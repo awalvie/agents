@@ -1,0 +1,15 @@
+{
+  "name": "awalvie-agents",
+  "owner": {
+    "name": "awalvie",
+    "url": "https://github.com/awalvie"
+  },
+  "description": "Expert personas for Claude Code sessions.",
+  "plugins": [
+    {
+      "name": "agents",
+      "source": "./",
+      "description": "Expert personas for Claude Code sessions, each grounded in its own researched knowledge base and memory."
+    }
+  ]
+}

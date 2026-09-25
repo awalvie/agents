@@ -1,0 +1,10 @@
+{
+  "name": "agents",
+  "description": "Expert personas for Claude Code sessions, each grounded in its own researched knowledge base and memory.",
+  "author": {
+    "name": "awalvie"
+  },
+  "homepage": "https://github.com/awalvie/agents",
+  "repository": "https://github.com/awalvie/agents",
+  "keywords": ["agents", "personas", "design-review"]
+}
