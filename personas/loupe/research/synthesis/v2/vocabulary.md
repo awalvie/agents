@@ -1,0 +1,30 @@
+# Vocabulary: terms commonly confused or misused
+
+- **Affordance vs signifier.** An affordance is what an object allows (a button can be pressed). A signifier is the visible cue that tells you so (a shape, an underline, a label). Most "affordance" complaints in reviews are really about weak signifiers.
+- **Intuitive vs familiar.** "Intuitive" usually means "works like something I already know" (Raskin 1994). Ask *familiar to whom*.
+- **Simple vs minimal.** Minimal describes how few elements are visible. Simple describes how few steps, decisions and memory demands the task has. A minimal screen can make a task harder by hiding what it needs.
+- **Visual complexity vs cognitive load.** Visual complexity is clutter you can see; it affects first impressions. Cognitive load is what the user must hold in mind and decide. Removing elements can raise cognitive load.
+- **Usability vs UX vs aesthetics.** Usability is whether people can do the task efficiently and without error. UX is the whole experience, including trust and feelings. Aesthetics is visual appeal. They can move in opposite directions.
+- **Accessible vs conformant.** Conformant means meeting WCAG success criteria. Accessible means disabled people can actually use it. WCAG 2.0 covered about half the problems blind users met.
+- **Consistency: internal, external, analogical** (Grudin 1989). Internal: the same within the product. External: the same as other products. Analogical: the same as the physical world. They can conflict with one another and with task fit.
+- **Discoverability vs findability.** Discoverability is noticing that a feature exists at all. Findability is locating something you know you want. Command palettes help findability, not discoverability.
+- **Progressive disclosure vs hiding.** Progressive disclosure shows rare options *when they become relevant*, with a clear entry point. Hiding removes the entry point.
+- **Adaptive vs adaptable.** Adaptive: the system changes itself. Adaptable: the user changes it. Adaptable is more predictable.
+- **Change aversion vs regression.** Change aversion is temporary discomfort with a new product that is at least as good. Regression is lost capability, speed or access. Only change aversion fades.
+- **Information scent.** Cues that predict what lies behind a link or label. Users persist while scent is strong, whatever the number of clicks.
+- **Recognition vs recall.** Recognition is choosing from visible options. Recall is producing the answer from memory (a typed command). A command palette is a hybrid: partial recall, then recognition.
+- **Hamburger menu vs hidden navigation.** The research concerns *hiding* navigation, not the three-line icon itself.
+- **Habituation.** Attention to a repeated identical stimulus declines. It is why "Are you sure?" stops working.
+- **Mode error.** Doing the right action in the wrong mode (a test alert sent as live).
+- **Deceptive pattern (dark pattern) vs persuasion.** Deceptive patterns hide information, mislead, make one choice harder than another, or shame the user. Persuasion that is honest and symmetric is not one.
+- **Friction: protective vs obstructive.** The same delay or extra step can serve the user (a cooling-off period the user chose) or the business (a cancellation maze).
+- **Contrast ratio vs APCA.** The contrast ratio is the WCAG 2 formula, a legal benchmark. APCA is a proposed perceptual model: not a standard, and not in WCAG 3 drafts as of 2026.
+- **Load time vs perceived performance.** Load time is a technical event. Perceived performance is when the useful, visible content is ready. Core Web Vitals: LCP (largest content painted), INP (response to input), CLS (layout shift). Their thresholds are partly chosen to be achievable.
+- **Optimistic UI.** Showing an action's result before the server confirms it, and rolling back if it fails.
+- **Skeleton screen.** A grey placeholder in the layout's shape shown while loading. Not proven to feel faster.
+- **Status message vs toast.** A status message is any update announced to screen readers without moving focus (WCAG 4.1.3). A toast is one visual form of it; it disappears, so it must not carry the only copy of an error or action.
+- **Prototypicality.** How typical a design looks for its category. It raises first-impression appeal.
+- **Evaluator effect.** Different reviewers find different problems in the same interface.
+- **Heuristic evaluation vs usability testing.** Heuristic evaluation is experts predicting problems. Usability testing is observing real users. The first produces hypotheses; the second produces observations.
+- **Severity.** A rating combining frequency, impact and persistence. It is less reliable than the problem list itself.
+- **Diegetic interface.** Status shown inside a game's world (health on the character's suit) rather than overlaid on the screen.
