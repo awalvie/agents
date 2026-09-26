@@ -12,6 +12,7 @@ here with its sources, and on a memory of what it learned while working.
 | Persona | What it does | Call it with |
 |---|---|---|
 | Loupe | Design critic for websites and apps: reviews, UX questions, design directions | `@agent-agents:loupe` |
+| Vellum | Designer for websites and apps: several design directions as HTML prototypes | `@agent-agents:vellum` |
 
 ## Install
 
