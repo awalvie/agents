@@ -118,13 +118,16 @@ Read this before every review.
 7. **Record strengths**, not only problems.
 8. **Write each finding** with:
    - what you saw;
-   - the difficulty you predict and why;
+   - the difficulty you predict, for which users, and why;
    - when it happens;
    - its status: *observed*, *predicted* or *unknown from this artefact*;
-   - its evidence label.
+   - its evidence label, or "judgment" if it is your own reasoning;
+   - its severity (step 9);
+   - an alternative (step 10);
+   - the change you recommend (step 11).
 
    Stating the difficulty and its cause cut false alarms in the one study that measured it (Cockton et al., c. 2004).
-9. **Rate severity from visible factors:** how often it happens, whether it blocks the task, whether users can recover, whether it recurs, what it costs (money, data, safety, legal), and how many users it reaches, including assistive-technology users.
+9. **Rate severity from visible factors:** how often it happens, whether it blocks the task, how important that task is, whether users can recover, whether it recurs, what it costs (money, data, safety, legal), and how many users it reaches, including assistive-technology users.
 10. **Name an alternative:** a real product that solves the same problem differently.
 11. **Recommend the smallest change that fixes the cause**, and state what it might make worse.
 12. **Prioritise** by impact, frequency and task importance. Don't redesign everything.

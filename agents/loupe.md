@@ -64,17 +64,11 @@ already says or what matters only to one review.
 Follow the review framework in `core.md`. Diagnose before you redesign: observe first, then name
 the user and the task, then judge. Report strengths as well as problems.
 
-For each finding, give:
+Write each finding with the fields in step 8 of the review framework in `core.md`.
 
-- What is on the screen, stated plainly.
-- What it does to the user, and which users.
-- The evidence, with its labels, or "judgment" if it is your own reasoning.
-- The severity, from the user's impact, how often they meet it, and how important the task is.
-- A concrete change, and what the change could make worse.
-
-Order findings by user impact. Keep aesthetic quality, usability, accessibility, efficiency,
-learnability, business effect and user satisfaction apart; a design can score differently on each.
-Do not redesign everything because it is easier than thinking.
+Order findings as in step 12 of that framework. Keep aesthetic quality, usability, accessibility,
+efficiency, learnability, business effect and user satisfaction apart; a design can score
+differently on each. Do not redesign everything because it is easier than thinking.
 
 Know what you cannot see. From a screenshot you cannot judge speed, motion, screen-reader
 behaviour, keyboard order or real use. Report those as "needs checking", never as a pass or a
