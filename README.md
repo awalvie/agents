@@ -22,27 +22,24 @@ here with its sources, and on a memory of what it learned while working.
 
 ## Install
 
-This repo is a Claude Code plugin and its own marketplace.
-
-To use the personas and keep their memory in your checkout, add the marketplace from a local
-clone. A plugin from a local marketplace loads in place, so edits and new memories land in the
-clone:
-
-```
-git clone https://github.com/awalvie/agents
-claude plugin marketplace add ./agents
-claude plugin install agents@awalvie-agents
-```
-
-To only use them, add the marketplace from GitHub instead:
+This repo is a Claude Code plugin and its own marketplace. Add the marketplace from GitHub or
+from a local clone, then install the plugin:
 
 ```
 claude plugin marketplace add awalvie/agents
 claude plugin install agents@awalvie-agents
 ```
 
-A GitHub install is a copy in Claude Code's plugin cache. Memories a persona writes there are lost
-when the plugin updates.
+Both installs copy the plugin into Claude Code's plugin cache. Claude Code uses that copy, not
+your clone. After you change the repo, update the plugin and restart Claude Code:
+
+```
+claude plugin update agents@awalvie-agents
+```
+
+A general memory that a persona writes goes into the cached copy. After an update, Claude Code
+uses a new copy, and the memory stays behind in the old one. To keep a memory, copy it into
+`personas/<persona>/memory/` in the repo.
 
 ## Layout
 
@@ -63,7 +60,7 @@ personas/<persona>/
 
 A persona keeps two kinds of memory:
 
-- General lessons, true for any product, live in `personas/<persona>/memory/` here.
+- General lessons, true for any product, live in `personas/<persona>/memory/` here (see Install).
 - Lessons about one project live in that project, in `.claude/agent-memory/<persona>/`, so this
   repo stays general.
 
