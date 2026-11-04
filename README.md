@@ -14,6 +14,12 @@ here with its sources, and on a memory of what it learned while working.
 | Loupe | Design critic for websites and apps: reviews, UX questions, design directions | `@agent-agents:loupe` |
 | Vellum | Designer for websites and apps: several design directions as HTML prototypes | `@agent-agents:vellum` |
 
+## Skills
+
+| Skill | What it does | Call it with |
+|---|---|---|
+| think-first | Understand the person and the problem before acting, scaled to the size of the work | Loads by itself, or `/agents:think-first` |
+
 ## Install
 
 This repo is a Claude Code plugin and its own marketplace.
@@ -43,6 +49,7 @@ when the plugin updates.
 ```
 .claude-plugin/        plugin and marketplace manifests
 agents/<persona>.md    the persona: who it is, how it works, what it reads
+skills/<skill>/        a skill: SKILL.md and anything it needs
 personas/<persona>/
   memory/              general lessons, true in any project
   research/
