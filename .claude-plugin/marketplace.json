@@ -4,12 +4,12 @@
     "name": "awalvie",
     "url": "https://github.com/awalvie"
   },
-  "description": "Expert personas for Claude Code sessions.",
+  "description": "Skills for Claude Code.",
   "plugins": [
     {
       "name": "agents",
       "source": "./",
-      "description": "Expert personas for Claude Code sessions, each grounded in its own researched knowledge base and memory."
+      "description": "Skills for Claude Code: think first, write concisely and plainly, design from user needs."
     }
   ]
 }

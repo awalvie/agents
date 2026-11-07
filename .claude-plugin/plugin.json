@@ -1,18 +1,14 @@
 {
   "name": "agents",
-  "description": "Expert personas for Claude Code sessions, each grounded in its own researched knowledge base and memory.",
+  "description": "Skills for Claude Code: think first, write concisely and plainly, design from user needs.",
   "author": {
     "name": "awalvie"
   },
   "homepage": "https://github.com/awalvie/agents",
   "repository": "https://github.com/awalvie/agents",
   "keywords": [
-    "agents",
-    "personas",
-    "design-review"
-  ],
-  "agents": [
-    "./personas/loupe/loupe.md",
-    "./personas/vellum/vellum.md"
+    "skills",
+    "writing",
+    "design"
   ]
 }
