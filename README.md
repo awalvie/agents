@@ -20,6 +20,7 @@ here with its sources, and on a memory of what it learned while working.
 |---|---|---|
 | think-first | Understand the person and the problem before acting, scaled to the size of the work | Loads by itself, or `/agents:think-first` |
 | simple-english | Write or check technical text with ASD-STE100 Simplified Technical English | Loads by itself, or `/agents:simple-english` |
+| concise | Rewrite each reply for the most information in the fewest words | A hook adds it to every prompt, or `/agents:concise` |
 
 ## Install
 
@@ -48,6 +49,7 @@ uses a new copy, and the memory stays behind in the old one. To keep a memory, c
 .claude-plugin/        plugin and marketplace manifests
 agents/<persona>.md    the persona: who it is, how it works, what it reads
 skills/<skill>/        a skill: SKILL.md and anything it needs
+hooks/hooks.json       hooks that run in every session with the plugin
 personas/<persona>/
   memory/              general lessons, true in any project
   research/

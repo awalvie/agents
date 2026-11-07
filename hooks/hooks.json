@@ -1,0 +1,25 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "awk 'n>=2; /^---$/{n++}' \"${CLAUDE_PLUGIN_ROOT}/skills/concise/SKILL.md\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/concise-check.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
