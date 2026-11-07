@@ -21,6 +21,7 @@ here with its sources, and on a memory of what it learned while working.
 | think-first | Understand the person and the problem before acting, scaled to the size of the work | Loads by itself, or `/agents:think-first` |
 | simple-english | Write or check technical text with ASD-STE100 Simplified Technical English | Loads by itself, or `/agents:simple-english` |
 | concise | Rewrite each reply for the most information in the fewest words | A hook adds it to every prompt, or `/agents:concise` |
+| design | Design a screen: the user first, versions, mocks of the real app, a checklist, a review | Loads by itself, or `/agents:design` |
 
 ## Install
 
