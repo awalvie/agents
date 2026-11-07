@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sami Ferreira</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#fbf8f0;
+  --ink:#15171d;
+  --plastic:#2f5de8;
+  --plastic-d:#1f44b8;
+  --red:#ee3b2b;
+  --yellow:#ffc62b;
+  --muted:#5d6070;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--paper)}
+body{font-family:"Barlow",system-ui,sans-serif;color:var(--ink);background:var(--paper);max-width:390px;margin:0 auto;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.cond{font-family:"Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+
+/* top */
+.top{display:flex;justify-content:space-between;align-items:center;padding:14px 16px}
+.top .no{font-size:13px}
+.top .no b{background:var(--ink);color:var(--paper);padding:2px 6px;margin-right:6px;border-radius:2px}
+.top nav{display:flex;gap:14px;font-size:14px}
+.top nav a:last-child{color:var(--red)}
+
+/* box top */
+.box{margin:0 16px;border:3px solid var(--ink);border-radius:6px;overflow:hidden;background:#fff}
+.stripes{height:18px;background:repeating-linear-gradient(-45deg,var(--red) 0 12px,var(--yellow) 12px 24px);border-bottom:3px solid var(--ink)}
+.boxin{padding:16px 16px 18px;position:relative}
+.kicker{font-size:13px;color:var(--plastic)}
+h1{font-family:"Big Shoulders Display";font-weight:900;font-size:72px;line-height:.82;text-transform:uppercase;letter-spacing:-.005em;margin-top:6px}
+h1 span{color:var(--plastic)}
+.lede{font-size:18px;line-height:1.35;font-weight:500;margin-top:12px}
+.lede b{font-weight:700;background:var(--yellow);padding:0 3px}
+.specs{display:flex;border-top:3px solid var(--ink)}
+.specs div{flex:1;padding:8px 10px;border-right:3px solid var(--ink)}
+.specs div:last-child{border-right:0}
+.specs small{display:block;font-size:11px;color:var(--muted)}
+.specs strong{font-family:"Big Shoulders Display";font-weight:900;font-size:22px;line-height:1;text-transform:uppercase}
+.specs .on{background:var(--plastic);color:#fff}
+.specs .on small{color:#cdd8ff}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#7dff9b;margin-right:5px;box-shadow:0 0 0 2px var(--plastic-d);vertical-align:1px}
+
+.ctarow{display:flex;gap:10px;margin:14px 16px 0}
+.btn{flex:1;display:flex;align-items:center;justify-content:center;padding:14px 10px;border:3px solid var(--ink);border-radius:6px;font-weight:700;font-size:16px;box-shadow:0 4px 0 var(--ink)}
+.btn.p{background:var(--red);color:#fff}
+
+/* sprue */
+.sec{display:flex;justify-content:space-between;align-items:baseline;margin:30px 16px 10px}
+.sec h2{font-family:"Big Shoulders Display";font-weight:900;font-size:30px;text-transform:uppercase;line-height:1}
+.sec span{font-size:13px;color:var(--muted)}
+
+.sprue{margin:0 16px;border:8px solid var(--plastic);border-radius:18px;padding:14px;position:relative;
+  box-shadow:inset 0 0 0 1px var(--plastic-d),0 0 0 1px var(--plastic-d)}
+.sprue::before{content:"";position:absolute;inset:-8px;border-radius:18px;background:linear-gradient(160deg,rgba(255,255,255,.35),transparent 40%);pointer-events:none;mix-blend-mode:screen}
+.runner{height:8px;background:var(--plastic);margin:14px -14px;position:relative}
+.tab{position:absolute;background:var(--plastic);color:#fff;font-family:"Barlow Condensed";font-weight:700;font-size:12px;letter-spacing:.05em;padding:2px 7px 3px;border-radius:4px;border:1px solid var(--plastic-d);z-index:2}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:-14px 0;padding:14px 0;background:linear-gradient(var(--plastic),var(--plastic)) 50% 0/8px 100% no-repeat}
+.part{position:relative;display:block}
+.part::before,.part::after{content:"";position:absolute;top:44%;width:14px;height:5px;background:var(--plastic);border-radius:2px}
+.part::before{left:-14px}
+.part::after{right:-14px}
+.row .part:first-child::before{left:-14px}
+.fr{background:#fff;border:2.5px solid var(--ink);border-radius:8px;overflow:hidden}
+.part .art{height:132px;position:relative;overflow:hidden}
+.lbl{padding:7px 8px 8px;border-top:2.5px solid var(--ink)}
+.lbl .n{font-family:"Barlow Condensed";font-weight:700;font-size:12px;color:var(--plastic);letter-spacing:.06em}
+.lbl strong{display:block;font-size:15px;line-height:1.1;font-weight:700}
+.lbl span{display:block;font-size:12px;color:var(--muted);line-height:1.25;margin-top:1px}
+
+.hero{position:relative}
+.mus-part .art{height:150px}
+.hero::before,.hero::after{top:40%}
+.hero .art{height:262px}
+.hero .lbl{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;padding:10px 12px}
+.hero .lbl strong{font-size:22px;font-family:"Big Shoulders Display";font-weight:900;text-transform:uppercase}
+.hero .lbl span{font-size:13px}
+.hero .tag2{background:var(--yellow);border:2px solid var(--ink);font-family:"Barlow Condensed";font-weight:700;font-size:12px;letter-spacing:.05em;padding:3px 7px;border-radius:3px;white-space:nowrap}
+
+/* artwork (CSS stand-ins for real shots) */
+.phone{width:120px;height:236px;border-radius:22px;border:5px solid #0b0b0e;position:relative;overflow:hidden;box-shadow:0 14px 24px -10px rgba(0,0,0,.5)}
+.phone .scr{position:absolute;inset:0;padding:20px 11px 10px;color:#e8f6ff}
+.t1{font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;opacity:.75}
+.tide{background:linear-gradient(170deg,#ffe07a 0%,#ffb65c 100%);display:flex;align-items:center;justify-content:center;gap:12px}
+.tide .phone .scr{background:linear-gradient(180deg,#0b2d63,#0a4d8c 70%,#1b7fb8)}
+.big{font-size:36px;font-weight:700;letter-spacing:-.04em;line-height:1;margin-top:6px}
+.big small{font-size:13px;font-weight:500;letter-spacing:0}
+.wave{height:46px;margin:12px -11px 0;background:radial-gradient(18px 10px at 18px 0,transparent 96%,#3fd0e6 100%) 0 0/36px 10px repeat-x}
+.rows div{display:flex;justify-content:space-between;font-size:9px;padding:6px 0;border-top:1px solid rgba(255,255,255,.15)}
+.phone.b{width:104px;height:206px;transform:rotate(7deg) translateY(12px)}
+.phone.b .scr{background:#f4fbff;color:#0a2a5c}
+.map{height:100px;margin:8px -11px 0;background:radial-gradient(circle at 70% 40%,#ee3b2b 4px,transparent 5px),repeating-linear-gradient(20deg,#cfe9f5 0 6px,#e2f3fa 6px 12px)}
+
+.half{background:#ff8fb1;display:flex;justify-content:center;align-items:flex-end}
+.half .phone{width:90px;height:160px;border-width:4px;border-radius:16px;transform:translateY(34px)}
+.half .scr{background:#fff;color:#15171d;padding:13px 7px}
+.bill{display:flex;align-items:center;gap:4px;font-size:7.5px;padding:5px 0;border-top:1px solid #eee;font-weight:600}
+.bill i{width:11px;height:11px;border-radius:50%;flex:none}
+.bill b{margin-left:auto}
+
+.forno{background:#efe4cf;display:flex;align-items:center;justify-content:center}
+.seal{width:88px;height:88px;border-radius:50%;background:#171412;color:#efe4cf;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Georgia,serif;box-shadow:inset 0 0 0 4px #171412,inset 0 0 0 5.5px #efe4cf}
+.seal b{font-size:26px;font-style:italic;line-height:1}
+.seal small{font-size:6.5px;letter-spacing:.3em;margin-top:4px;font-family:Barlow;font-weight:700}
+
+.load{background:#0f1512;padding:11px;color:#d7f7d8;font-size:8px}
+.kpi{font-size:22px;font-weight:700;letter-spacing:-.03em;color:#8cff7a;line-height:1}
+.kpi small{font-size:9px;color:#7c9a82;font-weight:500;letter-spacing:0;display:block;margin-bottom:3px}
+.bars{display:flex;align-items:flex-end;gap:3px;height:60px;margin-top:11px;border-bottom:1px solid #2a3a30}
+.bars i{flex:1;background:#8cff7a;border-radius:1px 1px 0 0}
+.bars i:nth-child(n+9){background:#f5c542}
+.leg{display:flex;justify-content:space-between;color:#7c9a82;margin-top:4px}
+
+.calc{background:conic-gradient(#15171d 25%,#fbf8f0 0 50%,#15171d 0 75%,#fbf8f0 0) 0 0/18px 18px;display:flex;align-items:center;justify-content:center}
+.sheet{background:#fbf8f0;width:80%;height:76%;display:flex;flex-direction:column;justify-content:center;padding:8px 10px;border:2px solid #15171d}
+.aa{font-family:"Big Shoulders Display";font-weight:900;font-size:58px;line-height:.8}
+.abc{font-size:7.5px;letter-spacing:.08em;margin-top:6px;font-weight:700}
+
+.mus{background:#dcd5f5;padding:9px}
+.browser{background:#fff;border-radius:5px;height:100%;overflow:hidden}
+.browser .bar{height:11px;background:#efecf8;display:flex;gap:3px;align-items:center;padding:0 5px}
+.browser .bar i{width:4px;height:4px;border-radius:50%;background:#c9c2dd}
+.page{padding:8px}
+.page .h{font-family:Georgia,serif;font-size:15px;line-height:.95;color:#3b2a8a}
+.gear{width:40px;height:40px;border-radius:50%;border:7px dotted #ee3b2b;float:right;margin:0 -2px 0 4px}
+.lines i{display:block;height:4px;background:#e5e1ef;margin-top:5px;border-radius:2px}
+.lines i:nth-child(2){width:70%}
+
+/* steps / contact */
+.steps{margin:30px 16px 0;border:3px solid var(--ink);border-radius:6px;background:#fff}
+.steps h2{font-family:"Big Shoulders Display";font-weight:900;font-size:30px;text-transform:uppercase;line-height:1;padding:14px 14px 4px}
+.steps ol{list-style:none;padding:4px 14px 14px}
+.steps li{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;padding:10px 0;border-top:1.5px dashed #c8c5bb}
+.steps li:first-child{border-top:0}
+.num{width:30px;height:30px;border-radius:50%;background:var(--plastic);color:#fff;display:flex;align-items:center;justify-content:center;font-family:"Big Shoulders Display";font-weight:900;font-size:18px}
+.steps li b{display:block;font-size:16px}
+.steps li div span{font-size:14px;color:var(--muted);line-height:1.35}
+.mail{display:block;margin:0 14px 14px;background:var(--red);color:#fff;border:3px solid var(--ink);border-radius:6px;padding:14px;font-weight:700;font-size:19px;text-align:center;box-shadow:0 4px 0 var(--ink)}
+.links{display:flex;justify-content:center;gap:18px;font-size:14px;font-weight:600;padding:0 14px 16px}
+.links a{border-bottom:2px solid var(--plastic)}
+footer{display:flex;justify-content:space-between;padding:20px 16px 34px;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="no cond"><b>Kit 06</b>sami ferreira</span>
+  <nav class="cond"><a href="#work">Work</a><a href="#about">About</a><a href="#contact">Contact</a></nav>
+</header>
+
+<section class="box">
+  <div class="stripes"></div>
+  <div class="boxin">
+    <div class="kicker cond">Designer &amp; builder &middot; Lisbon</div>
+    <h1>Sami<br><span>Ferreira</span></h1>
+    <p class="lede">I design apps, brands and websites, and <b>I build them too</b>. One pair of hands from sketch to shipped.</p>
+  </div>
+  <div class="specs">
+    <div class="on"><small class="cond">Available</small><strong><span class="dot"></span>3 Nov</strong></div>
+    <div><small class="cond">Slots</small><strong>1 left</strong></div>
+    <div><small class="cond">Full-time?</small><strong>Open</strong></div>
+  </div>
+</section>
+
+<div class="ctarow">
+  <a class="btn p" href="#contact">Start a project</a>
+  <a class="btn" href="#work">See the work</a>
+</div>
+
+<div class="sec" id="work"><h2>The parts</h2><span class="cond">6 pieces &middot; all built by me</span></div>
+
+<div class="sprue">
+  <span class="tab" style="top:-15px;left:22px">A &middot; APPS</span>
+
+  <a class="part hero" href="#">
+    <div class="fr">
+      <div class="art tide">
+        <div class="phone"><div class="scr">
+          <div class="t1">Today&rsquo;s swim</div>
+          <div class="big">2.4<small> km</small></div>
+          <div class="t1" style="margin-top:4px">Cascais Bay &middot; 16&deg;C</div>
+          <div class="wave"></div>
+          <div class="rows"><div><span>Pace</span><span>2:04 /100m</span></div><div><span>Strokes</span><span>1,812</span></div><div><span>Swell</span><span>0.6 m</span></div></div>
+        </div></div>
+        <div class="phone b"><div class="scr">
+          <div class="t1">Route</div>
+          <div class="map"></div>
+          <div style="font-size:10px;font-weight:700;margin-top:8px">Buddy near you</div>
+          <div style="font-size:8.5px;opacity:.7;margin-top:2px">Ana is 40 m to your left</div>
+        </div></div>
+      </div>
+      <div class="lbl">
+        <div><div class="n">A1</div><strong>Tidepool</strong><span>Open-water swim tracker &middot; design + SwiftUI</span></div>
+        <span class="tag2">40K SWIMMERS</span>
+      </div>
+    </div>
+  </a>
+
+  <div class="runner"></div>
+
+  <div class="row">
+    <a class="part" href="#"><div class="fr">
+      <div class="art half"><div class="phone"><div class="scr">
+        <div class="t1" style="font-size:6.5px">Flat 3B owes</div>
+        <div style="font-size:18px;font-weight:700;letter-spacing:-.03em;margin:3px 0 5px">&euro;84.20</div>
+        <div class="bill"><i style="background:#ee3b2b"></i>Groceries<b>&euro;31</b></div>
+        <div class="bill"><i style="background:#2f5de8"></i>Internet<b>&euro;12</b></div>
+        <div class="bill"><i style="background:#ffc62b"></i>Gas<b>&euro;41</b></div>
+      </div></div></div>
+      <div class="lbl"><div class="n">A2</div><strong>Halfsies</strong><span>Bill-splitting app &middot; React Native</span></div>
+    </div></a>
+
+    <a class="part" href="#"><div class="fr">
+      <div class="art forno"><div class="seal"><b>Forno<br>Nero</b><small>PORTO</small></div></div>
+      <div class="lbl"><div class="n">B1</div><strong>Forno Nero</strong><span>Identity for a Porto bakery</span></div>
+    </div></a>
+  </div>
+
+  <div class="runner"><span class="tab" style="top:-8px;right:-4px">B &middot; SYSTEMS</span></div>
+
+  <div class="row">
+    <a class="part" href="#"><div class="fr">
+      <div class="art load">
+        <div class="kpi"><small>Co-op output now</small>312 kW</div>
+        <div class="bars"><i style="height:30%"></i><i style="height:42%"></i><i style="height:55%"></i><i style="height:70%"></i><i style="height:88%"></i><i style="height:96%"></i><i style="height:90%"></i><i style="height:74%"></i><i style="height:52%"></i><i style="height:35%"></i><i style="height:20%"></i><i style="height:12%"></i></div>
+        <div class="leg"><span>06:00</span><span>12:00</span><span>18:00</span></div>
+      </div>
+      <div class="lbl"><div class="n">B2</div><strong>Loadline</strong><span>Live dashboard, solar co-op</span></div>
+    </div></a>
+
+    <a class="part" href="#"><div class="fr">
+      <div class="art calc"><div class="sheet"><div class="aa">Aa&ccedil;</div><div class="abc">CAL&Ccedil;ADA &middot; 6 WEIGHTS</div></div></div>
+      <div class="lbl"><div class="n">B3</div><strong>Cal&ccedil;ada</strong><span>Typeface from Lisbon pavements</span></div>
+    </div></a>
+  </div>
+
+  <div class="runner"></div>
+
+  <a class="part mus-part" href="#"><div class="fr">
+    <div class="art mus"><div class="browser"><div class="bar"><i></i><i></i><i></i></div>
+      <div class="page"><div class="gear"></div><div class="h">Museum of<br>Small Machines</div><div class="lines"><i></i><i></i><i></i></div></div>
+    </div></div>
+    <div class="lbl"><div class="n">B4</div><strong>Museum of Small Machines</strong><span>Website &middot; Astro + CMS</span></div>
+  </div></a>
+</div>
+
+<section class="steps" id="contact">
+  <h2>Assembly: 3 steps</h2>
+  <ol>
+    <li><span class="num">1</span><div><b>Write me a paragraph</b><span>What you&rsquo;re making, and by when.</span></div></li>
+    <li><span class="num">2</span><div><b>30-minute call</b><span>I reply within one working day.</span></div></li>
+    <li><span class="num">3</span><div><b>Fixed quote in 2 days</b><span>Design and build, one price.</span></div></li>
+  </ol>
+  <a class="mail" href="mailto:hello@samiferreira.pt">hello@samiferreira.pt</a>
+  <div class="links"><a href="#">LinkedIn</a><a href="#">GitHub</a><a href="#">CV (PDF)</a></div>
+</section>
+
+<footer id="about"><span>Kit 06 &middot; no glue required</span><span>Lisbon, GMT+1</span></footer>
+</body>
+</html>

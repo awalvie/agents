@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Juno Okafor — designs it, builds it</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Gaegu:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#fbf3e4; --ink:#1b1512;
+    --red:#ff4a1c; --blue:#2440ff; --lemon:#ffd21f; --green:#12a75a; --pink:#ff9ccb; --sky:#7fd3ff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#d9cfbf;font-family:"Bricolage Grotesque",sans-serif;color:var(--ink)}
+  .page{width:390px;margin:0 auto;background:var(--paper);overflow:hidden;position:relative;
+    background-image:radial-gradient(rgba(27,21,18,.05) 1px,transparent 1.2px);background-size:5px 5px}
+  a{color:inherit;text-decoration:none}
+  .cut{filter:drop-shadow(2px 3px 0 rgba(27,21,18,.18))}
+  .c1{clip-path:polygon(0 4%,38% 0,100% 3%,99% 60%,100% 97%,55% 100%,1% 98%,2% 50%)}
+  .c2{clip-path:polygon(2% 0,100% 5%,98% 48%,100% 100%,40% 96%,0 100%,1% 45%)}
+  .c3{clip-path:polygon(0 0,60% 3%,100% 0,97% 52%,100% 100%,0 96%,3% 55%)}
+  .hand{font-family:"Gaegu",cursive;font-weight:700}
+
+  header{display:flex;justify-content:space-between;align-items:center;padding:18px 18px 0}
+  .mark{font-weight:800;font-size:19px;letter-spacing:-.02em;font-stretch:75%}
+  .mark span{color:var(--red)}
+  nav{display:flex;gap:14px;font-size:14px;font-weight:600}
+  nav a:last-child{color:var(--blue)}
+
+  .hero{position:relative;padding:22px 18px 0}
+  h1{font-weight:800;font-stretch:75%;font-size:74px;line-height:.84;letter-spacing:-.035em;text-transform:uppercase;position:relative;z-index:2}
+  h1 .w{display:inline-block;position:relative;padding:4px 8px 0;margin:0 -2px 6px}
+  h1 .w i{position:absolute;inset:0;z-index:-1}
+  h1 .w1{transform:rotate(-2deg)} h1 .w1 i{background:var(--lemon)}
+  h1 .w2{transform:rotate(1.5deg);color:#fff} h1 .w2 i{background:var(--blue)}
+  h1 .w3{transform:rotate(-1deg);color:#fff} h1 .w3 i{background:var(--red)}
+  .leaf{position:absolute;right:-26px;top:10px;width:120px;height:150px;background:var(--green);z-index:1;
+    clip-path:polygon(50% 0,64% 18%,86% 10%,78% 34%,100% 42%,76% 55%,90% 78%,62% 72%,52% 100%,40% 72%,12% 82%,24% 56%,0 44%,24% 32%,14% 8%,38% 18%);transform:rotate(14deg);opacity:.95}
+  .intro{font-size:16px;line-height:1.4;margin-top:14px;max-width:300px;font-weight:500}
+  .intro b{font-weight:800}
+
+  .ctarow{display:flex;align-items:center;gap:12px;margin:18px 0 0}
+  .btn{display:inline-block;background:var(--ink);color:var(--paper);font-weight:800;font-size:17px;padding:14px 20px 13px}
+  .sun{position:relative;width:118px;height:118px;flex:none;margin:-8px -6px -12px auto;transform:rotate(-10deg)}
+  .sun::before{content:"";position:absolute;inset:0;background:var(--lemon);
+    clip-path:polygon(50% 0,59% 14%,75% 4%,76% 22%,93% 20%,86% 36%,100% 45%,86% 56%,96% 72%,78% 74%,77% 92%,61% 84%,50% 100%,39% 84%,23% 93%,23% 74%,5% 73%,14% 56%,0 46%,14% 36%,7% 20%,24% 22%,25% 4%,41% 14%)}
+  .sun p{position:relative;text-align:center;padding-top:34px;font-weight:800;font-stretch:75%;line-height:.95;font-size:17px;text-transform:uppercase}
+  .sun p small{display:block;font-size:12px;font-weight:600;text-transform:none;font-stretch:100%;margin-top:3px}
+
+  .work{padding:34px 14px 10px}
+  .work-h{display:flex;justify-content:space-between;align-items:baseline;padding:0 4px 12px}
+  .work-h h2{font-weight:800;font-stretch:75%;font-size:34px;text-transform:uppercase;letter-spacing:-.02em;line-height:1}
+  .work-h span{font-size:24px;color:var(--red)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 12px}
+  .p{display:block}
+  .p.full{grid-column:1/-1}
+  .art{position:relative;height:170px;overflow:hidden}
+  .full .art{height:236px}
+  .cap{padding:8px 2px 0}
+  .cap h3{font-weight:800;font-size:19px;letter-spacing:-.01em;line-height:1.05}
+  .cap p{font-size:13px;line-height:1.3;margin-top:2px;opacity:.8}
+  .tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:5px;padding:2px 6px;border:1.5px solid var(--ink)}
+  .rot-l{transform:rotate(-1.2deg)} .rot-r{transform:rotate(1.3deg)}
+
+  /* Tidal */
+  .tidal{background:var(--blue)}
+  .tidal .phone{position:absolute;left:28px;top:22px;width:128px;height:250px;background:#fff;border-radius:22px;border:5px solid var(--ink);overflow:hidden}
+  .tidal .phone .t{font-weight:800;font-size:44px;font-stretch:75%;padding:16px 12px 0;line-height:1}
+  .tidal .phone .s{font-size:10px;font-weight:600;padding:2px 12px}
+  .tidal .wv{position:absolute;left:-10px;right:-10px;height:90px;border-radius:50% 50% 0 0/40px 40px 0 0}
+  .tidal .phone .wv{bottom:0;background:var(--sky)}
+  .tidal .phone .wv2{bottom:-30px;background:var(--blue)}
+  .tidal .big{position:absolute;right:-20px;top:40px;width:220px;height:220px;border-radius:50%;background:var(--sky);opacity:.9}
+  .tidal .fish{position:absolute;right:30px;top:70px;width:90px;height:44px;background:var(--lemon);clip-path:polygon(0 50%,20% 10%,70% 0,78% 30%,100% 5%,94% 50%,100% 95%,78% 70%,70% 100%,20% 90%)}
+  .tidal .word{position:absolute;right:16px;bottom:18px;color:#fff;font-weight:800;font-stretch:75%;font-size:48px;line-height:.8;text-transform:uppercase;text-align:right}
+  .tidal .word small{display:block;font-size:13px;font-stretch:100%;font-weight:600;text-transform:none;margin-bottom:4px}
+  /* Halves */
+  .halves{background:var(--pink)}
+  .halves .a,.halves .b{position:absolute;width:96px;height:96px;border-radius:50%;top:36px}
+  .halves .a{left:20px;background:var(--red);mix-blend-mode:multiply}
+  .halves .b{left:66px;background:var(--lemon);mix-blend-mode:multiply}
+  .halves .n{position:absolute;left:12px;bottom:12px;font-weight:800;font-stretch:75%;font-size:30px;line-height:.9}
+  /* Forno */
+  .forno{background:var(--red)}
+  .forno .seal{position:absolute;left:50%;top:50%;width:122px;height:122px;margin:-61px 0 0 -61px;border-radius:50%;background:var(--paper);display:flex;align-items:center;justify-content:center;flex-direction:column}
+  .forno .seal b{font-family:Gaegu,cursive;font-size:40px;line-height:.8;color:var(--red)}
+  .forno .seal span{font-size:9px;letter-spacing:.2em;font-weight:700;margin-top:6px}
+  .forno .loaf{position:absolute;right:-18px;top:-10px;width:70px;height:46px;background:var(--lemon);border-radius:50% 50% 45% 45%;transform:rotate(28deg)}
+  /* Gridwatch */
+  .grid-d{background:var(--ink)}
+  .grid-d .bars{position:absolute;left:18px;right:150px;bottom:30px;top:60px;display:flex;align-items:flex-end;gap:6px}
+  .grid-d .bars i{flex:1;background:var(--lemon)}
+  .grid-d .bars i:nth-child(3n){background:var(--green)}
+  .grid-d .bars i:nth-child(4n){background:var(--sky)}
+  .grid-d .lbl{position:absolute;left:18px;top:18px;color:var(--paper);font-size:12px;font-weight:600;letter-spacing:.04em}
+  .grid-d .kpi{position:absolute;right:16px;top:26px;width:122px;height:180px;background:var(--lemon);padding:14px 12px}
+  .grid-d .kpi b{display:block;font-weight:800;font-stretch:75%;font-size:56px;line-height:.85}
+  .grid-d .kpi span{font-size:12px;font-weight:600;line-height:1.2;display:block;margin-top:6px}
+  .grid-d .kpi em{position:absolute;bottom:12px;left:12px;font-style:normal;font-size:12px;font-weight:800;color:var(--green)}
+  /* Quarry */
+  .quarry{background:var(--lemon)}
+  .quarry b{position:absolute;left:10px;top:-14px;font-weight:800;font-size:150px;font-stretch:75%;letter-spacing:-.06em;line-height:1}
+  .quarry span{position:absolute;right:10px;bottom:10px;font-size:11px;font-weight:700;text-align:right;line-height:1.25}
+  /* Museum */
+  .museum{background:var(--green)}
+  .museum .win{position:absolute;left:14px;right:14px;top:18px;bottom:0;background:var(--paper);border:3px solid var(--ink);border-bottom:0}
+  .museum .bar{height:14px;border-bottom:3px solid var(--ink);display:flex;gap:4px;padding:3px 5px}
+  .museum .bar i{width:5px;height:5px;border-radius:50%;background:var(--ink)}
+  .museum h4{font-family:Georgia,serif;font-weight:400;font-style:italic;font-size:26px;line-height:.95;padding:10px 10px 0;letter-spacing:-.02em}
+  .museum .arch{position:absolute;right:12px;bottom:0;width:52px;height:70px;background:var(--blue);border-radius:26px 26px 0 0}
+
+  .note{font-family:Gaegu,cursive;font-size:19px;color:var(--red);line-height:1;padding:14px 8px 0;transform:rotate(-2deg)}
+
+  .contact{position:relative;margin:34px 0 0;padding:40px 22px 34px;background:var(--lemon)}
+  .contact h2{position:relative;z-index:2;max-width:300px;font-weight:800;font-stretch:75%;font-size:60px;line-height:.86;text-transform:uppercase;letter-spacing:-.03em}
+  .contact .mail{display:inline-block;margin-top:18px;background:var(--blue);color:#fff;font-weight:800;font-size:22px;padding:14px 18px 12px;letter-spacing:-.01em}
+  .contact .status{margin-top:22px;font-size:15px;line-height:1.45;font-weight:500}
+  .contact .status b{font-weight:800}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--green);margin-right:6px;vertical-align:1px;box-shadow:0 0 0 3px rgba(18,167,90,.25)}
+  .links{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .links a{font-size:14px;font-weight:700;padding:7px 11px;border:2px solid var(--ink);background:var(--paper)}
+  .contact .blob{position:absolute;right:-50px;top:-40px;width:130px;height:96px;background:var(--red);clip-path:polygon(8% 30%,40% 0,70% 12%,100% 4%,92% 60%,100% 100%,50% 86%,10% 100%,0 64%);transform:rotate(-6deg)}
+  footer{padding:18px 22px 26px;font-size:12px;display:flex;justify-content:space-between;background:var(--lemon);opacity:.9}
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <a class="mark" href="#">juno okafor<span>*</span></a>
+    <nav><a href="#work">Work</a><a href="#about">About</a><a href="#hi">Say hi</a></nav>
+  </header>
+
+  <section class="hero">
+    <div class="leaf"></div>
+    <h1>
+      <span class="w w1"><i class="c1"></i>I design</span>
+      <span class="w w2"><i class="c2"></i>it. Then</span>
+      <span class="w w3"><i class="c3"></i>I build it.</span>
+    </h1>
+    <p class="intro">Independent designer who writes the code too. Apps, brands, dashboards and one very stubborn typeface — from <b>Lisbon</b>, for anywhere.</p>
+    <div class="ctarow">
+      <a class="btn c2" href="#hi">Start a project →</a>
+      <div class="sun cut"><p>Free from<br>3 Nov<small>1 slot left</small></p></div>
+    </div>
+  </section>
+
+  <section class="work" id="work">
+    <div class="work-h"><h2>Six I'm proud of</h2><span class="hand">↓</span></div>
+    <div class="grid">
+      <a class="p full" href="#">
+        <div class="art tidal cut c1 rot-l">
+          <div class="big"></div><div class="fish"></div>
+          <div class="phone"><div class="t">19°</div><div class="s">Praia do Tamariz · calm</div><div class="wv"></div><div class="wv wv2"></div></div>
+          <div class="word"><small>tide + swim app</small>Tidal</div>
+        </div>
+        <div class="cap"><h3>Tidal — when is the sea kind today?</h3><p>Designed it, built it in SwiftUI. 22k sea swimmers check it before breakfast.</p><span class="tag">iOS app</span></div>
+      </a>
+
+      <a class="p" href="#">
+        <div class="art halves cut c2 rot-r"><div class="a"></div><div class="b"></div><div class="n">€620<br>/ €620</div></div>
+        <div class="cap"><h3>Halves</h3><p>Money app for couples who hate spreadsheets.</p><span class="tag">App</span></div>
+      </a>
+      <a class="p" href="#">
+        <div class="art forno cut c3 rot-l"><div class="loaf"></div><div class="seal"><b>Forno<br>Rosa</b><span>DESDE 1961</span></div></div>
+        <div class="cap"><h3>Forno Rosa</h3><p>New face for a 60-year-old bakery.</p><span class="tag">Brand</span></div>
+      </a>
+
+      <a class="p full" href="#">
+        <div class="art grid-d cut c2 rot-r">
+          <div class="lbl">SOLAR CO-OP · OCTOBER</div>
+          <div class="bars"><i style="height:40%"></i><i style="height:62%"></i><i style="height:55%"></i><i style="height:80%"></i><i style="height:92%"></i><i style="height:70%"></i><i style="height:48%"></i></div>
+          <div class="kpi"><b>41%</b><span>of the street runs on its own roofs</span><em>▲ 6 pts</em></div>
+        </div>
+        <div class="cap"><h3>Gridwatch — a dashboard a street can read</h3><p>Energy data for 300 households, built in D3. No legend needed.</p><span class="tag">Data dashboard</span></div>
+      </a>
+
+      <a class="p" href="#">
+        <div class="art quarry cut c3 rot-r"><b>Rg</b><span>Quarry Grotesk<br>9 weights</span></div>
+        <div class="cap"><h3>Quarry Grotesk</h3><p>My own typeface, and its specimen.</p><span class="tag">Type</span></div>
+      </a>
+      <a class="p" href="#">
+        <div class="art museum cut c1 rot-l"><div class="win"><div class="bar"><i></i><i></i><i></i></div><h4>Museum of Salt &amp; Sea</h4></div><div class="arch"></div></div>
+        <div class="cap"><h3>Salt &amp; Sea</h3><p>A museum site that feels like a walk.</p><span class="tag">Website</span></div>
+      </a>
+    </div>
+    <p class="note hand">every one of these: my Figma file, my code →</p>
+  </section>
+
+  <section class="contact" id="hi">
+    <div class="blob"></div>
+    <h2>Got a thing that needs making?</h2>
+    <a class="mail c1" href="mailto:hello@junookafor.studio">hello@junookafor.studio</a>
+    <p class="status"><span class="dot"></span><b>Booking from 3 November.</b> One project slot left this year. Also happy to talk about full-time design-engineer roles.</p>
+    <div class="links"><a href="#">Book a 20-min call</a><a href="#">LinkedIn</a><a href="#">GitHub</a><a href="#">CV (PDF)</a></div>
+  </section>
+  <footer><span>© 2026 Juno Okafor</span><span>Made by hand, in Lisbon</span></footer>
+</div>
+</body>
+</html>

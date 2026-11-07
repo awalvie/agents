@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wren &amp; Quire Events</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Big+Shoulders+Display:wght@600;800;900&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f2e8d3;
+  --paper-deep:#e8dabd;
+  --ink:#1f1a15;
+  --ink-soft:#5b4f42;
+  --red:#c2331b;
+  --rule:#1f1a15;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:#d9cbb0}
+body{
+  max-width:430px;margin:0 auto;min-height:100vh;
+  background-color:var(--paper);
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35  0 0 0 0 .25  0 0 0 0 .12  0 0 0 .09 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+    radial-gradient(120% 60% at 50% 0%, rgba(255,250,235,.7), transparent 70%);
+  color:var(--ink);
+  font-family:"Libre Caslon Text",Georgia,serif;
+  font-size:16px;line-height:1.5;
+  padding:0 18px 40px;
+}
+a{color:inherit}
+.sc{font-family:"Big Shoulders Display",Impact,sans-serif;text-transform:uppercase;letter-spacing:.14em;font-weight:800}
+
+/* masthead */
+.top{display:flex;justify-content:space-between;align-items:center;padding:14px 0 10px;border-bottom:1px solid var(--rule)}
+.logo{font-family:"Abril Fatface",serif;font-size:21px;letter-spacing:.01em;text-decoration:none}
+.logo i{font-family:"Libre Caslon Text",serif;font-style:italic;font-size:17px;color:var(--red);padding:0 2px}
+.nav{display:flex;gap:14px;font-size:13px}
+.nav a{text-decoration:none}
+
+.bill{text-align:center;padding:22px 0 18px;border-bottom:4px double var(--rule)}
+.bill .pre{font-size:13px;letter-spacing:.32em;color:var(--ink)}
+.bill .pre span{color:var(--red)}
+.bill h1{
+  font-family:"Abril Fatface",serif;font-weight:400;
+  font-size:92px;line-height:.86;letter-spacing:-.01em;margin:10px 0 2px;
+  color:var(--ink);
+  text-shadow:1px .5px 0 rgba(194,51,27,.28);
+}
+.bill .of{font-family:"Libre Caslon Text",serif;font-style:italic;font-size:19px}
+.bill .stack{font-size:30px;line-height:1;font-weight:900;letter-spacing:.06em;margin-top:8px;color:var(--red)}
+.bill .stack small{display:block;font-size:14px;letter-spacing:.3em;color:var(--ink);font-weight:800;margin-top:6px}
+.orn{font-size:22px;color:var(--red);line-height:1;margin:14px 0 6px}
+.bill p.lede{font-size:15px;line-height:1.45;max-width:30ch;margin:0 auto;color:var(--ink)}
+
+.key{display:flex;justify-content:space-between;gap:6px;padding:10px 0;border-bottom:1px solid var(--rule);font-size:12.5px}
+.key span{white-space:nowrap}
+.key b{font-family:"Big Shoulders Display";font-weight:900;letter-spacing:.08em;font-size:13px}
+
+/* events */
+.ev{padding:22px 0 20px;border-bottom:1px solid var(--rule);position:relative}
+.when{display:flex;align-items:flex-end;gap:12px}
+.day{font-family:"Abril Fatface",serif;font-size:64px;line-height:.8;color:var(--red)}
+.when .dw{padding-bottom:2px}
+.when .dw .sc{display:block;font-size:17px;letter-spacing:.16em;line-height:1.05}
+.when .dw .t{font-size:14px;font-style:italic;color:var(--ink-soft)}
+.kind{margin-top:14px;font-size:12.5px;letter-spacing:.3em;color:var(--red)}
+.ev h2{font-family:"Libre Caslon Text",serif;font-weight:400;font-size:25px;line-height:1.15;margin-top:4px}
+.ev h2 em{font-style:italic}
+.ev h2 .who{font-family:"Abril Fatface",serif;font-size:28px;letter-spacing:.005em}
+.ev p.blurb{font-size:15px;color:var(--ink-soft);margin-top:6px}
+.seat{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}
+.price{font-size:15px;line-height:1.25}
+.price b{font-family:"Big Shoulders Display";font-weight:900;font-size:24px;letter-spacing:.04em;display:block}
+.btn{
+  display:inline-block;text-decoration:none;
+  background:var(--ink);color:var(--paper);
+  font-family:"Big Shoulders Display";font-weight:800;text-transform:uppercase;letter-spacing:.16em;font-size:16px;
+  padding:13px 18px 12px;border-radius:2px;
+  box-shadow:3px 3px 0 var(--red);
+  white-space:nowrap;
+}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:none;border:1.5px solid var(--ink);padding:11px 14px 10px}
+.left{font-size:13px;font-style:italic;color:var(--red);margin-top:8px}
+.walkin{font-family:"Big Shoulders Display";font-weight:800;text-transform:uppercase;letter-spacing:.14em;font-size:15px;border-top:1px dashed var(--ink-soft);border-bottom:1px dashed var(--ink-soft);padding:8px 2px;white-space:nowrap}
+
+.stamp{
+  position:absolute;right:4px;top:26px;transform:rotate(-9deg);
+  border:3px solid var(--red);color:var(--red);
+  font-family:"Big Shoulders Display";font-weight:900;font-size:24px;letter-spacing:.14em;line-height:1;
+  padding:7px 10px 5px;border-radius:3px;opacity:.88;
+  mix-blend-mode:multiply;
+}
+.stamp small{display:block;font-size:10px;letter-spacing:.3em;text-align:center;margin-top:3px}
+.ev.gone h2,.ev.gone .blurb{opacity:.7}
+
+.fleuron{text-align:center;color:var(--red);font-size:20px;padding:16px 0 0}
+.visit{text-align:center;padding:16px 0 4px}
+.visit h3{font-family:"Abril Fatface",serif;font-weight:400;font-size:30px;line-height:1}
+.visit p{font-size:15px;margin-top:8px}
+.visit .hrs{font-size:13px;letter-spacing:.2em;margin-top:10px}
+.post{margin-top:18px;border:1.5px solid var(--ink);padding:14px;text-align:left;background:rgba(255,250,238,.5)}
+.post p{margin:0 0 10px;font-size:15px}
+.post form{display:flex;gap:8px}
+.post input{flex:1;min-width:0;font:inherit;font-size:15px;padding:10px;border:1px solid var(--ink);background:var(--paper);border-radius:0}
+.post button{font-family:"Big Shoulders Display";font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:15px;padding:0 14px;background:var(--red);color:var(--paper);border:0}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="logo" href="#">Wren<i>&amp;</i>Quire</a>
+  <nav class="nav sc"><a href="#">What's on</a><a href="#">Visit</a><a href="#">Shop</a></nav>
+</header>
+
+<section class="bill">
+  <div class="pre sc">The bill <span>✦</span> Autumn 2026</div>
+  <h1>October</h1>
+  <div class="of">at the shop on Tanner Street</div>
+  <div class="stack sc">Readings · Book Club<br>&amp; Story Hours<small>eight evenings &amp; mornings</small></div>
+  <div class="orn">❦</div>
+  <p class="lede">Most of it is free and you can simply walk in. The author nights have small rooms, so book those.</p>
+</section>
+
+<div class="key">
+  <span><b>BOOK</b> ticket needed</span>
+  <span><b>FREE</b> just turn up</span>
+  <span><b style="color:var(--red)">SOLD OUT</b> waiting list</span>
+</div>
+
+<article class="ev">
+  <div class="when"><span class="day">01</span><span class="dw"><span class="sc">Thursday</span><span class="t">7 pm, doors 6.30</span></span></div>
+  <div class="kind sc">An author reading</div>
+  <h2><span class="who">Ada Mirren</span> reads from <em>The Salt Orchard</em></h2>
+  <p class="blurb">Her second novel: a family, a failing cider farm, one very long winter. Signing after.</p>
+  <div class="seat">
+    <div class="price"><b>£5</b>taken off the book</div>
+    <a class="btn" href="#">Book a seat</a>
+  </div>
+  <div class="left">12 of 40 seats left</div>
+</article>
+
+<article class="ev">
+  <div class="when"><span class="day">03</span><span class="dw"><span class="sc">Saturday</span><span class="t">10.30 am, 40 minutes</span></span></div>
+  <div class="kind sc">Story hour · ages 3 to 7</div>
+  <h2><span class="who">Conkers &amp; Owls</span>, autumn tales on the rug</h2>
+  <p class="blurb">Picture books read aloud by Maud from the children's corner. Grown-ups sit at the back.</p>
+  <div class="seat">
+    <div class="price"><b>Free</b>no booking</div>
+    <span class="walkin">Just turn up</span>
+  </div>
+</article>
+
+<article class="ev">
+  <div class="when"><span class="day">06</span><span class="dw"><span class="sc">Tuesday</span><span class="t">7.30 pm, upstairs</span></span></div>
+  <div class="kind sc">The book club</div>
+  <h2>This month: <em>The Remains of the Day</em></h2>
+  <p class="blurb">Kazuo Ishiguro. Read it or half-read it, both welcome. Tea, and strong opinions.</p>
+  <div class="seat">
+    <div class="price"><b>Free</b>no booking</div>
+    <span class="walkin">Just turn up</span>
+  </div>
+</article>
+
+<article class="ev gone">
+  <div class="stamp">Sold out<small>thank you</small></div>
+  <div class="when"><span class="day">08</span><span class="dw"><span class="sc">Thursday</span><span class="t">7 pm</span></span></div>
+  <div class="kind sc">Poetry, read aloud</div>
+  <h2><span class="who">Tomasz Wrenn</span>, <em>Low Tide Hymns</em></h2>
+  <p class="blurb">A launch night for his first collection, with a short set from the harpist Nell Adair.</p>
+  <div class="seat">
+    <div class="price"><b>£6</b>all 40 seats gone</div>
+    <a class="btn ghost" href="#">Join waiting list</a>
+  </div>
+</article>
+
+<article class="ev">
+  <div class="when"><span class="day">14</span><span class="dw"><span class="sc">Wednesday</span><span class="t">7 pm</span></span></div>
+  <div class="kind sc">In conversation</div>
+  <h2><span class="who">Priya Halloran</span> on <em>A Field Guide to Lost Rivers</em></h2>
+  <p class="blurb">The streams buried under our own streets, and how to find them. With a glass of wine.</p>
+  <div class="seat">
+    <div class="price"><b>£8</b>includes a drink</div>
+    <a class="btn" href="#">Book a seat</a>
+  </div>
+  <div class="left">Only 5 seats left</div>
+</article>
+
+<div class="fleuron">❧ &nbsp; ❧ &nbsp; ❧</div>
+
+<p style="text-align:center;margin-top:8px"><a class="sc" style="font-size:15px" href="#">See all eight October events →</a></p>
+
+<section class="visit">
+  <div class="orn">✦</div>
+  <h3>14 Tanner Street</h3>
+  <p>Up the hill from the market. The blue door.<br>Step-free to the ground floor.</p>
+  <div class="hrs sc">Tue–Sat 9.30–6 &nbsp;·&nbsp; Sun 11–4</div>
+  <div class="post">
+    <p><i>A postcard by email</i>, once a month, when the new bill is up.</p>
+    <form><input type="email" placeholder="you@example.com" aria-label="Email"><button type="button">Send it</button></form>
+  </div>
+</section>
+
+</body>
+</html>

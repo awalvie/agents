@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What's on · The Paper Moth</title>
+<!-- Direction 3: The contents page. The site reads like a small book: regulars and visiting authors as its parts, the booksellers' voice as the identity, type as the only image. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..600&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+<style>
+@layer reset, tokens, base, layout, components;
+
+@layer reset {
+  *, *::before, *::after { box-sizing: border-box; }
+  body, h1, h2, h3, p, dl, dd, ol, ul { margin: 0; }
+  ol, ul { padding: 0; list-style: none; }
+  button, input { font: inherit; color: inherit; }
+}
+
+@layer tokens {
+  :root {
+    /* raw: paper, iron-gall ink, and rubric red, the red old books used for headings */
+    --desk: #E6DCC8; --page: #F7F1E3; --ink: #2B211A; --ink-soft: #6B5C4E; --rule: #D6C9B1; --rubric: #A1261B; --rubric-dark: #7F1D14; --focus: #1A56C4;
+    /* roles */
+    --bg: var(--desk); --surface: var(--page); --text: var(--ink); --muted: var(--ink-soft); --line: var(--rule);
+    --accent: var(--rubric); --action: var(--rubric); --action-hover: var(--rubric-dark);
+    /* type: one book face for reading, one period face for headings */
+    --book: "EB Garamond", Garamond, "Iowan Old Style", Georgia, serif;
+    --fell: "IM Fell English", "EB Garamond", Georgia, serif;
+    --fell-sc: "IM Fell English SC", "EB Garamond", Georgia, serif;
+    --fs-body: 1.25rem; --fs-small: 1.05rem; --fs-h1: clamp(2.3rem, 1.8rem + 2.6vw, 3.6rem);
+    --s1: 0.25rem; --s2: 0.5rem; --s3: 0.8rem; --s4: 1.1rem; --s5: 1.6rem; --s6: 2.4rem; --s7: 3.6rem;
+    --measure: 34rem;
+  }
+}
+
+@layer base {
+  body { background: var(--bg); color: var(--text); font-family: var(--book); font-size: var(--fs-body); line-height: 1.45; font-variant-numeric: oldstyle-nums; }
+  a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  h1, h2, h3 { font-weight: 400; text-wrap: balance; }
+}
+
+@layer layout {
+  /* the page: full bleed on phones, a single book page on wider screens */
+  .page { background: var(--surface); max-width: 44rem; margin-inline: auto; padding: var(--s4) 18px var(--s6); min-height: 100vh; }
+  @media (min-width: 760px) { .page { margin-block: var(--s6); padding: var(--s5) 4.5rem var(--s6); box-shadow: 0 1px 2px rgba(60, 40, 20, .12), 0 20px 40px -24px rgba(60, 40, 20, .45); min-height: 0; } }
+  .measure { max-width: var(--measure); }
+}
+
+@layer components {
+  /* running head: shop name and section, as at the top of a book page */
+  .run { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); font-family: var(--fell-sc); font-size: 1rem; letter-spacing: .06em; color: var(--muted); padding-bottom: var(--s2); border-bottom: 1px solid var(--line); }
+  .run a { text-decoration: none; }
+  .run nav { display: flex; gap: var(--s4); white-space: nowrap; }
+  .run nav a { color: var(--text); padding-block: var(--s2); }
+  .run nav a[aria-current] { color: var(--accent); }
+
+  .title { text-align: center; padding-block: var(--s6) var(--s5); }
+  .title .moth { font-family: var(--fell); font-size: 1.6rem; color: var(--accent); line-height: 1; }
+  .title h1 { font-family: var(--fell); font-size: var(--fs-h1); line-height: 1; margin-top: var(--s2); }
+  .title p { font-style: italic; color: var(--muted); margin-top: var(--s3); }
+
+  .note { font-style: italic; margin: 0 auto var(--s6); max-width: var(--measure); position: relative; }
+  .note p + p { margin-top: var(--s2); }
+  .note .sig { text-align: right; font-style: normal; font-family: var(--fell); }
+  .note h2 { font-family: var(--fell-sc); font-style: normal; font-size: 1rem; letter-spacing: .08em; color: var(--accent); text-align: center; margin-bottom: var(--s2); }
+
+  .next { border-block: 1px solid var(--line); padding-block: var(--s3); margin-bottom: var(--s6); font-size: var(--fs-small); }
+  .next b { font-family: var(--fell-sc); font-weight: 400; color: var(--accent); letter-spacing: .05em; margin-right: var(--s2); }
+  .next a { white-space: nowrap; }
+
+  /* the contents: parts, entries, dot leaders */
+  .part + .part { margin-top: var(--s6); }
+  .part h2 { font-family: var(--fell); font-size: 1.7rem; line-height: 1.1; }
+  .part h2 .num { font-family: var(--fell-sc); color: var(--accent); font-size: .8em; margin-right: .35em; }
+  .part .terms { font-style: italic; color: var(--muted); margin-top: var(--s1); }
+  .part .terms b { font-style: normal; font-weight: 600; color: var(--text); }
+  .toc { margin-top: var(--s4); }
+  .toc li + li { margin-top: var(--s3); }
+  .toc a { display: flex; align-items: flex-end; text-decoration: none; }
+  .toc .t { flex: 0 1 auto; }
+  .toc a:hover .t { text-decoration: underline; text-underline-offset: 3px; }
+  .toc .dots { flex: 1 1 1.5rem; min-width: 1.5rem; margin: 0 .35em .38em; border-bottom: 2px dotted var(--muted); opacity: .6; }
+  .toc .d { flex: none; font-variant-numeric: lining-nums; }
+  .toc .d .wd { font-family: var(--fell-sc); letter-spacing: .04em; margin-right: .2em; }
+  .toc .how { display: block; font-style: italic; color: var(--muted); font-size: var(--fs-small); margin-top: 1px; }
+  .how.s-few { color: var(--accent); font-style: normal; font-weight: 600; }
+  .how.s-soldout { color: var(--muted); }
+
+  .finding { margin-top: var(--s7); padding-top: var(--s5); border-top: 1px solid var(--line); font-size: var(--fs-small); }
+  .finding h2 { font-family: var(--fell-sc); font-size: 1.1rem; letter-spacing: .06em; color: var(--accent); margin-bottom: var(--s2); }
+  .finding dl { display: grid; grid-template-columns: auto 1fr; gap: 0 var(--s4); }
+  .finding dt { font-style: italic; color: var(--muted); }
+  .folio { text-align: center; margin-top: var(--s6); font-family: var(--fell); color: var(--muted); }
+  .orn { text-align: center; color: var(--accent); font-size: 1.3rem; margin-block: var(--s5); }
+
+  /* event page: a chapter opening */
+  .back { display: inline-block; margin-top: var(--s3); padding-block: var(--s2); font-size: var(--fs-small); }
+  .chap { padding-block: var(--s5) var(--s4); }
+  .kicker { font-family: var(--fell-sc); color: var(--accent); letter-spacing: .07em; font-size: 1.05rem; }
+  .chap h1 { font-family: var(--fell); font-size: var(--fs-h1); line-height: 1.02; margin-top: var(--s2); }
+  .chap h1 i { display: block; font-size: .62em; margin-top: .2em; }
+  .argument { font-style: italic; margin-top: var(--s4); max-width: var(--measure); }
+  .argument .lead-in { font-family: var(--fell-sc); font-style: normal; letter-spacing: .04em; }
+
+  .facts { margin-top: var(--s5); border-top: 1px solid var(--line); }
+  .facts div { display: grid; grid-template-columns: 4.8rem 1fr; gap: var(--s3); padding-block: var(--s3); border-bottom: 1px solid var(--line); }
+  .facts dt { font-family: var(--fell-sc); color: var(--accent); letter-spacing: .05em; padding-top: 1px; }
+  .facts dd span { display: block; color: var(--muted); font-size: var(--fs-small); font-style: italic; }
+  .facts.after { margin-top: var(--s5); }
+  .facts .s-few { color: var(--accent); font-weight: 600; }
+
+  .take { margin-top: var(--s5); }
+  .btn { display: block; width: 100%; min-height: 54px; border: 0; background: var(--action); color: var(--page); cursor: pointer; font-family: var(--fell-sc); font-size: 1.3rem; letter-spacing: .06em; border-radius: 2px; padding: .4rem 1rem; }
+  .btn:hover { background: var(--action-hover); }
+  .btn.plain { background: transparent; color: var(--text); border: 1.5px solid var(--text); }
+  .take .fine { font-style: italic; color: var(--muted); font-size: var(--fs-small); margin-top: var(--s2); text-align: center; }
+  .wait { display: grid; gap: var(--s2); }
+  .wait label { font-style: italic; }
+  .wait input { width: 100%; min-width: 0; min-height: 50px; border: 1.5px solid var(--ink); background: #fff; padding-inline: var(--s3); border-radius: 2px; }
+  .minor { display: flex; justify-content: center; gap: var(--s5); margin-top: var(--s3); font-size: var(--fs-small); }
+  .minor button { background: none; border: 0; padding: var(--s2) 0; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+  .body { margin-top: var(--s6); }
+  .body p + p { margin-top: 0; text-indent: 1.4em; }
+  .body p:first-child::first-letter { float: left; font-family: var(--fell); color: var(--accent); font-size: 3.6em; line-height: .8; padding: .08em .08em 0 0; }
+  @supports (initial-letter: 3) { .body p:first-child::first-letter { float: none; initial-letter: 3; font-size: inherit; line-height: inherit; padding: 0 .12em 0 0; } }
+
+  .notes { margin-top: var(--s6); font-size: var(--fs-small); counter-reset: n; }
+  .notes h2, .see h2 { font-family: var(--fell-sc); font-size: 1.1rem; letter-spacing: .06em; color: var(--accent); margin-bottom: var(--s2); }
+  .notes li { counter-increment: n; display: grid; grid-template-columns: 1.4rem 1fr; }
+  .notes li::before { content: counter(n) "."; font-variant-numeric: lining-nums; color: var(--muted); }
+  .notes li + li { margin-top: var(--s2); }
+  .see { margin-top: var(--s6); }
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ---------- Shared content and helpers (identical in all three directions) ---------- */
+/* The prototype pretends today is Saturday 26 September 2026. */
+const TODAY = new Date(2026, 8, 26);
+
+const SHOP = {
+  name: "The Paper Moth",
+  street: "41 Tanner's Lane",
+  town: "Ashbury",
+  phone: "01632 960 418",
+  hours: [["Monday to Saturday", "9:30am to 6pm"], ["Sunday", "11am to 4pm"]],
+  owners: "Nell and Tomasz"
+};
+
+const TYPES = {
+  author: { label: "Author event", plural: "Author events" },
+  club:   { label: "Book club",    plural: "Book club" },
+  story:  { label: "Story hour",   plural: "Story hours" }
+};
+
+const ROOMS = {
+  long: { name: "The Long Room, upstairs", access: "The Long Room is up 16 stairs and there is no lift. If stairs are hard for you, ring us and we will keep you a seat downstairs by the door, with the talk on a speaker." },
+  corner: { name: "The children's corner, ground floor", access: "Ground floor, step-free from the street. Buggies can park by the till." }
+};
+
+const STORY_TEXT = "Tomasz reads three picture books and then everyone makes something to take home. For children aged 2 to 6, with a grown-up. We start at 10:30 sharp and finish by 11:15.";
+
+const EVENTS = [
+  { id: "book-club-piranesi", type: "club", date: "2026-10-01", start: "19:00", end: "20:30",
+    title: "Book club: Piranesi", subject: "Piranesi by Susanna Clarke", host: "Hosted by Nell",
+    entry: "freebook", cap: 14, left: 5, room: "long", age: "Adults",
+    blurb: [
+      "This month we are reading Piranesi by Susanna Clarke: a man lives in a house of endless halls and tides, and keeps careful notes on everything he finds. It is short, strange, and one of Nell's favourite books.",
+      "Come even if you have not finished it. Book club members get 10% off their copy. Tea, and biscuits from Hollis's bakery next door."
+    ] },
+  { id: "story-3-oct", type: "story", date: "2026-10-03", start: "10:30", end: "11:15",
+    title: "Owls, moths and other night-time friends", host: "Read by Tomasz",
+    entry: "dropin", room: "corner", age: "Ages 2 to 6",
+    blurb: [STORY_TEXT, "This week: creatures who come out after dark. Everyone makes a paper moth."] },
+  { id: "imogen-hale", type: "author", date: "2026-10-08", start: "19:00", end: "20:15", doors: "18:40",
+    title: "Imogen Hale: The Salt Orchard", subject: "Imogen Hale reads from her new novel", host: "In conversation with Nell",
+    entry: "ticket", price: 6, redeem: true, cap: 40, left: 4, room: "long", age: "Adults",
+    blurb: [
+      "Imogen Hale's first novel, The Glasshouse Year, was the book our customers pressed on each other all last winter. Her second, The Salt Orchard, follows three sisters who inherit a failing apple orchard on the Norfolk coast, and the sea that is slowly taking it.",
+      "Imogen will read two short passages, talk with Nell about writing a family you love and argue with, and take your questions. Afterwards she will sign books. Bring your old copies too."
+    ] },
+  { id: "story-10-oct", type: "story", date: "2026-10-10", start: "10:30", end: "11:15",
+    title: "Small dragons, big feelings", host: "Read by Tomasz",
+    entry: "dropin", room: "corner", age: "Ages 2 to 6",
+    blurb: [STORY_TEXT, "This week: dragons who are cross, shy, or very excited. Everyone makes a dragon mask."] },
+  { id: "dev-okafor", type: "author", date: "2026-10-14", start: "19:00", end: "20:30",
+    title: "Dev Okafor: Weather for Beginners", subject: "Launch of Dev Okafor's first book of poems", host: "With music from Aisling Byrne",
+    entry: "freebook", cap: 45, left: 0, room: "long", age: "Adults",
+    blurb: [
+      "Dev Okafor ran the Sunday poetry nights at the Crown for six years, and half of Ashbury has heard these poems out loud. Now they are a book, and we are hosting the launch.",
+      "Dev will read for about forty minutes, with fiddle tunes from Aisling Byrne in between. Free drinks, and a lot of cheering."
+    ] },
+  { id: "story-17-oct", type: "story", date: "2026-10-17", start: "10:30", end: "11:15",
+    title: "Conkers, leaves and a very lost squirrel", host: "Read by Tomasz",
+    entry: "dropin", room: "corner", age: "Ages 2 to 6",
+    blurb: [STORY_TEXT, "This week: autumn stories. Bring a leaf you like."] },
+  { id: "story-24-oct", type: "story", date: "2026-10-24", start: "10:30", end: "11:15",
+    title: "Under the sea, and under the bed", host: "Read by Tomasz",
+    entry: "dropin", room: "corner", age: "Ages 2 to 6",
+    blurb: [STORY_TEXT, "This week: things that live in deep, dark places. Everyone makes a paper fish."] },
+  { id: "ghosts-of-tanners-lane", type: "author", date: "2026-10-29", start: "19:30", end: "21:00",
+    title: "The Ghosts of Tanner's Lane", subject: "A talk by local historian Ruth Penhallow", host: "Lights low",
+    entry: "ticket", price: 8, extra: "includes a cup of mulled apple", cap: 50, left: 22, room: "long", age: "Adults, and brave teenagers",
+    blurb: [
+      "Ruth Penhallow has spent twenty years in the city archive. She will tell the stories behind the ghosts said to haunt our street, including the one who is supposed to rearrange our poetry shelf at night.",
+      "The lights will be low and the stories are true, or at least written down. A cup of mulled apple is included."
+    ] },
+  { id: "story-31-oct", type: "story", date: "2026-10-31", start: "10:30", end: "11:15",
+    title: "Not-too-scary stories for Halloween", host: "Read by Tomasz", note: "Costumes welcome",
+    entry: "dropin", room: "corner", age: "Ages 2 to 6",
+    blurb: [STORY_TEXT, "This week: friendly ghosts and a pumpkin with hiccups. Costumes very welcome."] }
+];
+
+const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const NUM_WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+
+function dateOf(e) { const [y, m, d] = e.date.split("-").map(Number); return new Date(y, m - 1, d); }
+function dayName(e) { return DAYS[dateOf(e).getDay()]; }
+function dayShort(e) { return dayName(e).slice(0, 3); }
+function dayNum(e) { return dateOf(e).getDate(); }
+function monthName(e) { return MONTHS[dateOf(e).getMonth()]; }
+function monthShort(e) { return monthName(e).slice(0, 3); }
+function longDate(e) { return `${dayName(e)} ${dayNum(e)} ${monthName(e)}`; }
+function shortDate(e) { return `${dayShort(e)} ${dayNum(e)} ${monthShort(e)}`; }
+function t12(t) {
+  let [h, m] = t.split(":").map(Number);
+  const ap = h >= 12 ? "pm" : "am"; h = h % 12 || 12;
+  return m ? `${h}:${String(m).padStart(2, "0")}${ap}` : `${h}${ap}`;
+}
+function timeRange(e) { return e.end ? `${t12(e.start)} to ${t12(e.end)}` : t12(e.start); }
+function daysAway(e) { return Math.round((dateOf(e) - TODAY) / 86400000); }
+function relDay(e) {
+  const n = daysAway(e);
+  if (n === 0) return "Today"; if (n === 1) return "Tomorrow";
+  if (n < 7) return `This ${dayName(e)}`;
+  return n < 14 ? `In ${n} days` : `In ${Math.round(n / 7)} weeks`;
+}
+function byId(id) { return EVENTS.find(e => e.id === id); }
+function upcoming() { return EVENTS.filter(e => daysAway(e) >= 0).sort((a, b) => dateOf(a) - dateOf(b)); }
+function room(e) { return ROOMS[e.room]; }
+function words(n) { return n <= 10 ? NUM_WORDS[n] : String(n); }
+
+/* Entry status: the one fact every screen must answer. */
+function status(e) {
+  if (e.entry === "dropin") return { key: "dropin", price: "Free", how: "Just turn up", short: "Free · just turn up" };
+  const price = e.entry === "ticket" ? `£${e.price}` : "Free";
+  const how = e.entry === "ticket" ? "Ticket needed" : "Book a seat";
+  if (e.left === 0) return { key: "soldout", price, how: "Sold out", short: `${price} · sold out` };
+  if (e.left <= Math.max(5, Math.round(e.cap * 0.15))) return { key: "few", price, how: `${e.left} seats left`, short: `${price} · only ${e.left} left` };
+  return { key: "open", price, how, short: `${price} · ${e.entry === "ticket" ? "book a ticket" : "book a seat"}` };
+}
+function priceLine(e) {
+  if (e.entry === "dropin") return "Free. No need to book.";
+  if (e.entry === "freebook") return `Free, but seats are limited to ${e.cap}, so please book.`;
+  let s = `£${e.price} a ticket`;
+  if (e.redeem) s += `. The £${e.price} comes off the book if you buy a copy on the night.`;
+  else if (e.extra) s += `, ${e.extra}.`;
+  return s;
+}
+function actionLabel(e) {
+  const s = status(e);
+  if (s.key === "soldout") return "Join the waiting list";
+  if (e.entry === "ticket") return `Book a ticket · £${e.price}`;
+  if (e.entry === "freebook") return "Book a free seat";
+  return "Add to my calendar";
+}
+
+/* Add to calendar: a real .ics download. */
+function downloadIcs(e) {
+  const d = e.date.replace(/-/g, "");
+  const f = t => t.replace(":", "") + "00";
+  const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//The Paper Moth//Events//EN", "BEGIN:VEVENT",
+    `UID:${e.id}@paper-moth-prototype`, `DTSTART:${d}T${f(e.start)}`, `DTEND:${d}T${f(e.end || e.start)}`,
+    `SUMMARY:${e.title} (The Paper Moth)`, `LOCATION:${SHOP.name}\\, ${SHOP.street}\\, ${SHOP.town}`,
+    `DESCRIPTION:${priceLine(e)}`, "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
+  a.download = `${e.id}.ics`; a.click();
+}
+
+function toast(msg) {
+  let t = document.getElementById("proto-toast");
+  if (!t) { t = document.createElement("div"); t.id = "proto-toast"; t.setAttribute("role", "status"); document.body.appendChild(t); }
+  t.textContent = msg; t.classList.add("on");
+  clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("on"), 3200);
+}
+function act(id) {
+  const e = byId(id), s = status(e);
+  if (e.entry === "dropin") { downloadIcs(e); return; }
+  if (s.key === "soldout") { toast("Prototype: the waiting-list step is not designed yet."); return; }
+  toast("Prototype: the booking step is not designed yet.");
+}
+function share(id) {
+  const e = byId(id);
+  const data = { title: e.title, text: `${e.title}, ${shortDate(e)} at The Paper Moth`, url: location.href };
+  if (navigator.share) navigator.share(data).catch(() => {});
+  else { navigator.clipboard && navigator.clipboard.writeText(location.href); toast("Link copied."); }
+}
+
+/* Router: #event=<id> shows one event, anything else shows the home page. */
+function go(hash) { location.hash = hash; }
+function route() {
+  const m = location.hash.match(/event=([\w-]+)/);
+  const e = m && byId(m[1]);
+  const app = document.getElementById("app");
+  app.innerHTML = e ? renderEvent(e) : renderHome();
+  document.title = e ? `${e.title} · ${SHOP.name}` : `What's on · ${SHOP.name}`;
+  window.scrollTo(0, 0);
+  if (typeof afterRender === "function") afterRender(e);
+  protoSync(e);
+}
+
+/* Prototype controls: outside the design, used to switch screens and entry states. */
+function protoBar() {
+  const opts = [["imogen-hale", "Ticketed, 4 seats left"], ["ghosts-of-tanners-lane", "Ticketed, seats free"], ["dev-okafor", "Free, sold out"], ["book-club-piranesi", "Free, book a seat"], ["story-3-oct", "Free, just turn up"]];
+  const bar = document.createElement("div");
+  bar.className = "proto";
+  bar.innerHTML = `<span class="proto-tag">Prototype controls, not part of the design</span>
+    <a href="#home" data-p="home">Home page</a>
+    <label>Event page: <select id="proto-sel">${opts.map(([id, l]) => `<option value="${id}">${l}</option>`).join("")}</select></label>`;
+  document.body.prepend(bar);
+  bar.querySelector("select").addEventListener("change", ev => go(`event=${ev.target.value}`));
+  bar.querySelector("select").addEventListener("click", ev => { if (!location.hash.includes("event=")) go(`event=${ev.target.value}`); });
+}
+function protoSync(e) {
+  document.querySelector('.proto [data-p="home"]').classList.toggle("on", !e);
+  const sel = document.getElementById("proto-sel");
+  sel.classList.toggle("on", !!e);
+  if (e && [...sel.options].some(o => o.value === e.id)) sel.value = e.id;
+}
+const PROTO_CSS = `
+.proto{position:relative;z-index:50;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;padding:8px 16px;background:#1d1d1f;color:#d8d8d8;font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.proto-tag{color:#9a9a9a;flex-basis:100%}
+@media (min-width:700px){.proto-tag{flex-basis:auto}}
+.proto a{color:#d8d8d8}.proto a.on{color:#fff;font-weight:700;text-decoration:none}
+.proto select{font:inherit;background:#333;color:#eee;border:1px solid #555;border-radius:3px;padding:2px 4px;max-width:210px}
+.proto select.on{border-color:#aaa;color:#fff}
+#proto-toast{position:fixed;left:50%;bottom:96px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#1d1d1f;color:#fff;font:14px/1.4 ui-monospace,Menlo,monospace;padding:10px 14px;border-radius:6px;transition:.2s;z-index:99;max-width:calc(100vw - 32px)}
+#proto-toast.on{opacity:1;transform:translate(-50%,0)}`;
+document.head.insertAdjacentHTML("beforeend", `<style>${PROTO_CSS}</style>`);
+window.addEventListener("hashchange", route);
+window.addEventListener("DOMContentLoaded", () => { protoBar(); route(); });
+
+</script>
+<script>
+/* One line per event, written by the owners: "In which ..." */
+const IN_WHICH = {
+  "imogen-hale": "Imogen Hale reads from her new novel, talks with Nell, and signs books",
+  "dev-okafor": "Dev Okafor launches his first book of poems, with fiddle tunes in between",
+  "ghosts-of-tanners-lane": "Ruth Penhallow tells the true stories behind the ghosts of our street",
+  "book-club-piranesi": "we talk about Piranesi over tea, whether or not you finished it",
+  story: "Tomasz reads three picture books and everyone makes something to take home"
+};
+const PARTS = {
+  author: { num: "I.", name: "Visiting authors", run: "Visiting authors" },
+  club: { num: "II.", name: "The book club", run: "The book club" },
+  story: { num: "III.", name: "Saturday story hour", run: "Saturday story hour" }
+};
+function howLine(e) {
+  const s = status(e);
+  if (s.key === "dropin") return "free, no booking";
+  if (s.key === "soldout") return "sold out · waiting list open";
+  const price = e.entry === "ticket" ? (e.redeem ? `£${e.price}, off the book` : `£${e.price}`) : "free, book a seat";
+  if (s.key === "few") return `${price} · only ${words(e.left)} seats left`;
+  return e.entry === "ticket" ? `${price} · seats available` : `${price}`;
+}
+function runHead(left, active) {
+  return `<header class="run"><a href="#home">${left}</a>
+    <nav aria-label="Main"><a href="#home" ${active ? 'aria-current="page"' : ""}>Contents</a><a href="#finding">Finding us</a></nav></header>`;
+}
+function entry(e, { showTitle = true } = {}) {
+  const s = status(e);
+  const t = e.type === "author" ? e.title.replace(": ", " · ") : e.type === "club" ? e.subject : e.title;
+  return `<li><a href="#event=${e.id}"><span class="t">${t}</span><span class="dots" aria-hidden="true"></span><span class="d"><span class="wd">${dayShort(e)}</span>${dayNum(e)} ${monthShort(e)}</span></a>
+    <span class="how s-${s.key}">${e.type === "story" ? (e.note ? e.note.toLowerCase() : "free, no booking") : howLine(e)}</span></li>`;
+}
+function finding() {
+  return `<section class="finding" id="finding"><h2>Finding the shop</h2><dl>
+    <dt>Where</dt><dd>${SHOP.street}, ${SHOP.town}. The blue door with the moth on it.</dd>
+    ${SHOP.hours.map(([d, h]) => `<dt>${d}</dt><dd>${h}</dd>`).join("")}
+    <dt>Ring</dt><dd><a href="tel:${SHOP.phone.replace(/\s/g, "")}">${SHOP.phone}</a></dd></dl></section>`;
+}
+function renderHome() {
+  const up = upcoming();
+  const by = t => up.filter(e => e.type === t);
+  const club = by("club"), story = by("story"), author = by("author");
+  const next = up.slice(0, 2);
+  return `<div class="page">
+    ${runHead("The Paper Moth", true)}
+    <div class="title"><div class="moth" aria-hidden="true">❦</div><h1>What's on</h1><p>at The Paper Moth, October 2026</p></div>
+    <section class="note"><h2>From the counter</h2>
+      <p>October is our busy month. Imogen Hale is back with her second novel, and only four seats remain. Dev's launch filled in a day, but people do cancel, so join the list. Story hour carries on every Saturday, rain or not.</p>
+      <p class="sig">Nell</p></section>
+    <p class="next"><b>Coming next</b>${next.map(e => `<a href="#event=${e.id}">${dayName(e)} ${dayNum(e)} ${monthShort(e)}, ${TYPES[e.type].label.toLowerCase()}</a>`).join(" · ")}</p>
+    <section class="part"><h2><span class="num">${PARTS.author.num}</span>${PARTS.author.name}</h2>
+      <p class="terms">Evenings upstairs. Most need a ticket, and the price usually comes off the book.</p>
+      <ol class="toc">${author.map(e => entry(e)).join("")}</ol></section>
+    <section class="part"><h2><span class="num">${PARTS.club.num}</span>${PARTS.club.name}</h2>
+      <p class="terms"><b>First Thursday of the month, 7pm.</b> Free, but there are fourteen chairs, so book one.</p>
+      <ol class="toc">${club.map(e => entry(e)).join("")}</ol></section>
+    <section class="part"><h2><span class="num">${PARTS.story.num}</span>${PARTS.story.name}</h2>
+      <p class="terms"><b>Every Saturday, 10:30am.</b> Free, no booking, just come. For ages 2 to 6, with a grown-up.</p>
+      <ol class="toc">${story.map(e => entry(e)).join("")}</ol></section>
+    <div class="orn" aria-hidden="true">⁂</div>
+    ${finding()}
+    <p class="folio">i</p>
+  </div>`;
+}
+function takePanel(e) {
+  const s = status(e);
+  if (s.key === "dropin") return `<div class="take" id="take"><button class="btn plain" onclick="act('${e.id}')">Add to my calendar</button>
+      <p class="fine">No booking and no ticket. Come a few minutes before ${t12(e.start)}.</p></div>`;
+  if (s.key === "soldout") return `<div class="take" id="take"><form class="wait" onsubmit="event.preventDefault();act('${e.id}')">
+      <label for="wl">All ${e.cap} seats are taken. Leave your email and we will write, in order, if one comes back.</label>
+      <input id="wl" type="email" autocomplete="email" required placeholder="name@example.com"><button class="btn">Join the waiting list</button></form>
+      <p class="fine">People often cancel on the day.</p></div>`;
+  return `<div class="take" id="take"><button class="btn" onclick="act('${e.id}')">${actionLabel(e)}</button>
+      <p class="fine">No printed ticket; your name goes on the list at the door.</p></div>`;
+}
+function seatsText(e) {
+  const s = status(e);
+  if (s.key === "dropin") return `<dd>No booking. There is always room on the rug.</dd>`;
+  if (s.key === "soldout") return `<dd>None left. The waiting list is open.</dd>`;
+  return `<dd class="s-${s.key}">${s.key === "few" ? "Only " : ""}${words(e.left)} of ${e.cap} left</dd>`;
+}
+function renderEvent(e) {
+  const r = room(e), s = status(e), P = PARTS[e.type];
+  const [name, work] = e.type === "author" ? e.title.split(": ") : [e.title, ""];
+  const kicker = e.type === "author" ? "An evening upstairs" : e.type === "club" ? "Book club, first Thursday" : "Story hour, every Saturday";
+  const see = e.type === "author" ? upcoming().filter(x => x.type === "author" && x.id !== e.id)
+    : upcoming().filter(x => x.type === e.type && x.id !== e.id).concat(upcoming().filter(x => x.type === "author")).slice(0, 4);
+  const notes = [r.access];
+  if (e.entry === "ticket") notes.push("Can't come after all? Tell us by noon on the day and we will refund you, or pass your seat to the waiting list.");
+  if (e.type === "story") notes.push("Grown-ups stay for the whole story hour. Siblings of any age are welcome.");
+  notes.push(`Questions: ring the shop on <a href="tel:${SHOP.phone.replace(/\s/g, "")}">${SHOP.phone}</a>.`);
+  return `<div class="page">
+    ${runHead(`${P.num} ${P.run}`, false)}
+    <a class="back" href="#home">← Contents</a>
+    <div class="chap">
+      <p class="kicker">${kicker}</p>
+      <h1>${work ? `${name}<i>${work}</i>` : name}</h1>
+      <p class="argument"><span class="lead-in">In which</span> ${IN_WHICH[e.id] || IN_WHICH[e.type]}.</p>
+    </div>
+    <dl class="facts">
+      <div><dt>When</dt><dd>${longDate(e)}, ${t12(e.start)}<span>until ${t12(e.end)}${e.doors ? `; doors open ${t12(e.doors)}` : ""} · ${relDay(e).toLowerCase()}</span></dd></div>
+      <div><dt>Where</dt><dd>${r.name}<span>${SHOP.name}, ${SHOP.street}, ${SHOP.town}</span></dd></div>
+      <div><dt>Entry</dt><dd>${priceLine(e)}</dd></div>
+      ${s.key === "dropin" ? "" : `<div><dt>Seats</dt>${seatsText(e)}</div>`}
+    </dl>
+    ${takePanel(e)}
+    <div class="minor">${s.key === "dropin" ? "" : `<button onclick="downloadIcs(byId('${e.id}'))">Add to calendar</button>`}<button onclick="share('${e.id}')">Share</button></div>
+    <dl class="facts after"><div><dt>For</dt><dd>${e.age}</dd></div></dl>
+    <div class="body measure">${e.blurb.map(p => `<p>${p}</p>`).join("")}</div>
+    <section class="notes measure"><h2>Notes</h2><ol>${notes.map(n => `<li><span>${n}</span></li>`).join("")}</ol></section>
+    <section class="see"><h2>${e.type === "story" ? "Other Saturdays, and more" : "See also"}</h2><ol class="toc">${see.map(x => entry(x)).join("")}</ol></section>
+    <div class="orn" aria-hidden="true">❦</div>
+  </div>`;
+}
+function afterRender(e) { if (!e && location.hash === "#finding") document.getElementById("finding").scrollIntoView(); }
+</script>
+</body>
+</html>

@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Event Jackets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Gloock&display=swap" rel="stylesheet">
+<style>
+  /* Direction 3: Event jackets.
+     Every event gets a generated book jacket, built from its type (colour
+     and pattern) and its title (type). The owner types a title; the site
+     makes the cover. The answer to "can I get in?" sits on top of every
+     jacket as a coloured band. */
+  :root {
+    --cream: #fbf3e4;
+    --ink: #1d1b1a;
+    --ink-2: #5d5750;
+    --line: #e4d8c3;
+    --reading: #e2562f;  /* tomato */
+    --club: #2f5d46;     /* bottle green */
+    --story: #f0b429;    /* mustard */
+    --night: #3b2f5c;    /* plum, for one-off specials */
+    --ok: #2f7d4f;
+    --warn: #b6461d;
+    --grot: "Bricolage Grotesque", system-ui, sans-serif;
+    --disp: "Gloock", Georgia, serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #e9e1d3; color: var(--ink); font-family: var(--grot); }
+  .intro { max-width: 880px; margin: 0 auto; padding: 32px 16px 8px; }
+  .intro h1 { font-family: var(--disp); font-weight: 400; font-size: 30px; margin: 0 0 6px; }
+  .intro p { margin: 0; color: var(--ink-2); max-width: 62ch; line-height: 1.5; }
+  .stage { display: flex; flex-wrap: wrap; gap: 40px; justify-content: center; padding: 24px 16px 40px; }
+  .screen-label { font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 10px 4px; }
+  .phone {
+    width: 375px; max-width: 100%; height: 800px; overflow-y: auto; position: relative;
+    border-radius: 28px; border: 10px solid var(--ink); background: var(--cream);
+    box-shadow: 0 20px 40px rgba(29,27,26,.25);
+  }
+  @media (max-width: 420px) { .phone { width: 100%; border-width: 6px; } }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+
+  /* Header */
+  .top { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 2px solid var(--ink); background: var(--cream); position: sticky; top: 0; z-index: 4; }
+  .brand { font-family: var(--disp); font-size: 21px; line-height: 1; }
+  .brand small { display: block; font: 600 10px var(--grot); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); margin-top: 3px; }
+  .top a { font-size: 14px; font-weight: 600; }
+
+  /* The jacket */
+  .jacket {
+    --c: var(--reading);
+    position: relative; display: flex; flex-direction: column; color: #fff; text-decoration: none;
+    background: var(--c); border-radius: 2px 8px 8px 2px; overflow: hidden; aspect-ratio: 2 / 3;
+    box-shadow: inset 6px 0 0 rgba(0,0,0,.14), 0 6px 14px rgba(29,27,26,.2);
+  }
+  .jacket.reading { --c: var(--reading); }
+  .jacket.club { --c: var(--club); }
+  .jacket.story { --c: var(--story); color: var(--ink); }
+  .jacket.night { --c: var(--night); }
+  .jacket .pattern { position: absolute; inset: 0; opacity: .22; pointer-events: none; }
+  .jacket.reading .pattern { background: repeating-linear-gradient(0deg, transparent 0 14px, rgba(255,255,255,.8) 14px 16px); }
+  .jacket.club .pattern { background: repeating-linear-gradient(45deg, transparent 0 10px, rgba(255,255,255,.7) 10px 12px); }
+  .jacket.story .pattern { background: radial-gradient(circle, rgba(29,27,26,.8) 2.5px, transparent 3px) 0 0 / 16px 16px; opacity: .12; }
+  .jacket.night .pattern { background: radial-gradient(circle at 70% 20%, rgba(255,255,255,.9) 1px, transparent 1.5px) 0 0 / 23px 19px, radial-gradient(circle, rgba(255,255,255,.7) 1px, transparent 1.5px) 7px 9px / 31px 27px; opacity: .6; }
+  .band { position: relative; z-index: 1; padding: 7px 10px; font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; background: var(--cream); color: var(--ink); display: flex; justify-content: space-between; gap: 6px; }
+  .band.free { background: #d7ecd9; color: #174a2b; }
+  .band.book { background: var(--cream); }
+  .band.few { background: #fde2d3; color: #7c2a0b; }
+  .band.out { background: var(--ink); color: #fff; }
+  .panel { position: relative; z-index: 1; margin: auto 10px 10px; background: var(--cream); color: var(--ink); padding: 10px; border-radius: 2px; }
+  .panel .k { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); }
+  .panel h3 { font: 400 19px/1.05 var(--disp); margin: 3px 0 4px; }
+  .panel .d { font-size: 13px; font-weight: 600; }
+  .jacket .seal { position: relative; z-index: 1; margin: 14px 12px 0; font: 400 15px var(--disp); opacity: .95; }
+
+  .hero { padding: 18px 16px 0; }
+  .hero h1 { font: 400 34px/1 var(--disp); margin: 0 0 8px; }
+  .hero p { margin: 0; font-size: 15px; line-height: 1.45; color: var(--ink-2); }
+
+  .next { display: grid; grid-template-columns: 150px 1fr; gap: 14px; margin: 18px 16px 0; align-items: end; }
+  .next .jacket .panel h3 { font-size: 20px; }
+  .next .say { font-size: 14px; line-height: 1.45; }
+  .next .say .lbl { font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--reading); }
+  .next .say h2 { font: 400 22px/1.1 var(--disp); margin: 4px 0 6px; }
+  .next .say ul { list-style: none; padding: 0; margin: 0 0 10px; }
+  .next .say li { padding: 3px 0; border-bottom: 1px solid var(--line); }
+  .btn { display: inline-block; font: 700 15px var(--grot); padding: 12px 16px; border-radius: 999px; background: var(--ink); color: var(--cream); text-decoration: none; border: 0; cursor: pointer; }
+  .btn.alt { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
+
+  .tabs { display: flex; gap: 6px; padding: 22px 16px 4px; overflow-x: auto; }
+  .tab { flex: none; font: 600 14px var(--grot); padding: 7px 12px; border-radius: 999px; border: 0; background: #efe5d3; color: var(--ink); cursor: pointer; }
+  .tab .sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 5px; vertical-align: 0; }
+  .tab[aria-pressed="true"] { background: var(--ink); color: var(--cream); }
+
+  .shelf-h { display: flex; justify-content: space-between; align-items: baseline; margin: 16px 16px 8px; }
+  .shelf-h h2 { font: 400 22px var(--disp); margin: 0; }
+  .shelf-h span { font-size: 13px; color: var(--ink-2); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 0 16px; }
+  .grid .panel h3 { font-size: 17px; }
+
+  .shelfboard { height: 10px; margin: 16px 10px 0; background: #b58b5a; border-radius: 2px; box-shadow: 0 4px 0 #8a6236; }
+
+  .regular { margin: 26px 16px 0; padding: 14px; border: 2px solid var(--ink); border-radius: 10px; font-size: 14px; line-height: 1.45; }
+  .regular b { font: 400 18px var(--disp); display: block; margin-bottom: 2px; }
+
+  .foot { margin-top: 26px; padding: 18px 16px 22px; background: var(--ink); color: var(--cream); font-size: 14px; line-height: 1.55; }
+  .foot .brand { color: var(--cream); margin-bottom: 8px; }
+  .foot .brand small { color: #c9bfae; }
+
+  /* Event page */
+  .ev-jacket { margin: 16px 16px 0; aspect-ratio: auto; min-height: 330px; border-radius: 2px 12px 12px 2px; }
+  .ev-jacket .panel { margin: auto 14px 14px; padding: 14px; }
+  .ev-jacket .panel h1 { font: 400 34px/1 var(--disp); margin: 4px 0 6px; }
+  .ev-jacket .panel .by { font-size: 17px; font-weight: 600; }
+  .ev-jacket .seal { font-size: 17px; margin-top: 18px; }
+  .ev-jacket .band { font-size: 13px; padding: 10px 14px; }
+
+  .answer { margin: 16px 16px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .answer > div { background: #fffaf1; padding: 12px; }
+  .answer .q { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); }
+  .answer .a { font: 400 20px/1.1 var(--disp); margin-top: 4px; }
+  .answer .s { font-size: 13px; color: var(--ink-2); margin-top: 3px; }
+  .answer a { font-size: 13px; font-weight: 600; }
+  .meter { height: 8px; border-radius: 99px; background: #eadfcb; margin-top: 8px; overflow: hidden; }
+  .meter i { display: block; height: 100%; width: 85%; background: var(--warn); }
+
+  .copy { padding: 18px 16px 0; font-size: 16px; line-height: 1.55; }
+  .copy h2 { font: 400 21px var(--disp); margin: 18px 0 6px; }
+  .copy p { margin: 0 0 10px; }
+  .pull { margin: 16px 0; padding: 14px 16px; background: var(--reading); color: #fff; border-radius: 4px 14px 14px 4px; font: 400 19px/1.3 var(--disp); }
+  .pull small { display: block; font: 600 13px var(--grot); margin-top: 8px; opacity: .9; }
+  .row-actions { display: flex; gap: 8px; flex-wrap: wrap; padding: 6px 16px 0; }
+  .row-actions .btn { font-size: 14px; padding: 9px 14px; }
+
+  .more { margin-top: 24px; }
+  .more .grid { grid-template-columns: 1fr 1fr; }
+
+  .bar { position: sticky; bottom: 0; z-index: 4; display: flex; align-items: center; gap: 12px; padding: 12px 16px 14px; background: var(--cream); border-top: 2px solid var(--ink); }
+  .bar .p { font: 400 26px/1 var(--disp); }
+  .bar .p small { display: block; font: 600 12px var(--grot); color: var(--warn); margin-top: 3px; }
+  .bar .btn { margin-left: auto; background: var(--reading); font-size: 16px; padding: 14px 20px; }
+
+  /* States strip, below the phones */
+  .states { max-width: 880px; margin: 0 auto; padding: 0 16px 64px; }
+  .states h2 { font: 400 22px var(--disp); margin: 0 0 4px; }
+  .states > p { margin: 0 0 14px; color: var(--ink-2); font-size: 15px; max-width: 62ch; line-height: 1.5; }
+  .state-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+  .state { background: var(--cream); border: 2px solid var(--ink); border-radius: 12px; overflow: hidden; }
+  .state .t { padding: 10px 14px; font-size: 13px; font-weight: 700; border-bottom: 1px solid var(--line); }
+  .state .bar { position: static; border-top: 0; }
+  .state .bar .btn.go { background: var(--ok); }
+  .state .bar .btn.wait { background: var(--ink); }
+  .state .bar .p small.ok { color: var(--ok); }
+  .state .bar .p small.dim { color: var(--ink-2); }
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>Direction 3: Event jackets</h1>
+  <p>Each event gets a book jacket that the site draws for it: the colour and pattern come from the event type, the lettering from the title. The band across the top of each jacket says whether you can still get in.</p>
+</div>
+
+<div class="stage">
+
+  <!-- ================= HOME ================= -->
+  <section>
+    <p class="screen-label">Home</p>
+    <div class="phone">
+      <header class="top">
+        <div class="brand">The Crooked Shelf<small>Books &middot; 14 Tanner St</small></div>
+        <a href="#">Opening hours</a>
+      </header>
+
+      <div class="hero">
+        <h1>Things happening in a bookshop.</h1>
+        <p>Nine this October. Most are free. A few will fill up, and we'll tell you which.</p>
+      </div>
+
+      <div class="next">
+        <a class="jacket reading" href="#event">
+          <div class="pattern"></div>
+          <div class="band few"><span>6 seats left</span><span>&pound;5</span></div>
+          <div class="seal">A reading</div>
+          <div class="panel"><div class="k">Thu 1 Oct &middot; 7pm</div><h3>The Salt Orchard</h3><div class="d">Mara Lindqvist</div></div>
+        </a>
+        <div class="say">
+          <div class="lbl">Next up &middot; this Thursday</div>
+          <h2>Mara Lindqvist reads The Salt Orchard</h2>
+          <ul>
+            <li>&pound;5, taken off the book</li>
+            <li>Booking needed</li>
+          </ul>
+          <a class="btn" href="#event">Get a seat</a>
+        </div>
+      </div>
+
+      <div class="tabs" role="group" aria-label="Show">
+        <button class="tab" aria-pressed="true" data-f="all">All</button>
+        <button class="tab" aria-pressed="false" data-f="free"><span class="sw" style="background:#2f7d4f"></span>Free, no booking</button>
+        <button class="tab" aria-pressed="false" data-f="story"><span class="sw" style="background:var(--story)"></span>For kids</button>
+        <button class="tab" aria-pressed="false" data-f="reading"><span class="sw" style="background:var(--reading)"></span>Readings</button>
+        <button class="tab" aria-pressed="false" data-f="club"><span class="sw" style="background:var(--club)"></span>Book club</button>
+      </div>
+
+      <div class="shelf-h"><h2>On the shelf</h2><span>October</span></div>
+      <div class="grid" id="grid">
+        <a class="jacket story" data-t="story free" href="#event">
+          <div class="pattern"></div>
+          <div class="band free"><span>Free &middot; just come</span></div>
+          <div class="seal">Story hour, 3&ndash;7s</div>
+          <div class="panel"><div class="k">Sat 3 Oct &middot; 10:30</div><h3>Dragons Who Hate Bedtime</h3></div>
+        </a>
+        <a class="jacket club" data-t="club" href="#event">
+          <div class="pattern"></div>
+          <div class="band few"><span>4 chairs left</span><span>Free</span></div>
+          <div class="seal">Book club</div>
+          <div class="panel"><div class="k">Wed 7 Oct &middot; 7:30</div><h3>Piranesi</h3><div class="d">Susanna Clarke</div></div>
+        </a>
+        <a class="jacket story" data-t="story free" href="#event">
+          <div class="pattern"></div>
+          <div class="band free"><span>Free &middot; just come</span></div>
+          <div class="seal">Story hour, 3&ndash;7s</div>
+          <div class="panel"><div class="k">Sat 10 Oct &middot; 10:30</div><h3>The Hedgehog's Umbrella</h3></div>
+        </a>
+        <a class="jacket reading" data-t="reading" href="#event">
+          <div class="pattern"></div>
+          <div class="band out"><span>Sold out</span><span>Waitlist</span></div>
+          <div class="seal">Poetry</div>
+          <div class="panel"><div class="k">Thu 15 Oct &middot; 7pm</div><h3>Small Hours</h3><div class="d">Tomas Ekwueme</div></div>
+        </a>
+        <a class="jacket story" data-t="story free" href="#event">
+          <div class="pattern"></div>
+          <div class="band free"><span>Free &middot; just come</span></div>
+          <div class="seal">Story hour, 3&ndash;7s</div>
+          <div class="panel"><div class="k">Sat 17 Oct &middot; 10:30</div><h3>A Very Small Lighthouse</h3></div>
+        </a>
+        <a class="jacket club" data-t="club" href="#event">
+          <div class="pattern"></div>
+          <div class="band book"><span>Book a chair</span><span>Free</span></div>
+          <div class="seal">Book club</div>
+          <div class="panel"><div class="k">Wed 21 Oct &middot; 7:30</div><h3>The Remains of the Day</h3><div class="d">Kazuo Ishiguro</div></div>
+        </a>
+        <a class="jacket reading" data-t="reading free" href="#event">
+          <div class="pattern"></div>
+          <div class="band free"><span>Free &middot; just come</span></div>
+          <div class="seal">A talk, all ages</div>
+          <div class="panel"><div class="k">Sat 24 Oct &middot; 2pm</div><h3>How to Train a Crow</h3><div class="d">Dr. Ines Okafor</div></div>
+        </a>
+        <a class="jacket night" data-t="reading" href="#event">
+          <div class="pattern"></div>
+          <div class="band book"><span>Book a seat</span><span>&pound;6</span></div>
+          <div class="seal">By candlelight</div>
+          <div class="panel"><div class="k">Fri 30 Oct &middot; 8pm</div><h3>Things That Knock</h3><div class="d">Ghost stories</div></div>
+        </a>
+      </div>
+      <div class="shelfboard" aria-hidden="true"></div>
+
+      <div class="regular"><b>Every Saturday, 10:30am</b>Story hour for 3 to 7 year olds. Free, no booking, grown-up required. Sit on the rug or on a beanbag shaped like a frog.</div>
+
+      <footer class="foot">
+        <div class="brand">The Crooked Shelf<small>Independent since 1987</small></div>
+        14 Tanner Street &middot; Tue&ndash;Sun 10&ndash;6<br>
+        Events are in the step-free back room.<br>
+        <a href="#" style="color:var(--cream);font-weight:600">Get one email a month with new events</a>
+      </footer>
+    </div>
+  </section>
+
+  <!-- ================= EVENT ================= -->
+  <section id="event">
+    <p class="screen-label">Event</p>
+    <div class="phone">
+      <header class="top">
+        <a href="#" style="text-decoration:none">&larr; All events</a>
+        <div class="brand" style="font-size:17px">The Crooked Shelf</div>
+      </header>
+
+      <article>
+        <div class="jacket reading ev-jacket">
+          <div class="pattern"></div>
+          <div class="band few"><span>Filling up &middot; 6 of 40 seats left</span></div>
+          <div class="seal">An evening reading</div>
+          <div class="panel">
+            <div class="k">Author reading</div>
+            <h1>The Salt Orchard</h1>
+            <div class="by">Mara Lindqvist</div>
+          </div>
+        </div>
+
+        <div class="answer">
+          <div><div class="q">When</div><div class="a">Thu 1 Oct</div><div class="s">7pm, doors 6:40. About 75 min.</div><a href="#">Add to calendar</a></div>
+          <div><div class="q">Cost</div><div class="a">&pound;5</div><div class="s">Taken off the book if you buy one</div></div>
+          <div><div class="q">Getting in</div><div class="a">Book ahead</div><div class="s">6 seats left</div><div class="meter" aria-hidden="true"><i></i></div></div>
+          <div><div class="q">Where</div><div class="a">Back room</div><div class="s">14 Tanner St. Step-free.</div><a href="#">Map</a></div>
+        </div>
+
+        <div class="copy">
+          <p>On an island that is sinking an inch a year, the Hale family keep planting apple trees. Mara Lindqvist's second novel is about stubbornness, salt water and the price of staying put.</p>
+          <p>She'll read for twenty minutes, then take questions from Ruth and from you. Signed copies on the table by the till.</p>
+          <div class="pull">&ldquo;I cried on the number 9 bus. Bring a hanky.&rdquo;<small>Ruth, who runs the shop</small></div>
+          <h2>Good to know</h2>
+          <p>Tea and apple cake are free. Wine is &pound;3. Can't make it after all? Cancel from your email and we'll give your seat to the next person.</p>
+        </div>
+
+        <div class="row-actions">
+          <a class="btn alt" href="#">Share</a>
+          <a class="btn alt" href="#">Ask a question</a>
+        </div>
+
+        <div class="more">
+          <div class="shelf-h"><h2>Also on the shelf</h2></div>
+          <div class="grid">
+            <a class="jacket club" href="#">
+              <div class="pattern"></div>
+              <div class="band few"><span>4 chairs left</span><span>Free</span></div>
+              <div class="seal">Book club</div>
+              <div class="panel"><div class="k">Wed 7 Oct</div><h3>Piranesi</h3></div>
+            </a>
+            <a class="jacket night" href="#">
+              <div class="pattern"></div>
+              <div class="band book"><span>Book</span><span>&pound;6</span></div>
+              <div class="seal">By candlelight</div>
+              <div class="panel"><div class="k">Fri 30 Oct</div><h3>Things That Knock</h3></div>
+            </a>
+          </div>
+          <div class="shelfboard" aria-hidden="true"></div>
+        </div>
+        <div style="height:24px"></div>
+      </article>
+
+      <div class="bar">
+        <div class="p">&pound;5<small>Only 6 left</small></div>
+        <a class="btn" href="#">Book a seat</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<section class="states">
+  <h2>The booking bar in each state</h2>
+  <p>The owner picks one of three settings for an event. The site then writes the band on the jacket and the bar at the bottom of the event page, so the answer to "how do I get in?" is always in the same place.</p>
+  <div class="state-row">
+    <div class="state"><div class="t">Free, no booking</div><div class="bar"><div class="p">Free<small class="ok">Just turn up</small></div><a class="btn go" href="#">Add to calendar</a></div></div>
+    <div class="state"><div class="t">Booking, seats left</div><div class="bar"><div class="p">&pound;5<small>Only 6 left</small></div><a class="btn" href="#">Book a seat</a></div></div>
+    <div class="state"><div class="t">Sold out</div><div class="bar"><div class="p">Sold out<small class="dim">12 on the waitlist</small></div><a class="btn wait" href="#">Join waitlist</a></div></div>
+  </div>
+</section>
+
+<script>
+  const tabs = document.querySelectorAll('.tab');
+  tabs.forEach(t => t.addEventListener('click', () => {
+    tabs.forEach(x => x.setAttribute('aria-pressed', x === t));
+    const f = t.dataset.f;
+    document.querySelectorAll('#grid .jacket').forEach(j => {
+      j.style.display = (f === 'all' || j.dataset.t.split(' ').includes(f)) ? '' : 'none';
+    });
+  }));
+</script>
+</body>
+</html>

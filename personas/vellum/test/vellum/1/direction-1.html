@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Direction 1: Shop-order checklist</title>
+<style>
+@layer reset, tokens, page, phone, components;
+
+@layer reset {
+  *, *::before, *::after { box-sizing: border-box; }
+  body, h1, h2, h3, p, ul { margin: 0; padding: 0; }
+  ul { list-style: none; }
+  button, input { font: inherit; color: inherit; }
+  button { cursor: pointer; background: none; border: 0; }
+}
+
+@layer tokens {
+  :root {
+    /* raw */
+    --green-8: #17663f; --green-2: #e3f2ea; --green-1: #f2f9f5;
+    --gray-9: #1b1d1f; --gray-7: #4a4f55; --gray-5: #687078; --gray-3: #d5d9dd; --gray-2: #eceef0; --gray-1: #f6f7f8;
+    --amber-2: #fff4d6; --amber-8: #7a5200;
+    /* roles */
+    --surface: #ffffff; --surface-sunk: var(--gray-1);
+    --text: var(--gray-9); --muted: var(--gray-7); --faint: var(--gray-5);
+    --border: var(--gray-3); --hair: var(--gray-2);
+    --accent: var(--green-8); --accent-soft: var(--green-2);
+    --notice: var(--amber-2); --notice-text: var(--amber-8);
+    --focus: #1a5fd0;
+    /* type: system font on purpose, the app should feel like the phone */
+    --font: system-ui, -apple-system, "Segoe UI", Roboto, "Liberation Sans", sans-serif;
+    --body: 1.125rem;   /* 18px */
+    --small: 0.9375rem; /* 15px */
+    --title: 1.5rem;
+    /* space */
+    --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px;
+  }
+}
+
+@layer page {
+  body { font-family: var(--font); background: #e9ebee; color: var(--text); line-height: 1.4; }
+  .intro { max-width: 60rem; margin: 0 auto; padding: 32px 16px 8px; }
+  .intro h1 { font-size: 1.375rem; }
+  .intro p { color: var(--muted); margin-top: 6px; max-width: 62ch; }
+  .screens { display: flex; flex-wrap: wrap; gap: 32px; justify-content: center; padding: 24px 16px 48px; }
+  figure { margin: 0; width: min(390px, 100%); }
+  figcaption { font-size: var(--small); color: var(--muted); margin-top: 12px; max-width: 390px; }
+  figcaption b { color: var(--text); }
+}
+
+@layer phone {
+  .phone {
+    position: relative; width: 100%; height: 844px; max-height: 844px;
+    background: var(--surface); border-radius: 36px; overflow: hidden;
+    box-shadow: 0 0 0 10px #1b1d1f, 0 20px 40px rgba(0,0,0,.25);
+    display: flex; flex-direction: column;
+  }
+  .status { height: 44px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; font-size: 14px; font-weight: 600; }
+}
+
+@layer components {
+  /* header */
+  .top { padding: 4px var(--s4) var(--s3); border-bottom: 1px solid var(--hair); flex: none; }
+  .top-row { display: flex; align-items: baseline; justify-content: space-between; }
+  .top h2 { font-size: var(--title); font-weight: 700; }
+  .count { font-size: var(--small); color: var(--muted); }
+  .presence { margin-top: var(--s3); display: flex; align-items: center; gap: var(--s2); font-size: var(--small); color: var(--notice-text); background: var(--notice); padding: var(--s2) var(--s3); border-radius: 10px; }
+  .presence .dot { width: 8px; height: 8px; border-radius: 50%; background: #d08a00; flex: none; }
+
+  .scroll { flex: 1; overflow-y: auto; }
+
+  /* sections, named the way a UK supermarket is laid out */
+  .section h3 { font-size: var(--small); font-weight: 600; color: var(--muted); text-transform: none; padding: var(--s4) var(--s4) var(--s1); letter-spacing: .01em; }
+
+  .item { display: flex; align-items: center; gap: var(--s3); min-height: 60px; padding: var(--s2) var(--s4); border-bottom: 1px solid var(--hair); }
+  .item .check {
+    flex: none; width: 34px; height: 34px; border-radius: 50%; border: 2.5px solid var(--gray-5);
+    display: grid; place-items: center; position: relative;
+  }
+  .item .check::after { content: ""; position: absolute; inset: -9px; } /* 52px touch area */
+  .item .check svg { width: 18px; height: 18px; opacity: 0; }
+  .item .body { flex: 1; min-width: 0; text-align: left; display: block; padding: 10px 0; }
+  .item .name { font-size: var(--body); }
+  .item .qty { color: var(--muted); }
+  .item .note { display: block; font-size: var(--small); color: var(--muted); margin-top: 2px; }
+  .item .note b { font-weight: 600; color: var(--text); }
+  .who { flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 700; color: #fff; }
+  .who[data-p="M"] { background: #3056a6; } .who[data-p="T"] { background: #8a4b12; }
+  .who[data-p="A"] { background: #17663f; } .who[data-p="S"] { background: #6b3fa0; }
+  .rowbtn { display: flex; align-items: center; gap: var(--s3); flex: 1; min-width: 0; min-height: 48px; }
+
+  .item.done .check { background: var(--accent); border-color: var(--accent); }
+  .item.done .check svg { opacity: 1; }
+  .item.done .name { text-decoration: line-through; color: var(--faint); }
+  .item.done .by { display: block; font-size: var(--small); color: var(--accent); margin-top: 2px; }
+  .item.fresh { background: var(--green-1); }
+
+  .trolley summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; padding: var(--s4); font-size: var(--small); color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--hair); }
+  .trolley summary::-webkit-details-marker { display: none; }
+
+  /* add bar: always at the bottom, where the thumb is */
+  .addbar { flex: none; padding: var(--s3) var(--s4) 28px; border-top: 1px solid var(--hair); background: var(--surface); }
+  .addfield { width: 100%; display: flex; align-items: center; gap: var(--s3); height: 56px; padding: 0 var(--s4); border-radius: 14px; background: var(--surface-sunk); border: 1px solid var(--border); color: var(--muted); font-size: var(--body); }
+  .addfield .plus { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; font-size: 22px; line-height: 1; }
+
+  /* item detail sheet */
+  .dim { position: absolute; inset: 0; background: rgba(20,22,24,.45); }
+  .sheet { position: absolute; left: 0; right: 0; bottom: 0; background: var(--surface); border-radius: 20px 20px 0 0; padding: var(--s3) var(--s4) 28px; }
+  .grab { width: 40px; height: 5px; border-radius: 3px; background: var(--gray-3); margin: 0 auto var(--s4); }
+  .sheet h3 { font-size: 1.375rem; }
+  .asked { display: flex; align-items: center; gap: var(--s3); margin-top: var(--s4); }
+  .asked .who { width: 44px; height: 44px; font-size: 17px; }
+  .asked p { font-size: var(--body); }
+  .asked small { display: block; font-size: var(--small); color: var(--muted); }
+  .quote { margin-top: var(--s4); padding: var(--s3) var(--s4); background: var(--surface-sunk); border-radius: 12px; font-size: var(--body); }
+  .actions { display: grid; gap: var(--s2); margin-top: var(--s5); }
+  .btn { height: 54px; border-radius: 14px; font-size: var(--body); font-weight: 600; display: flex; align-items: center; justify-content: center; gap: var(--s2); }
+  .btn.primary { background: var(--accent); color: #fff; }
+  .btn.secondary { background: var(--accent-soft); color: var(--accent); }
+  .btn.plain { color: var(--muted); }
+
+  /* add sheet */
+  .addsheet { position: absolute; left: 0; right: 0; bottom: 0; top: 96px; background: var(--surface); border-radius: 20px 20px 0 0; display: flex; flex-direction: column; }
+  .addsheet .head { display: flex; align-items: center; justify-content: space-between; padding: var(--s3) var(--s4) 0; }
+  .addsheet .head h3 { font-size: 1.25rem; }
+  .addsheet .head button { color: var(--accent); font-weight: 600; font-size: var(--body); min-height: 44px; padding: 0 4px; }
+  .field { margin: var(--s3) var(--s4) 0; display: flex; align-items: center; height: 58px; border: 2px solid var(--accent); border-radius: 14px; padding: 0 var(--s3) 0 var(--s4); }
+  .field input { flex: 1; border: 0; outline: 0; font-size: 1.25rem; background: transparent; min-width: 0; }
+  .field .go { height: 42px; padding: 0 var(--s4); border-radius: 10px; background: var(--accent); color: #fff; font-weight: 600; }
+  .dupe { margin: var(--s3) var(--s4) 0; padding: var(--s3); border-radius: 12px; background: var(--notice); color: var(--notice-text); font-size: var(--small); display: none; }
+  .dupe.show { display: block; }
+  .dupe b { color: var(--text); }
+  .suggest { margin-top: var(--s2); flex: 1; overflow-y: auto; }
+  .suggest li button { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--s3); min-height: 54px; padding: 0 var(--s4); border-bottom: 1px solid var(--hair); text-align: left; font-size: var(--body); }
+  .suggest li small { color: var(--muted); font-size: var(--small); }
+  .suggest .hint { padding: var(--s3) var(--s4) var(--s1); font-size: var(--small); color: var(--muted); font-weight: 600; }
+  .extras { display: flex; gap: var(--s2); padding: var(--s3) var(--s4); border-top: 1px solid var(--hair); }
+  .chip { height: 44px; padding: 0 var(--s4); border-radius: 22px; border: 1px solid var(--border); font-size: var(--small); display: flex; align-items: center; gap: 6px; }
+  .stepper { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 22px; height: 44px; }
+  .stepper button { width: 44px; height: 44px; font-size: 20px; }
+  .stepper span { min-width: 20px; text-align: center; font-size: var(--small); font-weight: 600; }
+
+  /* drawn keyboard, to show the real state of the screen */
+  .kbd { flex: none; background: #d1d4d9; padding: 8px 4px 30px; display: grid; gap: 10px; }
+  .kbd div { display: flex; justify-content: center; gap: 5px; }
+  .kbd span { background: #fff; border-radius: 5px; height: 42px; flex: 0 0 8.6%; display: grid; place-items: center; font-size: 17px; box-shadow: 0 1px 0 #898a8d; }
+  .kbd .wide { flex-basis: 22%; background: #aeb3bb; font-size: 14px; }
+  .kbd .space { flex-basis: 48%; font-size: 14px; }
+
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+}
+</style>
+</head>
+<body>
+
+<header class="intro">
+  <h1>Direction 1: one checklist, sorted the way the shop is laid out</h1>
+  <p>The expected answer. One list for the whole household, grouped by shop section, with a tick on every row and an add field always at the bottom. Tap a tick on the first screen to try it. The second screen shows what tapping a name opens; that tap is not wired on the first screen. Type in the third screen to see suggestions and the "already on the list" check.</p>
+</header>
+
+<main class="screens">
+
+  <!-- SCREEN 1: THE LIST -->
+  <figure>
+    <div class="phone" id="list">
+      <div class="status"><span>17:42</span><span>●●● 5G ▮</span></div>
+      <div class="top">
+        <div class="top-row"><h2>Shopping list</h2><span class="count" id="left">11 left</span></div>
+        <p class="presence"><span class="dot"></span><span>Tom is shopping too. He just got <b>Eggs</b>.</span></p>
+      </div>
+
+      <div class="scroll">
+        <section class="section"><h3>Fruit and veg</h3><ul>
+          <li class="item"><button class="check" aria-label="Tick" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="body"><span class="name">Bananas</span> <span class="qty">× 6</span></button><span class="who" data-p="M" title="Maureen">M</span></li>
+          <li class="item"><button class="check" aria-label="Tick" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="body"><span class="name">Onions</span> <span class="qty">× 3</span></button><span class="who" data-p="A" title="Anna">A</span></li>
+          <li class="item"><button class="check" aria-label="Tick" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="body"><span class="name">Lemons</span> <span class="qty">× 2</span></button><span class="who" data-p="T" title="Tom">T</span></li>
+        </ul></section>
+
+        <section class="section"><h3>Bread</h3><ul>
+          <li class="item"><button class="check" aria-label="Tick" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="body"><span class="name">Wholemeal loaf</span><span class="note"><b>Maureen:</b> sliced, not the seeded one</span></button><span class="who" data-p="M" title="Maureen">M</span></li>
+        </ul></section>
+
+        <section class="section"><h3>Fridge</h3><ul>
+          <li class="item"><button class="check" aria-label="Tick" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="body"><span class="name">Semi-skimmed milk</span> <span class="qty">2 L × 2</span></button><span class="who" data-p="M" title="Maureen">M</span></li>
+          <li class="item"><button class="check" aria-label="Tick" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="body"><span class="name">Cheese</span><span class="note"><b>Tom:</b> for the lasagne</span></button><span class="who" data-p="T" title="Tom">T</span></li>
+          <li class="item"><button class="check" aria-label="Tick" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="body"><span class="name">Greek yoghurt</span> <span class="qty">500 g</span></button><span class="who" data-p="S" title="Sam">S</span></li>
+          <li class="item done fresh"><button class="check" aria-label="Tick" aria-pressed="true"><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="body"><span class="name">Eggs</span> <span class="qty">× 12</span><span class="by">Tom got these · just now</span></button><span class="who" data-p="A" title="Anna">A</span></li>
+        </ul></section>
+
+        <section class="section"><h3>Tins and dry food</h3><ul>
+          <li class="item"><button class="check" aria-label="Tick" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="body"><span class="name">Chopped tomatoes</span> <span class="qty">× 4 tins</span></button><span class="who" data-p="T" title="Tom">T</span></li>
+          <li class="item"><button class="check" aria-label="Tick" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="body"><span class="name">Lasagne sheets</span></button><span class="who" data-p="T" title="Tom">T</span></li>
+          <li class="item"><button class="check" aria-label="Tick" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="body"><span class="name">Porridge oats</span></button><span class="who" data-p="M" title="Maureen">M</span></li>
+        </ul></section>
+
+        <section class="section"><h3>Household</h3><ul>
+          <li class="item"><button class="check" aria-label="Tick" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="body"><span class="name">Washing-up liquid</span></button><span class="who" data-p="A" title="Anna">A</span></li>
+        </ul></section>
+
+        <details class="trolley">
+          <summary><span>In the trolley</span><span>3 ›</span></summary>
+          <ul>
+            <li class="item done"><button class="check" aria-label="Tick" aria-pressed="true"><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="body"><span class="name">Coffee beans</span><span class="by">Tom got these · 6 min ago</span></button><span class="who" data-p="T" title="Tom">T</span></li>
+            <li class="item done"><button class="check" aria-label="Tick" aria-pressed="true"><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="body"><span class="name">Carrots</span><span class="by">You got these · 9 min ago</span></button><span class="who" data-p="M" title="Maureen">M</span></li>
+            <li class="item done"><button class="check" aria-label="Tick" aria-pressed="true"><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="body"><span class="name">Crisps</span><span class="by">You got these · 11 min ago</span></button><span class="who" data-p="S" title="Sam">S</span></li>
+          </ul>
+        </details>
+      </div>
+
+      <div class="addbar">
+        <button class="addfield"><span class="plus">+</span>Add an item</button>
+      </div>
+    </div>
+    <figcaption><b>The list, while Anna shops.</b> Sections follow the shop. Tom is in another shop at the same time: his tick on Eggs shows on Anna's phone as soon as he makes it, with his name, so she walks past them. The letter on the right says who asked.</figcaption>
+  </figure>
+
+  <!-- SCREEN 2: WHO ASKED -->
+  <figure>
+    <div class="phone">
+      <div class="status"><span>17:43</span><span>●●● 5G ▮</span></div>
+      <div class="top">
+        <div class="top-row"><h2>Shopping list</h2><span class="count">10 left</span></div>
+        <p class="presence"><span class="dot"></span><span>Tom is shopping too. He just got <b>Eggs</b>.</span></p>
+      </div>
+      <div class="scroll">
+        <section class="section"><h3>Fridge</h3><ul>
+          <li class="item"><span class="rowbtn"><span class="check"></span><span class="body"><span class="name">Semi-skimmed milk</span> <span class="qty">2 L × 2</span></span></span><span class="who" data-p="M">M</span></li>
+          <li class="item"><span class="rowbtn"><span class="check"></span><span class="body"><span class="name">Cheese</span><span class="note"><b>Tom:</b> for the lasagne</span></span></span><span class="who" data-p="T">T</span></li>
+        </ul></section>
+      </div>
+      <div class="dim"></div>
+      <div class="sheet" role="dialog" aria-label="Cheese">
+        <div class="grab"></div>
+        <h3>Cheese</h3>
+        <div class="asked">
+          <span class="who" data-p="T">T</span>
+          <p>Tom asked for this<small>Wednesday, 19:10</small></p>
+        </div>
+        <p class="quote">"For the lasagne"</p>
+        <div class="actions">
+          <button class="btn primary">Message Tom: which cheese?</button>
+          <button class="btn secondary">Call Tom</button>
+          <button class="btn plain">Change or remove item</button>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>"Which cheese?"</b> Tap the name of any item. The sheet says who asked and when, shows their note, and offers a ready-made message or a call.</figcaption>
+  </figure>
+
+  <!-- SCREEN 3: ADD -->
+  <figure>
+    <div class="phone" id="add">
+      <div class="status"><span>19:05</span><span>●●● 5G ▮</span></div>
+      <div class="top" style="opacity:.35">
+        <div class="top-row"><h2>Shopping list</h2><span class="count">11 left</span></div>
+      </div>
+      <div class="dim" style="top:44px"></div>
+      <div class="addsheet" role="dialog" aria-label="Add an item">
+        <div class="head"><h3>Add to the list</h3><button>Done</button></div>
+        <form class="field" id="addform" autocomplete="off">
+          <input id="addinput" value="milk" aria-label="Item name">
+          <button class="go" type="submit">Add</button>
+        </form>
+        <p class="dupe" id="dupe"></p>
+        <ul class="suggest" id="suggest"></ul>
+        <div class="extras">
+          <div class="stepper"><button aria-label="Fewer">−</button><span>1</span><button aria-label="More">+</button></div>
+          <button class="chip">Add a note</button>
+        </div>
+        <div class="kbd" aria-hidden="true">
+          <div><span>q</span><span>w</span><span>e</span><span>r</span><span>t</span><span>y</span><span>u</span><span>i</span><span>o</span><span>p</span></div>
+          <div><span>a</span><span>s</span><span>d</span><span>f</span><span>g</span><span>h</span><span>j</span><span>k</span><span>l</span></div>
+          <div><span class="wide">⇧</span><span>z</span><span>x</span><span>c</span><span>v</span><span>b</span><span>n</span><span>m</span><span class="wide">⌫</span></div>
+          <div><span class="wide">123</span><span class="space">space</span><span class="wide">add</span></div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>Adding, while cooking.</b> The keyboard is up at once. Things the household buys often appear as you type, so most items take one word and one tap. If it is already on the list, the app says so and says who added it. Amount and note are optional and sit out of the way.</figcaption>
+  </figure>
+
+</main>
+
+<script>
+// Screen 1: tick an item. Ticked items say who got them.
+document.querySelectorAll('#list .item .check').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const li = btn.closest('.item');
+    const done = li.classList.toggle('done');
+    btn.setAttribute('aria-pressed', done);
+    li.classList.remove('fresh');
+    let by = li.querySelector('.by');
+    if (done && !by) { by = document.createElement('span'); by.className = 'by'; li.querySelector('.body').append(by); }
+    if (by) by.textContent = done ? 'You got it · just now' : '';
+    const left = document.querySelectorAll('#list .section .item:not(.done)').length;
+    document.getElementById('left').textContent = left + ' left';
+  });
+});
+
+// Screen 3: suggestions from what the household has bought before.
+const history = [
+  ['Semi-skimmed milk', 'Maureen, most weeks', true, 'Maureen added it on Tuesday'],
+  ['Oat milk', 'Sam, now and then'],
+  ['Mature cheddar', 'Tom, most weeks'],
+  ['Mozzarella', 'Tom, last month'],
+  ['Cherry tomatoes', 'Anna, most weeks'],
+  ['Chopped tomatoes', 'Tom', true, 'Tom added it on Wednesday'],
+  ['Chicken thighs', 'Anna, most weeks'],
+  ['Mint tea', 'Maureen'],
+  ['Butter', 'everyone'],
+  ['Bananas', 'Maureen', true, 'Maureen added it on Monday'],
+  ['Toilet roll', 'Anna'],
+];
+const input = document.getElementById('addinput');
+const list = document.getElementById('suggest');
+const dupe = document.getElementById('dupe');
+function render() {
+  const q = input.value.trim().toLowerCase();
+  const hits = q ? history.filter(h => h[0].toLowerCase().includes(q)) : history.slice(0, 5);
+  list.innerHTML = '<li class="hint">' + (q ? 'Bought before' : 'Often bought') + '</li>' +
+    hits.map(h => `<li><button type="button"><span>${h[0]}</span><small>${h[1]}</small></button></li>`).join('');
+  // check the list itself, not the history
+  const onList = [...document.querySelectorAll('#list .section .item:not(.done)')].map(li => [li.querySelector('.name').textContent, li.querySelector('.who').title]);
+  const d = q.length > 2 && onList.find(([n]) => n.toLowerCase().includes(q) || q.includes(n.toLowerCase()));
+  dupe.classList.toggle('show', !!d);
+  if (d) dupe.innerHTML = `<b>${d[0]} is already on the list.</b> ${d[1]} added it. Tap "Add" to put one more on anyway.`;
+}
+input.addEventListener('input', render);
+document.getElementById('addform').addEventListener('submit', e => { e.preventDefault(); input.value = ''; render(); });
+render();
+</script>
+</body>
+</html>

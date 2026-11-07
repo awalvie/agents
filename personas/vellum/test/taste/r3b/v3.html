@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280">
+<title>Overview · Halyard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f1f0ea; --white:#fbfaf6; --ink:#111110; --ink-2:#4b4a45; --ink-3:#8b8a82;
+  --cell:#dcdbd3; --line:#d2d1c8;
+  --sig:#ff4a17; --sig-2:#ffb59c;
+  --sans:"Archivo",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-width:1280px;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:13px;line-height:1.4;-webkit-font-smoothing:antialiased;font-variation-settings:"wdth" 100}
+.mono{font-family:var(--mono)}
+.cap{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+
+header{display:flex;align-items:center;height:46px;padding:0 28px;border-bottom:2px solid var(--ink);gap:36px;background:var(--white)}
+.wm{font-weight:800;font-size:17px;letter-spacing:.02em;font-variation-settings:"wdth" 125}
+.wm span{font-weight:400;color:var(--ink-3);font-variation-settings:"wdth" 100;letter-spacing:0;font-size:13px;margin-left:10px}
+nav{display:flex;gap:22px}
+nav a{color:var(--ink-3);text-decoration:none}
+nav a.on{color:var(--ink);font-weight:700}
+header .r{margin-left:auto;display:flex;gap:20px;align-items:center;color:var(--ink-3)}
+header .r b{color:var(--ink);font-weight:500}
+
+.wrap{display:grid;grid-template-columns:400px 1fr;min-height:calc(100vh - 46px)}
+.left{border-right:2px solid var(--ink);display:flex;flex-direction:column}
+
+/* incident block */
+.inc{background:var(--sig);color:var(--ink);padding:22px 28px 24px;position:relative}
+.inc .cap{display:flex;justify-content:space-between;font-weight:700}
+.inc h1{font-size:56px;line-height:.92;font-weight:800;letter-spacing:-.02em;font-variation-settings:"wdth" 70;margin:18px 0 10px}
+.inc .pct{display:flex;align-items:flex-end;gap:14px;margin-bottom:14px}
+.inc .pct b{font-size:88px;line-height:.8;font-weight:300;letter-spacing:-.05em;font-variation-settings:"wdth" 80}
+.inc .pct span{font-size:15px;line-height:1.2;font-weight:600;padding-bottom:4px}
+.inc dl{display:grid;grid-template-columns:78px 1fr;gap:3px 10px;font-size:12.5px;border-top:1.5px solid var(--ink);padding-top:10px}
+.inc dt{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;padding-top:2px}
+.inc dd{font-weight:500}
+.inc .acts{display:flex;gap:8px;margin-top:16px}
+.btn{font-weight:700;font-size:12.5px;padding:9px 14px;text-decoration:none;color:var(--ink);border:1.5px solid var(--ink)}
+.btn.k{background:var(--ink);color:var(--sig)}
+
+/* spend */
+.spend{padding:22px 28px 22px;background:var(--white);flex:1;display:flex;flex-direction:column}
+.spend .top{display:flex;justify-content:space-between;color:var(--ink-3)}
+.money{font-size:64px;font-weight:300;letter-spacing:-.045em;line-height:1;margin:12px 0 6px;font-variation-settings:"wdth" 85}
+.money span{color:var(--ink-3)}
+.pace{font-size:13px;color:var(--ink-2)}
+.pace b{color:var(--ink);font-weight:700}
+.chart{position:relative;height:84px;margin:18px 0 6px;display:flex;align-items:flex-end;gap:3px;border-bottom:1.5px solid var(--ink)}
+.chart i{flex:1;background:var(--ink)}
+.chart i.t{background:var(--ink)}
+.chart i.f{background:transparent;border:1px dashed var(--ink-3);border-bottom:0}
+.chart .bud{position:absolute;left:0;right:0;bottom:88.9%;border-top:1px dashed var(--sig)}
+.chart .bud span{position:absolute;right:0;top:-15px;font-family:var(--mono);font-size:9.5px;color:var(--sig);letter-spacing:.04em}
+.axis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--ink-3)}
+.lines{margin-top:18px;border-top:1.5px solid var(--ink)}
+.ln{display:grid;grid-template-columns:1fr auto 70px;align-items:baseline;padding:7px 0;border-bottom:1px solid var(--line);gap:10px}
+.ln .k{font-weight:600}
+.ln .k small{font-weight:400;color:var(--ink-3);font-family:var(--mono);font-size:10.5px;margin-left:6px}
+.ln .v{font-family:var(--mono);font-size:12.5px}
+.ln .s{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);text-align:right}
+.ln .s.up{color:var(--sig);font-weight:700}
+
+/* right */
+.right{padding:22px 32px 26px}
+.head{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:2px solid var(--ink);padding-bottom:12px}
+.head h2{font-size:42px;line-height:.95;font-weight:800;letter-spacing:-.02em;font-variation-settings:"wdth" 70}
+.head h2 span{font-weight:300;color:var(--ink-3)}
+.head .key{display:flex;gap:16px;color:var(--ink-3);align-items:center}
+.key i{display:inline-block;width:10px;height:12px;background:var(--cell);vertical-align:-2px;margin-right:6px}
+.key i.b1{background:var(--sig-2)} .key i.b2{background:var(--sig)}
+.key i.d{background:var(--cell);box-shadow:inset 0 3px 0 var(--ink)}
+
+.thead{display:grid;grid-template-columns:138px 300px 1fr 30px 46px;gap:0 14px;padding:10px 0 6px;color:var(--ink-3)}
+.hours{display:grid;grid-template-columns:repeat(24,1fr);gap:0 2px;font-family:var(--mono);font-size:9.5px;color:var(--ink-3)}
+.pr{display:grid;grid-template-columns:138px 300px 1fr 30px 46px;gap:0 14px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
+.nm b{display:block;font-weight:700;font-size:13.5px;letter-spacing:-.005em}
+.nm span{font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
+.cells{display:grid;grid-template-columns:repeat(24,1fr);gap:2px;height:22px}
+.cells i{background:var(--cell)}
+.cells i.b1{background:var(--sig-2)}
+.cells i.b2{background:var(--sig)}
+.cells i.d{box-shadow:inset 0 3px 0 var(--ink)}
+.dp{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink-2)}
+.dp .sha{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);margin-right:6px}
+.dp em{font-style:normal;color:var(--ink-3);margin-left:6px}
+.ag,.er{font-family:var(--mono);font-size:11.5px;text-align:right;color:var(--ink-2)}
+.pr.hot{background:linear-gradient(90deg,rgba(255,74,23,.13),rgba(255,74,23,0) 90%);border-bottom:2px solid var(--sig);margin:0 -12px;padding:6px 12px}
+.pr.hot .nm b{color:var(--sig)}
+.pr.hot .er{color:var(--sig);font-weight:700}
+.pr.hot .dp{color:var(--ink)}
+
+/* timeline */
+.tl{margin-top:26px}
+.tl .h{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--ink);padding-bottom:8px}
+.tl .h b{font-size:20px;font-weight:800;font-variation-settings:"wdth" 70;letter-spacing:-.01em}
+.tl .h span{color:var(--ink-3)}
+.track{position:relative;height:46px;margin-top:10px}
+.track::before{content:"";position:absolute;left:0;right:0;top:22px;border-top:1px solid var(--ink)}
+.track i{position:absolute;top:12px;width:2px;height:20px;background:var(--ink);transform:translateX(-1px)}
+.track i.x{background:var(--sig);width:4px;height:30px;top:7px}
+.track i.b{background:transparent;border:1.5px solid var(--ink);width:9px;height:9px;border-radius:50%;top:18px;transform:translateX(-4px)}
+.track .lab{position:absolute;top:38px;font-family:var(--mono);font-size:10px;color:var(--ink-3);transform:translateX(-50%)}
+.track .call{position:absolute;top:-4px;font-size:11px;font-weight:700;color:var(--sig);transform:translateX(-100%);padding-right:8px;white-space:nowrap}
+.foot{display:flex;justify-content:space-between;margin-top:22px;color:var(--ink-3)}
+</style>
+</head>
+<body>
+<header>
+  <div class="wm">HALYARD<span>Northwind Labs</span></div>
+  <nav><a class="on" href="#">Overview</a><a href="#">Projects</a><a href="#">Deploys</a><a href="#">Logs</a><a href="#">Usage</a><a href="#">Team</a></nav>
+  <div class="r"><span class="cap">⌘K Search</span><span class="cap">Sat 26 Sep · <b>14:25 UTC</b></span></div>
+</header>
+
+<div class="wrap">
+  <div class="left">
+    <section class="inc">
+      <div class="cap"><span>● Incident · SEV-2</span><span>Open 23 min</span></div>
+      <h1>checkout-api<br>is failing</h1>
+      <div class="pct"><b>8.4%</b><span>of requests<br>return 5xx</span></div>
+      <dl>
+        <dt>Suspect</dt><dd>Deploy #482 · 9f3c2a1 · marta.k</dd>
+        <dt>Started</dt><dd>14:02, two minutes after release</dd>
+        <dt>On call</dt><dd>Priya S. · acknowledged 14:06</dd>
+      </dl>
+      <div class="acts"><a class="btn k" href="#">Roll back to #481</a><a class="btn" href="#">Logs</a><a class="btn" href="#">Channel</a></div>
+    </section>
+
+    <section class="spend">
+      <div class="top cap"><span>September spend</span><span>Day 26 / 30</span></div>
+      <div class="money">$1,712<span>.40</span></div>
+      <div class="pace">Heading for <b>$1,978</b>. Budget $2,400. August was $1,846.</div>
+      <div class="chart"><i style="height:59%"></i><i style="height:65%"></i><i style="height:69%"></i><i style="height:71%"></i><i style="height:74%"></i><i style="height:68%"></i><i style="height:62%"></i><i style="height:72%"></i><i style="height:74%"></i><i style="height:77%"></i><i style="height:79%"></i><i style="height:66%"></i><i style="height:64%"></i><i style="height:70%"></i><i style="height:75%"></i><i style="height:80%"></i><i style="height:82%"></i><i style="height:81%"></i><i style="height:71%"></i><i style="height:68%"></i><i style="height:78%"></i><i style="height:83%"></i><i style="height:86%"></i><i style="height:84%"></i><i style="height:74%"></i><i style="height:72%" class=t></i><i class="f" style="height:73%"></i><i class="f" style="height:73%"></i><i class="f" style="height:73%"></i><i class="f" style="height:73%"></i><div class="bud"><span>BUDGET PACE $80/DAY</span></div></div>
+      <div class="axis"><span>1</span><span>10</span><span>20</span><span>30</span></div>
+      <div class="lines">
+        <div class="ln"><span class="k">Compute<small>2,946 vCPU·h</small></span><span class="v">$884.10</span><span class="s">52%</span></div>
+        <div class="ln"><span class="k">Bandwidth<small>5.16 TB</small></span><span class="v">$412.75</span><span class="s up">+18% MoM</span></div>
+        <div class="ln"><span class="k">Databases<small>84 GB</small></span><span class="v">$268.00</span><span class="s">16%</span></div>
+        <div class="ln"><span class="k">Builds<small>6,503 min</small></span><span class="v">$97.55</span><span class="s">6%</span></div>
+        <div class="ln"><span class="k">Functions<small>41.2 M</small></span><span class="v">$50.00</span><span class="s">3%</span></div>
+      </div>
+    </section>
+  </div>
+
+  <main class="right">
+    <div class="head">
+      <h2>11 of 12 <span>projects healthy</span></h2>
+      <div class="key cap"><span><i></i>OK</span><span><i class="b1"></i>Degraded</span><span><i class="b2"></i>Failing</span><span><i class="d"></i>Deploy</span></div>
+    </div>
+    <div class="thead cap"><span>Project</span><div class="hours"><span>15</span><span></span><span></span><span>18</span><span></span><span></span><span>21</span><span></span><span></span><span>00</span><span></span><span></span><span>03</span><span></span><span></span><span>06</span><span></span><span></span><span>09</span><span></span><span></span><span>12</span><span></span><span></span></div><span>Latest deploy</span><span style="text-align:right">Age</span><span style="text-align:right">Err</span></div>
+    <div class="pr hot"><div class="nm"><b>checkout-api</b><span>api · eu</span></div><div class="cells"><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c d"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c b1"></i><i class="c b2 d"></i></div><div class="dp"><span class="sha">9f3c2a1</span>Switch payment client to pooled conn…<em>marta.k</em></div><div class="ag">23m</div><div class="er">8.4%</div></div>
+<div class="pr"><div class="nm"><b>storefront-web</b><span>web · eu</span></div><div class="cells"><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c d"></i><i class="c"></i><i class="c"></i><i class="c d"></i></div><div class="dp"><span class="sha">c81e07d</span>Product grid: lazy-load below fold<em>jonas</em></div><div class="ag">1m</div><div class="er">0.02%</div></div>
+<div class="pr"><div class="nm"><b>auth-service</b><span>api · eu</span></div><div class="cells"><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c d"></i><i class="c"></i><i class="c"></i></div><div class="dp"><span class="sha">4a0d9be</span>Rotate JWKS every 12h<em>priya.s</em></div><div class="ag">2h</div><div class="er">0.00%</div></div>
+<div class="pr"><div class="nm"><b>search-indexer</b><span>worker</span></div><div class="cells"><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c d"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i></div><div class="dp"><span class="sha">e2b7714</span>Batch reindex writes in groups of 500<em>dev.r</em></div><div class="ag">5h</div><div class="er">0.01%</div></div>
+<div class="pr"><div class="nm"><b>media-worker</b><span>worker</span></div><div class="cells"><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c b1"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i></div><div class="dp"><span class="sha">71ce3f0</span>Upgrade libvips to 8.16<em>jonas</em></div><div class="ag">1d</div><div class="er">0.10%</div></div>
+<div class="pr"><div class="nm"><b>notifications</b><span>api · us</span></div><div class="cells"><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i></div><div class="dp"><span class="sha">0b5f8c2</span>Retry SMS with exponential backoff<em>marta.k</em></div><div class="ag">1d</div><div class="er">0.03%</div></div>
+<div class="pr"><div class="nm"><b>admin-dashboard</b><span>web · eu</span></div><div class="cells"><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i></div><div class="dp"><span class="sha">d93a61e</span>Orders table: add refund column<em>sanne</em></div><div class="ag">2d</div><div class="er">0.00%</div></div>
+<div class="pr"><div class="nm"><b>marketing-site</b><span>static</span></div><div class="cells"><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i></div><div class="dp"><span class="sha">5e21b09</span>Autumn campaign landing page<em>lea</em></div><div class="ag">3d</div><div class="er">0.00%</div></div>
+<div class="pr"><div class="nm"><b>billing-cron</b><span>cron</span></div><div class="cells"><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i></div><div class="dp"><span class="sha">3c7a0de</span>Skip invoices already marked paid<em>dev.r</em></div><div class="ag">4d</div><div class="er">0.00%</div></div>
+<div class="pr"><div class="nm"><b>docs</b><span>static</span></div><div class="cells"><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="c"></i></div><div class="dp"><span class="sha">a18f2e4</span>Document the new rollback API<em>lea</em></div><div class="ag">6d</div><div class="er">0.00%</div></div>
+    <div class="cap" style="color:var(--ink-3);padding-top:8px">+ 2 more · status-page, feature-flags · all OK</div>
+
+    <section class="tl">
+      <div class="h"><b>Today’s deploys</b><span class="cap">14 shipped · 1 erroring · 1 building · median build 1m 48s</span></div>
+      <div class="track"><i class="ok" style="left:11.24%"></i><i class="ok" style="left:16.18%"></i><i class="ok" style="left:27.87%"></i><i class="ok" style="left:33.71%"></i><i class="ok" style="left:40.90%"></i><i class="ok" style="left:51.24%"></i><i class="ok" style="left:57.30%"></i><i class="ok" style="left:62.92%"></i><i class="ok" style="left:68.54%"></i><i class="ok" style="left:76.63%"></i><i class="ok" style="left:83.15%"></i><i class="ok" style="left:88.31%"></i><i class="x" style="left:94.38%"></i><i class="b" style="left:99.78%"></i>
+        <span class="call" style="left:88.99%">#482 checkout-api</span>
+        <span class="lab" style="left:0">07:00</span><span class="lab" style="left:26.97%">09:00</span><span class="lab" style="left:53.93%">11:00</span><span class="lab" style="left:80.9%">13:00</span><span class="lab" style="left:100%;transform:translateX(-100%)">now</span>
+      </div>
+    </section>
+    <div class="foot cap"><span>Regions · eu-west ● us-east ● ap-south ●</span><span>Halyard platform status · normal</span></div>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Juno Okafor — Designer who builds</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#1d1b22;--soft:#5d5866;--line:rgba(255,255,255,.7);--glass:rgba(255,255,255,.42)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#ece6df;font-family:"Instrument Sans",sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .page{width:390px;margin:0 auto;position:relative;overflow:hidden;background:#f6f1ea}
+  .sky{position:absolute;inset:0;z-index:0;
+    background:
+      radial-gradient(60% 22% at 90% 3%, #ffc9a8 0%, transparent 70%),
+      radial-gradient(55% 20% at 0% 12%, #d9c8ff 0%, transparent 70%),
+      radial-gradient(70% 18% at 100% 34%, #bfe3ff 0%, transparent 70%),
+      radial-gradient(60% 16% at 0% 55%, #ffd6e4 0%, transparent 70%),
+      radial-gradient(70% 18% at 100% 76%, #d4f0dc 0%, transparent 70%),
+      radial-gradient(70% 16% at 10% 96%, #ffcfb0 0%, transparent 70%)}
+  .grain{position:absolute;inset:0;z-index:0;opacity:.35;mix-blend-mode:soft-light;
+    background-image:radial-gradient(rgba(0,0,0,.25) .6px,transparent .8px);background-size:3px 3px}
+  .in{position:relative;z-index:1;padding:14px 16px 28px}
+  .glass{background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(18px) saturate(1.3);-webkit-backdrop-filter:blur(18px) saturate(1.3);box-shadow:0 1px 0 rgba(255,255,255,.8) inset,0 20px 40px -24px rgba(60,40,80,.35)}
+  .serif{font-family:"Instrument Serif",serif;font-weight:400}
+
+  header{display:flex;justify-content:space-between;align-items:center;border-radius:999px;padding:8px 8px 8px 16px}
+  header .n{font-family:"Instrument Serif";font-size:20px;letter-spacing:-.01em}
+  .status{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:500;background:rgba(255,255,255,.7);border-radius:999px;padding:7px 12px}
+  .pulse{width:8px;height:8px;border-radius:50%;background:#2fb36b;box-shadow:0 0 0 4px rgba(47,179,107,.18)}
+
+  .hero{padding:44px 6px 0}
+  .eyebrow{font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+  h1{font-family:"Instrument Serif";font-weight:400;font-size:52px;line-height:.98;letter-spacing:-.025em;margin-top:14px}
+  h1 em{font-style:italic;background:linear-gradient(95deg,#7a5cff,#ff7a6b 60%,#ffb35c);-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:4px}
+  .lede{font-size:15.5px;line-height:1.5;color:var(--soft);margin-top:16px;max-width:320px}
+  .cta{display:flex;gap:8px;margin-top:22px}
+  .b1{background:var(--ink);color:#fff;border-radius:999px;padding:13px 20px;font-size:15px;font-weight:500}
+  .b2{border-radius:999px;padding:13px 18px;font-size:15px;font-weight:500}
+
+  .work{margin-top:44px}
+  .wh{display:flex;justify-content:space-between;align-items:baseline;padding:0 6px 12px}
+  .wh h2{font-family:"Instrument Serif";font-weight:400;font-size:30px;letter-spacing:-.01em}
+  .wh span{font-size:12.5px;color:var(--soft)}
+  .card{display:block;border-radius:28px;padding:10px;margin-bottom:12px}
+  .shot{position:relative;border-radius:20px;overflow:hidden;height:200px}
+  .card.feat .shot{height:300px}
+  .meta{display:flex;justify-content:space-between;align-items:flex-end;padding:12px 8px 4px;gap:12px}
+  .meta h3{font-family:"Instrument Serif";font-weight:400;font-size:25px;line-height:1.05;letter-spacing:-.01em}
+  .meta p{font-size:13px;color:var(--soft);line-height:1.4;margin-top:3px}
+  .meta .k{flex:none;font-size:11.5px;font-weight:500;color:var(--soft);border:1px solid rgba(29,27,34,.14);border-radius:999px;padding:4px 10px;background:rgba(255,255,255,.5)}
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+  .pair .card{margin:0}
+  .pair .shot{height:168px}
+  .pair .meta{display:block;padding:10px 6px 2px}
+  .pair .meta h3{font-size:21px}
+  .pair .meta p{font-size:12px}
+
+  /* Tidal */
+  .s-tidal{background:linear-gradient(180deg,#9fd3ff 0%,#c9e6ff 45%,#ffe0cc 100%)}
+  .s-tidal .sunb{position:absolute;right:40px;top:40px;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,#fff6e8 0%,#ffd1a8 55%,transparent 72%)}
+  .s-tidal .phone{position:absolute;left:50%;top:34px;width:150px;height:300px;margin-left:-75px;border-radius:30px;background:#0f1a2e;padding:6px;box-shadow:0 30px 50px -20px rgba(20,40,90,.55)}
+  .s-tidal .scr{width:100%;height:100%;border-radius:24px;overflow:hidden;background:linear-gradient(180deg,#e9f4ff,#bfdcff);position:relative}
+  .s-tidal .scr .loc{font-size:9.5px;font-weight:600;color:#3b5a86;padding:22px 14px 0;letter-spacing:.04em;text-transform:uppercase}
+  .s-tidal .scr .tmp{font-family:"Instrument Serif";font-size:64px;line-height:1;padding:2px 12px 0;color:#0f1a2e;letter-spacing:-.03em}
+  .s-tidal .scr .say{font-family:"Instrument Serif";font-style:italic;font-size:15px;padding:0 14px;color:#2d4a74}
+  .s-tidal .scr .sea{position:absolute;left:-20px;right:-20px;bottom:0;height:120px;background:linear-gradient(180deg,#5aa6f0,#2c6fd1);border-radius:50% 50% 0 0/26px 26px 0 0}
+  .s-tidal .scr .sea2{bottom:-14px;height:80px;background:linear-gradient(180deg,#2f7ae0,#1f4fb0);border-radius:50% 50% 0 0/20px 20px 0 0}
+  /* Gridwatch */
+  .s-grid{background:linear-gradient(160deg,#fbf7ef,#eef6ea)}
+  .s-grid .panel{position:absolute;left:16px;right:16px;top:18px;bottom:18px;border-radius:14px;background:#fff;box-shadow:0 10px 30px -14px rgba(40,60,40,.3);padding:14px}
+  .s-grid .panel small{font-size:10px;color:#7b8a7b;letter-spacing:.08em;text-transform:uppercase}
+  .s-grid .panel b{display:block;font-family:"Instrument Serif";font-weight:400;font-size:40px;line-height:1;margin-top:2px}
+  .s-grid .panel b i{font-family:"Instrument Sans";font-style:normal;font-size:11px;white-space:nowrap;color:#2fb36b;margin-left:6px;vertical-align:10px}
+  .s-grid svg{position:absolute;left:14px;right:14px;bottom:12px;width:calc(100% - 28px);height:74px}
+  /* Halves */
+  .s-halves{background:linear-gradient(160deg,#ffe3ea,#ffd9c7)}
+  .s-halves .o{position:absolute;top:34px;width:84px;height:84px;border-radius:50%}
+  .s-halves .o1{left:22px;background:radial-gradient(circle at 35% 30%,#ffb3c7,#ff6f91)}
+  .s-halves .o2{left:66px;background:radial-gradient(circle at 35% 30%,#ffd4a8,#ff9a5a);mix-blend-mode:multiply;opacity:.9}
+  /* Forno */
+  .s-forno{background:#f3e3d0}
+  .s-forno .mark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#b5452f}
+  .s-forno .mark b{font-family:"Instrument Serif";font-style:italic;font-weight:400;font-size:42px;line-height:.9;letter-spacing:-.02em}
+  .s-forno .mark span{font-size:8.5px;letter-spacing:.3em;margin-top:8px;font-weight:600}
+  .s-forno .ring{position:absolute;left:50%;top:50%;width:124px;height:124px;margin:-62px 0 0 -62px;border-radius:50%;border:1px solid #b5452f;opacity:.5}
+  /* Quarry */
+  .s-quarry{background:#1d1b22;color:#f6f1ea}
+  .s-quarry b{position:absolute;left:12px;top:0;font-family:"Instrument Sans";font-weight:600;font-size:112px;letter-spacing:-.07em;line-height:1.1}
+  .s-quarry span{position:absolute;left:14px;bottom:12px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;opacity:.6}
+  .s-quarry .g{position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,#7a5cff 0%,transparent 70%);opacity:.8}
+  /* Museum */
+  .s-museum{background:linear-gradient(170deg,#dfe9f3,#f4efe6)}
+  .s-museum .win{position:absolute;left:12px;right:-20px;top:22px;bottom:-10px;background:#fbfaf7;border-radius:10px;box-shadow:0 10px 30px -12px rgba(30,50,80,.35);padding:12px}
+  .s-museum .win i{display:block;width:30px;height:3px;border-radius:2px;background:#d6d0c6;margin-bottom:12px}
+  .s-museum .win h4{font-family:"Instrument Serif";font-weight:400;font-size:24px;line-height:.95;letter-spacing:-.02em}
+  .s-museum .win .im{margin-top:10px;height:56px;border-radius:6px;background:linear-gradient(135deg,#9ec3e0,#e9d2b4)}
+
+  .contact{margin-top:32px;border-radius:32px;padding:30px 22px 24px;text-align:left}
+  .contact h2{font-family:"Instrument Serif";font-weight:400;font-size:42px;line-height:1;letter-spacing:-.02em}
+  .contact h2 em{font-style:italic}
+  .contact .mail{display:block;margin-top:20px;font-family:"Instrument Serif";font-size:27px;border-bottom:1px solid rgba(29,27,34,.3);padding-bottom:6px}
+  .contact dl{display:grid;grid-template-columns:auto 1fr;gap:10px 16px;margin-top:22px;font-size:13.5px}
+  .contact dt{color:var(--soft)}
+  .contact dd{font-weight:500}
+  .contact .row{display:flex;gap:8px;margin-top:22px}
+  .contact .row a{flex:1;text-align:center}
+  .chips{display:flex;justify-content:center;gap:18px;margin-top:22px;font-size:13px;color:var(--soft)}
+  footer{text-align:center;font-size:11.5px;color:var(--soft);margin-top:24px}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="sky"></div><div class="grain"></div>
+  <div class="in">
+    <header class="glass"><a class="n" href="#">Juno Okafor</a><span class="status"><i class="pulse"></i>Booking from 3 Nov</span></header>
+
+    <section class="hero">
+      <p class="eyebrow">Independent designer · engineer · Lisbon</p>
+      <h1>I design products, <em>then build them</em> — so nothing gets lost between the two.</h1>
+      <p class="lede">Apps, identities, dashboards and type for founders and teams who care how things feel. One person, from first sketch to shipped code.</p>
+      <div class="cta"><a class="b1" href="#hi">Email me</a><a class="b2 glass" href="#">Book a 20-min call</a></div>
+    </section>
+
+    <section class="work" id="work">
+      <div class="wh"><h2>Selected work</h2><span>6 projects, 2021–26</span></div>
+
+      <a class="card feat glass" href="#">
+        <div class="shot s-tidal"><div class="sunb"></div>
+          <div class="phone"><div class="scr"><div class="loc">Praia do Tamariz</div><div class="tmp">19°</div><div class="say">Calm. Go now.</div><div class="sea"></div><div class="sea sea2"></div></div></div>
+        </div>
+        <div class="meta"><div><h3>Tidal</h3><p>A swim app that tells you when the sea is kind. Designed and built in SwiftUI.</p></div><span class="k">iOS app</span></div>
+      </a>
+
+      <a class="card glass" href="#">
+        <div class="shot s-grid"><div class="panel"><small>Solar co-op · this month</small><b>41%<i>self-powered · ▲ 6 pts</i></b>
+          <svg viewBox="0 0 300 74" preserveAspectRatio="none"><defs><linearGradient id="gf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fd6a4" stop-opacity=".55"/><stop offset="1" stop-color="#8fd6a4" stop-opacity="0"/></linearGradient></defs><path d="M0 60 C30 55 45 40 70 44 S110 20 140 28 S190 12 220 18 S270 6 300 8 L300 74 L0 74Z" fill="url(#gf)"/><path d="M0 60 C30 55 45 40 70 44 S110 20 140 28 S190 12 220 18 S270 6 300 8" fill="none" stroke="#2fb36b" stroke-width="2"/></svg>
+        </div></div>
+        <div class="meta"><div><h3>Gridwatch</h3><p>Energy data 300 households can read at a glance. Built in D3.</p></div><span class="k">Dashboard</span></div>
+      </a>
+
+      <div class="pair">
+        <a class="card glass" href="#"><div class="shot s-halves"><div class="o o1"></div><div class="o o2"></div></div>
+          <div class="meta"><h3>Halves</h3><p>Shared money, for couples</p></div></a>
+        <a class="card glass" href="#"><div class="shot s-forno"><div class="ring"></div><div class="mark"><b>Forno<br>Rosa</b><span>LISBOA · 1961</span></div></div>
+          <div class="meta"><h3>Forno Rosa</h3><p>Bakery identity</p></div></a>
+      </div>
+      <div class="pair">
+        <a class="card glass" href="#"><div class="shot s-quarry"><div class="g"></div><b>Rg</b><span>9 weights</span></div>
+          <div class="meta"><h3>Quarry</h3><p>My typeface + specimen</p></div></a>
+        <a class="card glass" href="#"><div class="shot s-museum"><div class="win"><i></i><h4>Museum of Salt &amp; Sea</h4><div class="im"></div></div></div>
+          <div class="meta"><h3>Salt &amp; Sea</h3><p>Museum website</p></div></a>
+      </div>
+    </section>
+
+    <section class="contact glass" id="hi">
+      <h2>Have something that should <em>feel right?</em></h2>
+      <a class="mail" href="mailto:hello@junookafor.studio">hello@junookafor.studio →</a>
+      <dl>
+        <dt>Freelance</dt><dd>Booking from 3 November · 1 slot left in 2026</dd>
+        <dt>Full-time</dt><dd>Open to a design-engineer lead role</dd>
+        <dt>Replies</dt><dd>Within one working day</dd>
+      </dl>
+      <div class="row"><a class="b1" href="mailto:hello@junookafor.studio">Email</a><a class="b2 glass" href="#">Book a call</a></div>
+      <div class="chips"><a href="#">LinkedIn</a><a href="#">GitHub</a><a href="#">Read.cv</a></div>
+    </section>
+    <footer>© 2026 Juno Okafor · Designed and built by me</footer>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Iron Session</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d0d0b;
+    --panel:#171714;
+    --line:#2a2a25;
+    --chalk:#efe9dc;
+    --dim:#8f8a7e;
+    --faint:#57544c;
+    --hot:#ff5a1f;
+    --hot-ink:#1a0a03;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:#000}
+  body{
+    width:390px;min-height:844px;margin:0 auto;background:var(--bg);color:var(--chalk);
+    font-family:"Archivo",system-ui,sans-serif;-webkit-font-smoothing:antialiased;
+    position:relative;overflow:hidden;
+  }
+  .display{font-family:"Big Shoulders Display",sans-serif}
+  /* grain */
+  body::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.07;
+    background-image:radial-gradient(#fff 0.6px,transparent 0.7px);background-size:3px 3px}
+
+  .status{display:flex;justify-content:space-between;padding:14px 24px 0;font-size:14px;font-weight:600;color:var(--chalk)}
+  .top{display:flex;justify-content:space-between;align-items:center;padding:18px 20px 0}
+  .session{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);font-weight:600}
+  .session b{color:var(--chalk);font-weight:700}
+  .elapsed{font-family:"Big Shoulders Display";font-weight:800;font-size:18px;letter-spacing:.04em;color:var(--dim)}
+  .ticks{display:flex;gap:4px;padding:12px 20px 0}
+  .ticks i{flex:1;height:4px;background:var(--line);border-radius:1px}
+  .ticks i.done{background:var(--chalk)}
+  .ticks i.now{background:var(--hot)}
+
+  .rest{padding:22px 20px 0;position:relative}
+  .rest-label{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:var(--hot)}
+  .rest-label span:last-child{color:var(--dim);letter-spacing:.1em}
+  .clock{font-family:"Big Shoulders Display";font-weight:900;font-size:208px;line-height:.8;letter-spacing:-.01em;margin:14px 0 0 -6px;color:var(--chalk);font-variant-numeric:tabular-nums}
+  .clock .colon{color:var(--hot)}
+  .drain{height:10px;background:var(--line);margin-top:18px;position:relative}
+  .drain::after{content:"";position:absolute;left:0;top:0;bottom:0;width:80%;background:var(--hot)}
+  .drain-scale{display:flex;justify-content:space-between;font-size:11px;color:var(--faint);margin-top:6px;font-weight:600;letter-spacing:.06em}
+
+  .lift{margin:26px 20px 0;display:flex;justify-content:space-between;align-items:flex-end}
+  .lift h1{font-family:"Big Shoulders Display";font-weight:800;font-size:40px;line-height:.9;text-transform:uppercase;letter-spacing:.01em}
+  .lift .meta{font-size:14px;color:var(--dim);text-align:right;line-height:1.4;font-weight:500}
+  .lift .meta b{color:var(--chalk);font-weight:700}
+
+  .sets{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:14px 20px 0}
+  .set{border:1.5px solid var(--line);padding:9px 8px 8px;min-height:66px}
+  .set small{display:block;white-space:nowrap;font-size:10px;letter-spacing:.14em;color:var(--dim);font-weight:700;text-transform:uppercase}
+  .set strong{display:block;font-family:"Big Shoulders Display";font-weight:800;font-size:24px;margin-top:4px;line-height:1}
+  .set.done{background:var(--panel);border-color:var(--panel)}
+  .set.done small::after{content:" ✓";color:var(--hot)}
+  .set.cur{border-color:var(--hot)}
+  .set.cur small{color:var(--hot)}
+  .set.todo strong{color:#8a857a}
+  .set.todo small{color:#8a857a}
+
+  .next{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 20px 0}
+  .field{background:var(--panel);display:flex;align-items:center;justify-content:space-between;padding:0 6px;height:74px}
+  .step{width:44px;height:56px;display:grid;place-items:center;font-size:26px;color:var(--dim);font-weight:400}
+  .val{text-align:center}
+  .val strong{font-family:"Big Shoulders Display";font-weight:900;font-size:40px;line-height:1;display:block}
+  .val small{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);font-weight:700}
+
+  .cue{margin:16px 20px 0;display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.45;color:var(--dim)}
+  .cue b{color:var(--chalk);font-weight:600}
+  .cue .tag{flex:none;font-size:10px;letter-spacing:.14em;font-weight:700;text-transform:uppercase;border:1px solid var(--faint);color:var(--chalk);padding:3px 6px;margin-top:1px}
+  .cue a{color:var(--chalk);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--faint)}
+
+  .log{position:absolute;left:12px;right:12px;bottom:34px}
+  .btn{display:flex;align-items:center;justify-content:space-between;background:var(--hot);color:var(--hot-ink);height:92px;padding:0 24px}
+  .btn .l{font-family:"Big Shoulders Display";font-weight:900;font-size:40px;text-transform:uppercase;letter-spacing:.01em;line-height:1}
+  .btn .r{text-align:right;font-weight:700;font-size:17px;line-height:1.3}
+  .btn .r span{display:block;font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.7}
+  .upnext{display:flex;justify-content:space-between;font-size:14px;color:var(--dim);padding:10px 12px 0;font-weight:500}
+  .upnext b{color:var(--chalk);font-weight:600}
+  .home{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:var(--chalk);opacity:.5}
+</style>
+</head>
+<body>
+  <div class="status"><span>6:42</span><span>●●● 82%</span></div>
+
+  <div class="top">
+    <div class="session"><b>Push A</b> · Week 6 · Day 2</div>
+    <div class="elapsed">00:34:12</div>
+  </div>
+  <div class="ticks"><i class="done"></i><i class="now"></i><i></i><i></i><i></i></div>
+
+  <section class="rest">
+    <div class="rest-label"><span>Rest</span><span>of 1:30</span></div>
+    <div class="clock display">1<span class="colon">:</span>12</div>
+    <div class="drain"></div>
+  </section>
+
+  <div class="lift">
+    <h1>Bench<br>Press</h1>
+    <div class="meta">Lift 2 of 5<br>Last week <b>77.5 × 6</b></div>
+  </div>
+
+  <div class="sets">
+    <div class="set done"><small>Set 1</small><strong>80×6</strong></div>
+    <div class="set done"><small>Set 2</small><strong>80×6</strong></div>
+    <div class="set cur"><small>Set 3</small><strong>80×6</strong></div>
+    <div class="set todo"><small>Set 4</small><strong>80×6</strong></div>
+  </div>
+
+  <div class="next">
+    <div class="field"><span class="step">−</span><span class="val"><strong>80</strong><small>kg</small></span><span class="step">+</span></div>
+    <div class="field"><span class="step">−</span><span class="val"><strong>6</strong><small>reps</small></span><span class="step">+</span></div>
+  </div>
+
+  <div class="cue"><span class="tag">Form</span><span><b>Blades pinned, feet planted.</b> Bar to low chest, drive up. <a>Demo</a></span></div>
+
+  <div class="log">
+    <div class="btn"><span class="l">Log set 3</span><span class="r">80 kg × 6</span></div>
+    <div class="upnext"><span>Then <b>Overhead Press</b> · 3 × 8</span><span>+2.5 kg vs last week</span></div>
+  </div>
+  <div class="home"></div>
+</body>
+</html>

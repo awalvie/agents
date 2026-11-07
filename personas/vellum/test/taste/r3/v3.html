@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280">
+<title>Overview · Kestrel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f2ee; --card:#ffffff; --ink:#121212; --ink2:#454545; --ink3:#6c6a64; --line:#e2e0da;
+  --hot:#d63a19; --hot2:#b82a0d; --cobalt:#2f3bd6; --cob-soft:#e3e5fb; --ok:#1a7a50; --amber:#a36600;
+  --disp:'Bricolage Grotesque',system-ui,sans-serif; --mono:'DM Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:13px/1.45 var(--disp);-webkit-font-smoothing:antialiased}
+.mono,.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* status field */
+.field{background:var(--hot);color:#fff;position:relative;overflow:hidden}
+.field:after{content:"";position:absolute;inset:0;background:radial-gradient(700px 260px at 88% 0%,#ff7a4a40,transparent 70%),repeating-linear-gradient(90deg,transparent 0 79px,#ffffff10 79px 80px);pointer-events:none}
+.bar{position:relative;z-index:1;height:50px;display:flex;align-items:center;gap:22px;padding:0 28px;border-bottom:1px solid #ffffff30}
+.logo{font-weight:700;font-size:17px;letter-spacing:-.02em;display:flex;gap:8px;align-items:center}
+.logo i{width:16px;height:16px;border:2.5px solid #fff;border-radius:4px;display:block;transform:rotate(45deg) scale(.8)}
+.bar .team{opacity:.8}
+.bar nav{display:flex;gap:4px;margin-left:10px}
+.bar nav a{padding:6px 11px;border-radius:999px;opacity:.85}
+.bar nav a.on{background:#fff;color:var(--hot2);opacity:1;font-weight:600}
+.sp{flex:1}
+.bar .search{height:30px;width:230px;border-radius:999px;background:#ffffff22;display:flex;align-items:center;padding:0 14px;color:#ffe4dc}
+.bar .search kbd{margin-left:auto;font:11px var(--mono)}
+.av{width:28px;height:28px;border-radius:50%;background:#fff;color:var(--hot2);display:grid;place-items:center;font-size:11px;font-weight:700}
+
+.alarm{position:relative;z-index:1;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end;padding:22px 28px 24px}
+.tag{display:inline-flex;align-items:center;gap:8px;font:500 11.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;background:#00000026;padding:4px 10px 4px 8px;border-radius:999px}
+.tag i{width:8px;height:8px;border-radius:50%;background:#fff;animation:blink 1.4s steps(2) infinite}
+@keyframes blink{50%{opacity:.25}}
+.alarm h1{font:600 44px/1.02 var(--disp);font-variation-settings:"opsz" 96;letter-spacing:-.025em;margin-top:12px}
+.alarm h1 span{opacity:.72}
+.alarm p{margin-top:10px;font-size:14px;color:#fff;max-width:640px}
+.alarm p .mono{color:#fff}
+.stats{display:flex;gap:28px;align-items:flex-end}
+.stat .l{font:11px var(--mono);letter-spacing:.06em;text-transform:uppercase;opacity:.8}
+.stat .v{font:600 30px/1 var(--disp);letter-spacing:-.03em;margin-top:4px;font-variant-numeric:tabular-nums}
+.acts{display:flex;flex-direction:column;gap:8px}
+.b{height:36px;padding:0 16px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-weight:600;font-size:13.5px}
+.b.w{background:#fff;color:var(--hot2)}
+.b.o{border:1.5px solid #ffffffa0;color:#fff}
+
+main{display:grid;grid-template-columns:1fr 340px;gap:20px;padding:20px 28px 28px}
+.head{display:flex;align-items:baseline;gap:12px;margin-bottom:10px}
+.head h2{font:600 19px var(--disp);letter-spacing:-.02em}
+.head .c{color:var(--ink3)}
+.head .f{margin-left:auto;display:flex;gap:6px}
+.head .f span{padding:3px 10px;border-radius:999px;border:1px solid var(--line);color:var(--ink2);font-size:12px;background:var(--card)}
+.head .f span.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.t{background:var(--card);border-radius:14px;padding:12px 14px 10px;display:flex;flex-direction:column;gap:6px;min-height:128px;position:relative;box-shadow:0 1px 0 #00000008}
+.t .top{display:flex;align-items:center;gap:8px}
+.t .nm{font-weight:600;font-size:14.5px;letter-spacing:-.015em}
+.t .st{margin-left:auto;font:500 11px var(--mono);display:flex;align-items:center;gap:5px;color:var(--ok)}
+.t .st:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.t:not(.hot):not(.warn):not(.run):not(.off) .st{color:var(--ink3)}
+.t.warn .st:before{background:var(--amber)} .t.run .st:before{background:var(--cobalt)} .t.off .st:before{background:#c9c6be} .t.hot .st:before{background:#fff}
+.t .dep{font-size:12.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t .meta{font:11px var(--mono);color:var(--ink3)}
+.t svg{margin-top:auto;display:block}
+.t .nums{display:flex;justify-content:space-between;font:11px var(--mono);color:var(--ink3)}
+.t .nums b{color:var(--ink);font-weight:500}
+.t.hot{background:var(--hot);color:#fff}
+.t.hot .st,.t.hot .dep,.t.hot .meta,.t.hot .nums,.t.hot .nums b{color:#fff}
+.t.hot .meta,.t.hot .nums{opacity:.85}
+.t.warn{box-shadow:inset 0 0 0 2px var(--amber)}
+.t.warn .st{color:var(--amber)}
+.t.run .st{color:var(--cobalt)}
+.t.off{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
+.t.off .st{color:var(--ink3)}
+.t.off .nm{color:var(--ink3)}
+
+.deploys{margin-top:20px;background:var(--card);border-radius:14px;padding:4px 16px}
+.dl{display:grid;grid-template-columns:120px 1fr 150px 90px 70px;gap:14px;align-items:center;height:38px;border-bottom:1px solid var(--line);white-space:nowrap}
+.dl:last-child{border-bottom:0}
+.dl .p{font-weight:600}
+.dl .m{overflow:hidden;text-overflow:ellipsis;color:var(--ink2)}
+.dl .s{font:11.5px var(--mono);color:var(--ink3)}
+.chip{font:500 11px var(--mono);padding:2px 8px;border-radius:999px;background:#e5f3ec;color:var(--ok);justify-self:start}
+.chip.h{background:#fde4dc;color:var(--hot2)} .chip.a{background:#fbf0d9;color:#8a5a00} .chip.c{background:var(--cob-soft);color:var(--cobalt)}
+.dl .r{text-align:right;font:11.5px var(--mono);color:var(--ink3)}
+
+/* spend */
+.spend{background:var(--ink);color:#fff;border-radius:18px;padding:18px 18px 16px;position:relative;overflow:hidden}
+.spend:before{content:"";position:absolute;right:-60px;top:-80px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,#2f3bd6aa,transparent 70%)}
+.spend .l{font:11px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:#b9b8c9;position:relative}
+.spend .amt{font:600 52px/1 var(--disp);letter-spacing:-.045em;margin-top:8px;position:relative;font-variant-numeric:tabular-nums}
+.spend .amt small{font-size:24px;color:#9a99ad;letter-spacing:-.02em}
+.spend .sub{color:#c9c8d8;margin-top:8px;position:relative}
+.spend .sub b{color:#fff}
+.gauge{position:relative;height:30px;margin-top:16px;border-radius:8px;background:#26262e;overflow:hidden}
+.gauge .f{position:absolute;inset:0 auto 0 0;width:64.2%;background:linear-gradient(90deg,#4553ff,#7f8bff)}
+.gauge .p{position:absolute;top:0;bottom:0;left:64.2%;width:10.7%;background:repeating-linear-gradient(135deg,#7f8bff66 0 4px,transparent 4px 8px)}
+.gauge span{position:absolute;top:7px;font:500 11px var(--mono)}
+.gscale{display:flex;justify-content:space-between;font:11px var(--mono);color:#9a99ad;margin-top:6px}
+.items{margin-top:14px;display:flex;flex-direction:column;gap:9px;position:relative}
+.it{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:baseline}
+.it .n{font-weight:500} .it .n span{color:#9a99ad;font:11px var(--mono);margin-left:6px}
+.it .a{font:500 12.5px var(--mono)}
+.it .track{grid-column:1/-1;height:3px;background:#26262e;border-radius:2px}
+.it .track i{display:block;height:100%;border-radius:2px;background:#7f8bff}
+.it .up{color:#ffb38f;font:11px var(--mono);margin-left:6px}
+
+.side{display:flex;flex-direction:column;gap:16px}
+.box{background:var(--card);border-radius:14px;padding:14px 16px}
+.box h3{font:600 15px var(--disp);letter-spacing:-.015em;margin-bottom:8px}
+.q{display:grid;grid-template-columns:1fr auto;padding:7px 0;border-top:1px solid var(--line)}
+.q span:last-child{font:12px var(--mono);color:var(--ink2)}
+</style>
+</head>
+<body>
+<section class="field">
+  <div class="bar">
+    <div class="logo"><i></i>Kestrel</div>
+    <div class="team">Lanternfish</div>
+    <nav><a class="on">Overview</a><a>Projects</a><a>Deployments</a><a>Logs</a><a>Usage</a><a>Settings</a></nav>
+    <div class="sp"></div>
+    <div class="search">Search <kbd>⌘K</kbd></div>
+    <div class="av">MR</div>
+  </div>
+  <div class="alarm">
+    <div>
+      <span class="tag"><i></i>Incident · SEV-2 · started 14:02</span>
+      <h1>api-gateway is failing in eu-west-1. <span>1 in 15 requests get a 502.</span></h1>
+      <p>It began 4 minutes after deploy <span class="mono">a3f9c21</span> “Bump pg driver to 8.12”. Priya is on it. us-east-1 and every other project are fine.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="l">Running</div><div class="v">18:40</div></div>
+      <div class="stat"><div class="l">5xx rate</div><div class="v">6.8%</div></div>
+      <div class="acts"><a class="b w">Roll back to 4c11e0b</a><a class="b o">Open incident room</a></div>
+    </div>
+  </div>
+</section>
+
+<main>
+  <div>
+    <div class="head"><h2>Projects</h2><span class="c">12 · 1 failing · 1 build failed</span>
+      <div class="f"><span class="on">All</span><span>Needs attention</span><span>Production</span></div></div>
+    <div class="tiles">
+      <div class="t hot"><div class="top"><span class="nm">api-gateway</span><span class="st">Failing</span></div>
+        <div class="dep">Bump pg driver to 8.12</div><div class="meta">a3f9c21 · priya · 22m ago</div>
+        <svg width="100%" height="28" viewBox="0 0 180 28" preserveAspectRatio="none"><path d="M0 22 L20 21 L40 22 L60 21 L80 22 L100 21 L120 22 L130 16 L140 8 L150 5 L160 7 L170 3 L180 4" fill="none" stroke="#fff" stroke-width="2"/></svg>
+        <div class="nums"><span>err <b>6.8%</b></span><span>p95 <b>412ms</b></span></div></div>
+
+      <div class="t warn"><div class="top"><span class="nm">billing-worker</span><span class="st">Build failed</span></div>
+        <div class="dep">Add proration for mid-cycle upgrades</div><div class="meta">77be0d4 · sam · 41m ago</div>
+        <svg width="100%" height="28" viewBox="0 0 180 28" preserveAspectRatio="none"><path d="M0 18 L20 17 L40 19 L60 16 L80 17 L100 15 L120 17 L140 16 L160 17 L180 16 L180 28 L0 28Z" fill="#e3e5fb"/><path d="M0 18 L20 17 L40 19 L60 16 L80 17 L100 15 L120 17 L140 16 L160 17 L180 16" fill="none" stroke="#2f3bd6" stroke-width="1.5"/></svg>
+        <div class="nums"><span>err <b>0.02%</b></span><span>live: <b>e02f5b1</b></span></div></div>
+
+      <div class="t run"><div class="top"><span class="nm">admin-panel</span><span class="st">Building</span></div>
+        <div class="dep">Preview: new refunds table</div><div class="meta">1b6c4de · mara · 1:12</div>
+        <svg width="100%" height="28" viewBox="0 0 180 28" preserveAspectRatio="none"><path d="M0 20 L20 19 L40 20 L60 17 L80 18 L100 19 L120 16 L140 18 L160 19 L180 18 L180 28 L0 28Z" fill="#e3e5fb"/><path d="M0 20 L20 19 L40 20 L60 17 L80 18 L100 19 L120 16 L140 18 L160 19 L180 18" fill="none" stroke="#2f3bd6" stroke-width="1.5"/></svg>
+        <div class="nums"><span>err <b>0%</b></span><span>p95 <b>52ms</b></span></div></div>
+
+      <div class="t"><div class="top"><span class="nm">storefront-web</span><span class="st">Live</span></div>
+        <div class="dep">Lazy-load reviews carousel</div><div class="meta">c19e2aa · jonas · 1h ago</div>
+        <svg width="100%" height="28" viewBox="0 0 180 28" preserveAspectRatio="none"><path d="M0 22 L20 20 L40 18 L60 19 L80 14 L100 12 L120 13 L140 10 L160 9 L180 7 L180 28 L0 28Z" fill="#e3e5fb"/><path d="M0 22 L20 20 L40 18 L60 19 L80 14 L100 12 L120 13 L140 10 L160 9 L180 7" fill="none" stroke="#2f3bd6" stroke-width="1.5"/></svg>
+        <div class="nums"><span>err <b>0.04%</b></span><span>p95 <b>138ms</b></span></div></div>
+
+      <div class="t"><div class="top"><span class="nm">auth-service</span><span class="st">Live</span></div>
+        <div class="dep">Rotate JWKS every 12h</div><div class="meta">4d0a8f1 · priya · 3h ago</div>
+        <svg width="100%" height="28" viewBox="0 0 180 28" preserveAspectRatio="none"><path d="M0 14 L20 15 L40 14 L60 13 L80 14 L100 15 L120 14 L140 13 L160 14 L180 13 L180 28 L0 28Z" fill="#e3e5fb"/><path d="M0 14 L20 15 L40 14 L60 13 L80 14 L100 15 L120 14 L140 13 L160 14 L180 13" fill="none" stroke="#2f3bd6" stroke-width="1.5"/></svg>
+        <div class="nums"><span>err <b>0.01%</b></span><span>p95 <b>41ms</b></span></div></div>
+
+      <div class="t"><div class="top"><span class="nm">search-indexer</span><span class="st">Live</span></div>
+        <div class="dep">Batch writes in chunks of 500</div><div class="meta">e83b7c0 · ade · 5h ago</div>
+        <svg width="100%" height="28" viewBox="0 0 180 28" preserveAspectRatio="none"><path d="M0 26 L10 8 L20 26 L50 26 L60 8 L70 26 L100 26 L110 8 L120 26 L150 26 L160 8 L170 26 L180 26" fill="none" stroke="#2f3bd6" stroke-width="1.5"/></svg>
+        <div class="nums"><span>last run <b>ok</b></span><span>next <b>14:30</b></span></div></div>
+
+      <div class="t"><div class="top"><span class="nm">image-resize</span><span class="st">Live</span></div>
+        <div class="dep">Support AVIF output</div><div class="meta">90af3e2 · jonas · 1d ago</div>
+        <svg width="100%" height="28" viewBox="0 0 180 28" preserveAspectRatio="none"><path d="M0 17 L20 16 L40 14 L60 15 L80 12 L100 14 L120 13 L140 11 L160 13 L180 12 L180 28 L0 28Z" fill="#e3e5fb"/><path d="M0 17 L20 16 L40 14 L60 15 L80 12 L100 14 L120 13 L140 11 L160 13 L180 12" fill="none" stroke="#2f3bd6" stroke-width="1.5"/></svg>
+        <div class="nums"><span>err <b>0.11%</b></span><span>p95 <b>220ms</b></span></div></div>
+
+      <div class="t"><div class="top"><span class="nm">notify</span><span class="st">Live</span></div>
+        <div class="dep">Retry SMS with backoff</div><div class="meta">3e1d07a · mara · 1d ago</div>
+        <svg width="100%" height="28" viewBox="0 0 180 28" preserveAspectRatio="none"><path d="M0 20 L20 19 L40 21 L60 18 L80 19 L100 20 L120 18 L140 19 L160 17 L180 18 L180 28 L0 28Z" fill="#e3e5fb"/><path d="M0 20 L20 19 L40 21 L60 18 L80 19 L100 20 L120 18 L140 19 L160 17 L180 18" fill="none" stroke="#2f3bd6" stroke-width="1.5"/></svg>
+        <div class="nums"><span>err <b>0%</b></span><span>p95 <b>74ms</b></span></div></div>
+
+      <div class="t"><div class="top"><span class="nm">docs-site</span><span class="st">Live</span></div>
+        <div class="dep">Fix broken anchors in API reference</div><div class="meta">5f2e991 · ade · 2d ago</div>
+        <svg width="100%" height="28" viewBox="0 0 180 28" preserveAspectRatio="none"><path d="M0 18 L20 17 L40 19 L60 16 L80 17 L100 18 L120 16 L140 17 L160 16 L180 18 L180 28 L0 28Z" fill="#e3e5fb"/><path d="M0 18 L20 17 L40 19 L60 16 L80 17 L100 18 L120 16 L140 17 L160 16 L180 18" fill="none" stroke="#2f3bd6" stroke-width="1.5"/></svg>
+        <div class="nums"><span>err <b>0%</b></span><span>p95 <b>24ms</b></span></div></div>
+
+      <div class="t"><div class="top"><span class="nm">marketing-site</span><span class="st">Live</span></div>
+        <div class="dep">Autumn pricing page</div><div class="meta">b7d21fe · jonas · 3d ago</div>
+        <svg width="100%" height="28" viewBox="0 0 180 28" preserveAspectRatio="none"><path d="M0 19 L20 18 L40 16 L60 17 L80 15 L100 16 L120 14 L140 15 L160 13 L180 14 L180 28 L0 28Z" fill="#e3e5fb"/><path d="M0 19 L20 18 L40 16 L60 17 L80 15 L100 16 L120 14 L140 15 L160 13 L180 14" fill="none" stroke="#2f3bd6" stroke-width="1.5"/></svg>
+        <div class="nums"><span>err <b>0%</b></span><span>p95 <b>31ms</b></span></div></div>
+
+      <div class="t"><div class="top"><span class="nm">feature-flags</span><span class="st">Live</span></div>
+        <div class="dep">Cache flag sets for 30s</div><div class="meta">6a90c3d · priya · 4d ago</div>
+        <svg width="100%" height="28" viewBox="0 0 180 28" preserveAspectRatio="none"><path d="M0 15 L20 16 L40 15 L60 14 L80 15 L100 16 L120 15 L140 14 L160 15 L180 15 L180 28 L0 28Z" fill="#e3e5fb"/><path d="M0 15 L20 16 L40 15 L60 14 L80 15 L100 16 L120 15 L140 14 L160 15 L180 15" fill="none" stroke="#2f3bd6" stroke-width="1.5"/></svg>
+        <div class="nums"><span>err <b>0%</b></span><span>p95 <b>9ms</b></span></div></div>
+
+      <div class="t off"><div class="top"><span class="nm">legacy-cron</span><span class="st">Paused</span></div>
+        <div class="dep">Pause nightly export</div><div class="meta">0c7a113 · sam · 9d ago</div>
+        <svg width="100%" height="28" viewBox="0 0 180 28" preserveAspectRatio="none"><path d="M0 26 L180 26" fill="none" stroke="#c9c6be" stroke-width="1.5" stroke-dasharray="3 3"/></svg>
+        <div class="nums"><span>no traffic</span><span></span></div></div>
+    </div>
+
+    <div class="head" style="margin:22px 0 10px"><h2>Latest deployments</h2><span class="c">23 today</span></div>
+    <div class="deploys" style="margin-top:0">
+      <div class="dl"><span class="p">admin-panel</span><span class="m">Preview: new refunds table · feat/refunds</span><span class="s">1b6c4de · mara</span><span class="chip c">Building</span><span class="r">14:08</span></div>
+      <div class="dl"><span class="p">api-gateway</span><span class="m">Bump pg driver to 8.12 · main</span><span class="s">a3f9c21 · priya</span><span class="chip h">Suspect</span><span class="r">13:58</span></div>
+      <div class="dl"><span class="p">billing-worker</span><span class="m">Add proration for mid-cycle upgrades · feat/proration</span><span class="s">77be0d4 · sam</span><span class="chip a">Failed</span><span class="r">13:39</span></div>
+      <div class="dl"><span class="p">storefront-web</span><span class="m">Lazy-load reviews carousel · main</span><span class="s">c19e2aa · jonas</span><span class="chip">Live</span><span class="r">13:18</span></div>
+    </div>
+  </div>
+
+  <aside class="side">
+    <section class="spend">
+      <div class="l">Spend · September · 4 days left</div>
+      <div class="amt">$1,284<small>.40</small></div>
+      <div class="sub">Heading for <b>$1,498</b> of your <b>$2,000</b> budget.</div>
+      <div class="gauge"><div class="f"></div><div class="p"></div><span style="left:10px">spent</span><span style="left:calc(74.9% + 8px);color:#9a99ad">$502 left</span></div>
+      <div class="gscale"><span>$0</span><span>$1,000</span><span>$2,000</span></div>
+      <div class="items">
+        <div class="it"><span class="n">Compute<span>2,418 vCPU-h</span><span class="up">+18%</span></span><span class="a">$612.10</span><div class="track"><i style="width:100%"></i></div></div>
+        <div class="it"><span class="n">Bandwidth<span>3.9 TB</span></span><span class="a">$351.00</span><div class="track"><i style="width:57%"></i></div></div>
+        <div class="it"><span class="n">Functions<span>88.4M calls</span></span><span class="a">$176.80</span><div class="track"><i style="width:29%"></i></div></div>
+        <div class="it"><span class="n">Build minutes<span>6,120</span></span><span class="a">$91.80</span><div class="track"><i style="width:15%"></i></div></div>
+        <div class="it"><span class="n">Storage<span>412 GB</span></span><span class="a">$52.70</span><div class="track"><i style="width:9%"></i></div></div>
+      </div>
+    </section>
+    <section class="box">
+      <h3>Today</h3>
+      <div class="q"><span>Deploys</span><span>23 · 2 failed</span></div>
+      <div class="q"><span>Requests, 24h</span><span>41.2M</span></div>
+      <div class="q"><span>Median build time</span><span>1m 48s</span></div>
+      <div class="q"><span>On call</span><span>priya · until 18:00</span></div>
+    </section>
+  </aside>
+</main>
+</body>
+</html>

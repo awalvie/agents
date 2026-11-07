@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What's on · The Paper Moth</title>
+<!-- Direction 1: The listings. One reading typeface, a chronological list, entry status in words on every row. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400..750;1,7..72,400..600&display=swap" rel="stylesheet">
+<style>
+@layer reset, tokens, base, layout, components;
+
+@layer reset {
+  *, *::before, *::after { box-sizing: border-box; }
+  body, h1, h2, h3, p, dl, dd, ul { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  img, svg { display: block; }
+  button, input { font: inherit; color: inherit; }
+}
+
+@layer tokens {
+  :root {
+    /* raw */
+    --cream: #FAF5EA; --cream-2: #F2EADB; --white: #FFFDF8;
+    --ink-900: #261E19; --ink-600: #65584D; --ink-300: #D9CCB7;
+    --rust: #A63A22; --rust-dark: #86301C;
+    --teal: #1E5C58; --plum: #6B3A63; --ochre: #8A5E08; --moss: #2F6437;
+    /* roles */
+    --bg: var(--cream); --surface: var(--white); --sunk: var(--cream-2);
+    --text: var(--ink-900); --muted: var(--ink-600); --line: var(--ink-300);
+    --action: var(--rust); --action-hover: var(--rust-dark); --urgent: var(--rust);
+    --free: var(--moss); --focus: #1A56C4;
+    --t-author: var(--teal); --t-club: var(--plum); --t-story: var(--ochre);
+    /* type: one family, sizes chosen by hand, body kept large for phones */
+    --font: "Literata", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    --fs-small: 0.84rem; --fs-body: 1.1875rem; --fs-lead: 1.3rem;
+    --fs-h3: 1.3rem; --fs-h2: 1.05rem; --fs-h1: clamp(2rem, 1.6rem + 2vw, 3rem);
+    /* space: inside a group < between siblings < between sections */
+    --s1: 0.25rem; --s2: 0.5rem; --s3: 0.75rem; --s4: 1rem; --s5: 1.5rem; --s6: 2.25rem; --s7: 3.5rem;
+    --radius: 6px; --measure: 38rem;
+  }
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: var(--fs-body); line-height: 1.5; font-optical-sizing: auto; }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  h1, h2, h3 { line-height: 1.15; text-wrap: balance; }
+}
+
+@layer layout {
+  .wrap { max-width: 68rem; margin-inline: auto; padding-inline: 16px; }
+  @media (min-width: 700px) { .wrap { padding-inline: 32px; } }
+  .home-grid { display: grid; gap: var(--s7); }
+  .home-grid > *, .ev-grid > * { min-width: 0; }
+  @media (min-width: 960px) { .home-grid { grid-template-columns: minmax(0, 1fr) 20rem; gap: var(--s7); align-items: start; } }
+  .ev-grid { display: grid; gap: var(--s6); }
+  @media (min-width: 960px) { .ev-grid { grid-template-columns: minmax(0, 1fr) 22rem; gap: var(--s7); align-items: start; } .ev-grid .seat { position: sticky; top: var(--s5); } }
+}
+
+@layer components {
+  /* header: conventional furniture, two visible links */
+  .top { border-bottom: 1px solid var(--line); background: var(--bg); }
+  .top .wrap { display: flex; align-items: center; justify-content: space-between; gap: var(--s4); min-height: 64px; }
+  .brand { display: flex; align-items: center; gap: var(--s2); text-decoration: none; font-weight: 650; font-size: 1.15rem; letter-spacing: -0.01em; }
+  .brand svg { width: 30px; height: 22px; color: var(--rust); }
+  .brand small { display: block; font-weight: 400; font-size: 0.78rem; color: var(--muted); letter-spacing: 0; }
+  .nav { display: flex; gap: var(--s4); font-size: 1rem; white-space: nowrap; }
+  @media (max-width: 440px) { .brand small { display: none; } }
+  .nav a { text-decoration: none; padding-block: var(--s2); }
+  .nav a[aria-current] { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+
+  /* home intro */
+  .intro { padding-block: var(--s6) var(--s5); max-width: var(--measure); }
+  .intro h1 { font-size: var(--fs-h1); font-weight: 700; letter-spacing: -0.02em; }
+  .intro p { margin-top: var(--s3); color: var(--muted); font-size: 1.1rem; }
+
+  .filters { display: flex; gap: var(--s2); overflow-x: auto; padding-bottom: var(--s2); margin-bottom: var(--s4); scrollbar-width: none; }
+  .filters button { flex: none; border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 0.4rem 0.9rem; font-size: 0.95rem; cursor: pointer; min-height: 40px; }
+  .filters button[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+  .week + .week { margin-top: var(--s6); }
+  .week h2 { font-size: var(--fs-h2); font-weight: 600; color: var(--muted); padding-bottom: var(--s2); border-bottom: 1px solid var(--line); }
+  .week h2 span { font-weight: 400; }
+
+  /* one event row: date, what, when, and the entry answer in words */
+  .ev { display: grid; grid-template-columns: 3.4rem 1fr; gap: var(--s4); padding-block: var(--s4); border-bottom: 1px solid var(--line); text-decoration: none; position: relative; }
+  .ev:hover h3 { text-decoration: underline; text-underline-offset: 3px; }
+  .ev-date { text-align: center; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); padding: var(--s2) 0; line-height: 1.05; align-self: start; }
+  .ev-date .dow { display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .ev-date .dn { display: block; font-size: 1.6rem; font-weight: 700; margin-block: 2px; }
+  .ev-date .mon { display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .ev-kind { font-size: var(--fs-small); color: var(--muted); display: flex; align-items: center; gap: var(--s2); }
+  .ev-kind i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); flex: none; }
+  [data-type="author"] { --c: var(--t-author); } [data-type="club"] { --c: var(--t-club); } [data-type="story"] { --c: var(--t-story); }
+  .ev h3 { font-size: var(--fs-h3); font-weight: 650; margin-top: var(--s1); }
+  .ev-sub { font-size: 1rem; color: var(--muted); margin-top: 2px; }
+  .entry { display: inline-flex; align-items: center; gap: 6px; margin-top: var(--s2); font-size: 1rem; font-weight: 600; }
+  .entry svg { width: 16px; height: 16px; flex: none; }
+  .s-dropin { color: var(--free); } .s-few { color: var(--urgent); } .s-soldout { color: var(--muted); font-weight: 500; } .s-open { color: var(--text); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .empty { padding: var(--s5) 0; color: var(--muted); }
+
+  .aside h2 { font-size: 1.2rem; font-weight: 650; margin-bottom: var(--s3); }
+  .aside section + section { margin-top: var(--s6); }
+  .aside dl { display: grid; grid-template-columns: auto 1fr; gap: var(--s2) var(--s4); font-size: 1rem; }
+  .aside dt { color: var(--muted); }
+  .how li { display: grid; grid-template-columns: 1.2rem 1fr; gap: var(--s2); font-size: 1rem; }
+  .how li + li { margin-top: var(--s3); }
+  .how svg { width: 16px; height: 16px; margin-top: 5px; }
+  .how b { font-weight: 650; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: var(--s5); }
+
+  .foot { margin-top: var(--s7); border-top: 1px solid var(--line); padding-block: var(--s5) var(--s7); color: var(--muted); font-size: 0.95rem; }
+
+  /* event page */
+  .back { display: inline-block; margin-top: var(--s4); font-size: 1rem; padding-block: var(--s2); }
+  .ev-head { padding-block: var(--s4) var(--s5); max-width: var(--measure); }
+  .ev-head .ev-kind { font-size: 0.95rem; }
+  .ev-head h1 { font-size: var(--fs-h1); font-weight: 700; letter-spacing: -0.02em; margin-top: var(--s2); }
+  .ev-head .lead { font-size: var(--fs-lead); margin-top: var(--s3); line-height: 1.35; }
+  .ev-head .host { color: var(--muted); margin-top: var(--s1); font-size: 1.05rem; }
+
+  .facts { display: grid; gap: var(--s4); padding-block: var(--s5); border-block: 1px solid var(--line); }
+  .facts div { display: grid; grid-template-columns: 5rem 1fr; gap: var(--s3); }
+  .facts dt { font-size: var(--fs-small); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding-top: 4px; }
+  .facts dd b { font-weight: 650; display: block; }
+  .facts dd span { color: var(--muted); display: block; font-size: 1rem; }
+
+  .seat h2 { font-size: 1.35rem; font-weight: 700; }
+  .seat .sub { margin-top: var(--s2); font-size: 1rem; color: var(--muted); }
+  .meter { height: 8px; border-radius: 99px; background: var(--sunk); margin-top: var(--s3); overflow: hidden; }
+  .meter i { display: block; height: 100%; background: var(--urgent); border-radius: 99px; }
+  .seat.s-open .meter i { background: var(--text); }
+  .btn { display: flex; align-items: center; justify-content: center; gap: var(--s2); width: 100%; min-height: 52px; margin-top: var(--s4); border: 0; border-radius: var(--radius); background: var(--action); color: #fff; font-weight: 650; font-size: 1.1rem; cursor: pointer; text-decoration: none; padding-inline: var(--s4); }
+  .btn:hover { background: var(--action-hover); }
+  .btn.quiet { background: transparent; color: var(--text); border: 1.5px solid var(--text); }
+  .btn.quiet:hover { background: var(--sunk); }
+  .fine { margin-top: var(--s3); font-size: 0.92rem; color: var(--muted); }
+  .fine li + li { margin-top: var(--s1); }
+  .wait { display: grid; gap: var(--s2); margin-top: var(--s4); }
+  .wait label { font-size: 0.95rem; }
+  .wait input { width: 100%; min-width: 0; min-height: 48px; border: 1.5px solid var(--ink-600); border-radius: var(--radius); padding-inline: var(--s3); background: var(--white); }
+  .wait .btn { margin-top: var(--s1); }
+  .minor { display: flex; gap: var(--s4); margin-top: var(--s4); font-size: 1rem; }
+  .minor button { background: none; border: 0; padding: var(--s2) 0; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+  .prose { max-width: var(--measure); margin-top: var(--s6); }
+  .prose h2, .good h2, .more h2 { font-size: 1.2rem; font-weight: 650; margin-bottom: var(--s3); }
+  .prose p + p { margin-top: var(--s4); }
+  .good { max-width: var(--measure); margin-top: var(--s6); }
+  .good dl { display: grid; gap: var(--s4); font-size: 1.05rem; }
+  .good dt { font-weight: 650; }
+  .more { margin-top: var(--s7); }
+
+  /* phone: the answer follows you once the seat panel scrolls away */
+  .dock { position: fixed; inset: auto 0 0 0; z-index: 40; background: var(--surface); border-top: 1px solid var(--line); padding: var(--s3) 16px calc(var(--s3) + env(safe-area-inset-bottom)); display: flex; align-items: center; gap: var(--s4); transform: translateY(110%); transition: transform .2s; }
+  .dock.on { transform: none; }
+  .dock p { flex: 1; font-size: 0.95rem; line-height: 1.3; }
+  .dock p b { display: block; font-size: 1rem; }
+  .dock .btn { width: auto; margin: 0; min-height: 48px; font-size: 1rem; }
+  @media (min-width: 960px) { .dock { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .dock { transition: none; } }
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="dock" id="dock" aria-hidden="true"></div>
+<script>
+/* ---------- Shared content and helpers (identical in all three directions) ---------- */
+/* The prototype pretends today is Saturday 26 September 2026. */
+const TODAY = new Date(2026, 8, 26);
+
+const SHOP = {
+  name: "The Paper Moth",
+  street: "41 Tanner's Lane",
+  town: "Ashbury",
+  phone: "01632 960 418",
+  hours: [["Monday to Saturday", "9:30am to 6pm"], ["Sunday", "11am to 4pm"]],
+  owners: "Nell and Tomasz"
+};
+
+const TYPES = {
+  author: { label: "Author event", plural: "Author events" },
+  club:   { label: "Book club",    plural: "Book club" },
+  story:  { label: "Story hour",   plural: "Story hours" }
+};
+
+const ROOMS = {
+  long: { name: "The Long Room, upstairs", access: "The Long Room is up 16 stairs and there is no lift. If stairs are hard for you, ring us and we will keep you a seat downstairs by the door, with the talk on a speaker." },
+  corner: { name: "The children's corner, ground floor", access: "Ground floor, step-free from the street. Buggies can park by the till." }
+};
+
+const STORY_TEXT = "Tomasz reads three picture books and then everyone makes something to take home. For children aged 2 to 6, with a grown-up. We start at 10:30 sharp and finish by 11:15.";
+
+const EVENTS = [
+  { id: "book-club-piranesi", type: "club", date: "2026-10-01", start: "19:00", end: "20:30",
+    title: "Book club: Piranesi", subject: "Piranesi by Susanna Clarke", host: "Hosted by Nell",
+    entry: "freebook", cap: 14, left: 5, room: "long", age: "Adults",
+    blurb: [
+      "This month we are reading Piranesi by Susanna Clarke: a man lives in a house of endless halls and tides, and keeps careful notes on everything he finds. It is short, strange, and one of Nell's favourite books.",
+      "Come even if you have not finished it. Book club members get 10% off their copy. Tea, and biscuits from Hollis's bakery next door."
+    ] },
+  { id: "story-3-oct", type: "story", date: "2026-10-03", start: "10:30", end: "11:15",
+    title: "Owls, moths and other night-time friends", host: "Read by Tomasz",
+    entry: "dropin", room: "corner", age: "Ages 2 to 6",
+    blurb: [STORY_TEXT, "This week: creatures who come out after dark. Everyone makes a paper moth."] },
+  { id: "imogen-hale", type: "author", date: "2026-10-08", start: "19:00", end: "20:15", doors: "18:40",
+    title: "Imogen Hale: The Salt Orchard", subject: "Imogen Hale reads from her new novel", host: "In conversation with Nell",
+    entry: "ticket", price: 6, redeem: true, cap: 40, left: 4, room: "long", age: "Adults",
+    blurb: [
+      "Imogen Hale's first novel, The Glasshouse Year, was the book our customers pressed on each other all last winter. Her second, The Salt Orchard, follows three sisters who inherit a failing apple orchard on the Norfolk coast, and the sea that is slowly taking it.",
+      "Imogen will read two short passages, talk with Nell about writing a family you love and argue with, and take your questions. Afterwards she will sign books. Bring your old copies too."
+    ] },
+  { id: "story-10-oct", type: "story", date: "2026-10-10", start: "10:30", end: "11:15",
+    title: "Small dragons, big feelings", host: "Read by Tomasz",
+    entry: "dropin", room: "corner", age: "Ages 2 to 6",
+    blurb: [STORY_TEXT, "This week: dragons who are cross, shy, or very excited. Everyone makes a dragon mask."] },
+  { id: "dev-okafor", type: "author", date: "2026-10-14", start: "19:00", end: "20:30",
+    title: "Dev Okafor: Weather for Beginners", subject: "Launch of Dev Okafor's first book of poems", host: "With music from Aisling Byrne",
+    entry: "freebook", cap: 45, left: 0, room: "long", age: "Adults",
+    blurb: [
+      "Dev Okafor ran the Sunday poetry nights at the Crown for six years, and half of Ashbury has heard these poems out loud. Now they are a book, and we are hosting the launch.",
+      "Dev will read for about forty minutes, with fiddle tunes from Aisling Byrne in between. Free drinks, and a lot of cheering."
+    ] },
+  { id: "story-17-oct", type: "story", date: "2026-10-17", start: "10:30", end: "11:15",
+    title: "Conkers, leaves and a very lost squirrel", host: "Read by Tomasz",
+    entry: "dropin", room: "corner", age: "Ages 2 to 6",
+    blurb: [STORY_TEXT, "This week: autumn stories. Bring a leaf you like."] },
+  { id: "story-24-oct", type: "story", date: "2026-10-24", start: "10:30", end: "11:15",
+    title: "Under the sea, and under the bed", host: "Read by Tomasz",
+    entry: "dropin", room: "corner", age: "Ages 2 to 6",
+    blurb: [STORY_TEXT, "This week: things that live in deep, dark places. Everyone makes a paper fish."] },
+  { id: "ghosts-of-tanners-lane", type: "author", date: "2026-10-29", start: "19:30", end: "21:00",
+    title: "The Ghosts of Tanner's Lane", subject: "A talk by local historian Ruth Penhallow", host: "Lights low",
+    entry: "ticket", price: 8, extra: "includes a cup of mulled apple", cap: 50, left: 22, room: "long", age: "Adults, and brave teenagers",
+    blurb: [
+      "Ruth Penhallow has spent twenty years in the city archive. She will tell the stories behind the ghosts said to haunt our street, including the one who is supposed to rearrange our poetry shelf at night.",
+      "The lights will be low and the stories are true, or at least written down. A cup of mulled apple is included."
+    ] },
+  { id: "story-31-oct", type: "story", date: "2026-10-31", start: "10:30", end: "11:15",
+    title: "Not-too-scary stories for Halloween", host: "Read by Tomasz", note: "Costumes welcome",
+    entry: "dropin", room: "corner", age: "Ages 2 to 6",
+    blurb: [STORY_TEXT, "This week: friendly ghosts and a pumpkin with hiccups. Costumes very welcome."] }
+];
+
+const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const NUM_WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+
+function dateOf(e) { const [y, m, d] = e.date.split("-").map(Number); return new Date(y, m - 1, d); }
+function dayName(e) { return DAYS[dateOf(e).getDay()]; }
+function dayShort(e) { return dayName(e).slice(0, 3); }
+function dayNum(e) { return dateOf(e).getDate(); }
+function monthName(e) { return MONTHS[dateOf(e).getMonth()]; }
+function monthShort(e) { return monthName(e).slice(0, 3); }
+function longDate(e) { return `${dayName(e)} ${dayNum(e)} ${monthName(e)}`; }
+function shortDate(e) { return `${dayShort(e)} ${dayNum(e)} ${monthShort(e)}`; }
+function t12(t) {
+  let [h, m] = t.split(":").map(Number);
+  const ap = h >= 12 ? "pm" : "am"; h = h % 12 || 12;
+  return m ? `${h}:${String(m).padStart(2, "0")}${ap}` : `${h}${ap}`;
+}
+function timeRange(e) { return e.end ? `${t12(e.start)} to ${t12(e.end)}` : t12(e.start); }
+function daysAway(e) { return Math.round((dateOf(e) - TODAY) / 86400000); }
+function relDay(e) {
+  const n = daysAway(e);
+  if (n === 0) return "Today"; if (n === 1) return "Tomorrow";
+  if (n < 7) return `This ${dayName(e)}`;
+  return n < 14 ? `In ${n} days` : `In ${Math.round(n / 7)} weeks`;
+}
+function byId(id) { return EVENTS.find(e => e.id === id); }
+function upcoming() { return EVENTS.filter(e => daysAway(e) >= 0).sort((a, b) => dateOf(a) - dateOf(b)); }
+function room(e) { return ROOMS[e.room]; }
+function words(n) { return n <= 10 ? NUM_WORDS[n] : String(n); }
+
+/* Entry status: the one fact every screen must answer. */
+function status(e) {
+  if (e.entry === "dropin") return { key: "dropin", price: "Free", how: "Just turn up", short: "Free · just turn up" };
+  const price = e.entry === "ticket" ? `£${e.price}` : "Free";
+  const how = e.entry === "ticket" ? "Ticket needed" : "Book a seat";
+  if (e.left === 0) return { key: "soldout", price, how: "Sold out", short: `${price} · sold out` };
+  if (e.left <= Math.max(5, Math.round(e.cap * 0.15))) return { key: "few", price, how: `${e.left} seats left`, short: `${price} · only ${e.left} left` };
+  return { key: "open", price, how, short: `${price} · ${e.entry === "ticket" ? "book a ticket" : "book a seat"}` };
+}
+function priceLine(e) {
+  if (e.entry === "dropin") return "Free. No need to book.";
+  if (e.entry === "freebook") return `Free, but seats are limited to ${e.cap}, so please book.`;
+  let s = `£${e.price} a ticket`;
+  if (e.redeem) s += `. The £${e.price} comes off the book if you buy a copy on the night.`;
+  else if (e.extra) s += `, ${e.extra}.`;
+  return s;
+}
+function actionLabel(e) {
+  const s = status(e);
+  if (s.key === "soldout") return "Join the waiting list";
+  if (e.entry === "ticket") return `Book a ticket · £${e.price}`;
+  if (e.entry === "freebook") return "Book a free seat";
+  return "Add to my calendar";
+}
+
+/* Add to calendar: a real .ics download. */
+function downloadIcs(e) {
+  const d = e.date.replace(/-/g, "");
+  const f = t => t.replace(":", "") + "00";
+  const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//The Paper Moth//Events//EN", "BEGIN:VEVENT",
+    `UID:${e.id}@paper-moth-prototype`, `DTSTART:${d}T${f(e.start)}`, `DTEND:${d}T${f(e.end || e.start)}`,
+    `SUMMARY:${e.title} (The Paper Moth)`, `LOCATION:${SHOP.name}\\, ${SHOP.street}\\, ${SHOP.town}`,
+    `DESCRIPTION:${priceLine(e)}`, "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
+  a.download = `${e.id}.ics`; a.click();
+}
+
+function toast(msg) {
+  let t = document.getElementById("proto-toast");
+  if (!t) { t = document.createElement("div"); t.id = "proto-toast"; t.setAttribute("role", "status"); document.body.appendChild(t); }
+  t.textContent = msg; t.classList.add("on");
+  clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("on"), 3200);
+}
+function act(id) {
+  const e = byId(id), s = status(e);
+  if (e.entry === "dropin") { downloadIcs(e); return; }
+  if (s.key === "soldout") { toast("Prototype: the waiting-list step is not designed yet."); return; }
+  toast("Prototype: the booking step is not designed yet.");
+}
+function share(id) {
+  const e = byId(id);
+  const data = { title: e.title, text: `${e.title}, ${shortDate(e)} at The Paper Moth`, url: location.href };
+  if (navigator.share) navigator.share(data).catch(() => {});
+  else { navigator.clipboard && navigator.clipboard.writeText(location.href); toast("Link copied."); }
+}
+
+/* Router: #event=<id> shows one event, anything else shows the home page. */
+function go(hash) { location.hash = hash; }
+function route() {
+  const m = location.hash.match(/event=([\w-]+)/);
+  const e = m && byId(m[1]);
+  const app = document.getElementById("app");
+  app.innerHTML = e ? renderEvent(e) : renderHome();
+  document.title = e ? `${e.title} · ${SHOP.name}` : `What's on · ${SHOP.name}`;
+  window.scrollTo(0, 0);
+  if (typeof afterRender === "function") afterRender(e);
+  protoSync(e);
+}
+
+/* Prototype controls: outside the design, used to switch screens and entry states. */
+function protoBar() {
+  const opts = [["imogen-hale", "Ticketed, 4 seats left"], ["ghosts-of-tanners-lane", "Ticketed, seats free"], ["dev-okafor", "Free, sold out"], ["book-club-piranesi", "Free, book a seat"], ["story-3-oct", "Free, just turn up"]];
+  const bar = document.createElement("div");
+  bar.className = "proto";
+  bar.innerHTML = `<span class="proto-tag">Prototype controls, not part of the design</span>
+    <a href="#home" data-p="home">Home page</a>
+    <label>Event page: <select id="proto-sel">${opts.map(([id, l]) => `<option value="${id}">${l}</option>`).join("")}</select></label>`;
+  document.body.prepend(bar);
+  bar.querySelector("select").addEventListener("change", ev => go(`event=${ev.target.value}`));
+  bar.querySelector("select").addEventListener("click", ev => { if (!location.hash.includes("event=")) go(`event=${ev.target.value}`); });
+}
+function protoSync(e) {
+  document.querySelector('.proto [data-p="home"]').classList.toggle("on", !e);
+  const sel = document.getElementById("proto-sel");
+  sel.classList.toggle("on", !!e);
+  if (e && [...sel.options].some(o => o.value === e.id)) sel.value = e.id;
+}
+const PROTO_CSS = `
+.proto{position:relative;z-index:50;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;padding:8px 16px;background:#1d1d1f;color:#d8d8d8;font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.proto-tag{color:#9a9a9a;flex-basis:100%}
+@media (min-width:700px){.proto-tag{flex-basis:auto}}
+.proto a{color:#d8d8d8}.proto a.on{color:#fff;font-weight:700;text-decoration:none}
+.proto select{font:inherit;background:#333;color:#eee;border:1px solid #555;border-radius:3px;padding:2px 4px;max-width:210px}
+.proto select.on{border-color:#aaa;color:#fff}
+#proto-toast{position:fixed;left:50%;bottom:96px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#1d1d1f;color:#fff;font:14px/1.4 ui-monospace,Menlo,monospace;padding:10px 14px;border-radius:6px;transition:.2s;z-index:99;max-width:calc(100vw - 32px)}
+#proto-toast.on{opacity:1;transform:translate(-50%,0)}`;
+document.head.insertAdjacentHTML("beforeend", `<style>${PROTO_CSS}</style>`);
+window.addEventListener("hashchange", route);
+window.addEventListener("DOMContentLoaded", () => { protoBar(); route(); });
+
+</script>
+<script>
+const MOTH = `<svg viewBox="0 0 30 22" aria-hidden="true" fill="currentColor"><path d="M15 5c-1 0-1.4 1.6-1.4 5.5S14 20 15 20s1.4-5.6 1.4-9.5S16 5 15 5Z"/><path d="M13.3 9C11 4 5 .5 1.2 2.2-.6 3 1.8 9.5 6 11c-3 1.8-3.4 6.4-1.2 7.3 2.6 1 6.8-3 8.5-6.8Z" opacity=".85"/><path d="M16.7 9C19 4 25 .5 28.8 2.2c1.8.8-.6 7.3-4.8 8.8 3 1.8 3.4 6.4 1.2 7.3-2.6 1-6.8-3-8.5-6.8Z" opacity=".85"/><path d="M14.4 5.2C13.6 3 12.2 1.6 11 1.2M15.6 5.2C16.4 3 17.8 1.6 19 1.2" stroke="currentColor" stroke-width=".8" fill="none"/></svg>`;
+const ICON = {
+  dropin: `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2"/></svg>`,
+  few: `<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 4v4.5l3 1.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>`,
+  soldout: `<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 12.5l9-9" stroke="currentColor" stroke-width="1.6"/></svg>`,
+  open: `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 5h12v2a1.5 1.5 0 000 3v2H2v-2a1.5 1.5 0 000-3z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>`
+};
+const ENTRY_WORDS = e => {
+  const s = status(e);
+  if (s.key === "dropin") return "Free · just turn up";
+  if (s.key === "soldout") return `Sold out · waiting list open`;
+  if (s.key === "few") return `${s.price} · only ${e.left} seats left`;
+  return e.entry === "ticket" ? `${s.price} · tickets available` : "Free · book a seat";
+};
+let filter = "all";
+
+function header(active) {
+  return `<header class="top"><div class="wrap">
+    <a class="brand" href="#home">${MOTH}<span>The Paper Moth<small>Booksellers, 41 Tanner's Lane</small></span></a>
+    <nav class="nav" aria-label="Main"><a href="#home" ${active === "home" ? 'aria-current="page"' : ""}>What's on</a><a href="#visit">Visit us</a></nav>
+  </div></header>`;
+}
+function row(e) {
+  const s = status(e);
+  return `<li><a class="ev" href="#event=${e.id}" data-type="${e.type}">
+    <div class="ev-date" aria-hidden="true"><span class="dow">${dayShort(e)}</span><span class="dn">${dayNum(e)}</span><span class="mon">${monthShort(e)}</span></div>
+    <div>
+      <p class="ev-kind"><i></i>${TYPES[e.type].label} · <span class="sr">${shortDate(e)}, </span>${t12(e.start)}</p>
+      <h3>${e.title}</h3>
+      ${e.subject ? `<p class="ev-sub">${e.subject}</p>` : e.note ? `<p class="ev-sub">${e.note}</p>` : ""}
+      <p class="entry s-${s.key}">${ICON[s.key]}${ENTRY_WORDS(e)}</p>
+    </div></a></li>`;
+}
+function weekStart(e) { const d = dateOf(e); const m = new Date(d); m.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return m; }
+function listHtml() {
+  const list = upcoming().filter(e => filter === "all" || e.type === filter);
+  if (!list.length) return `<p class="empty">Nothing of this kind is booked yet. We add new events every week or two.</p>`;
+  const groups = [];
+  list.forEach(e => { const k = +weekStart(e); let g = groups.find(g => g.k === k); if (!g) groups.push(g = { k, items: [] }); g.items.push(e); });
+  return groups.map((g, i) => {
+    const d = new Date(g.k), end = new Date(g.k + 6 * 86400000);
+    const range = `${d.getDate()} ${MONTHS[d.getMonth()].slice(0, 3)} to ${end.getDate()} ${MONTHS[end.getMonth()].slice(0, 3)}`;
+    const name = (d - TODAY) / 86400000 < 7 ? "Next week" : `Week of ${d.getDate()} ${MONTHS[d.getMonth()]}`;
+    return `<section class="week"><h2>${name} <span>· ${range}</span></h2><ul>${g.items.map(row).join("")}</ul></section>`;
+  }).join("");
+}
+function setFilter(f) {
+  filter = f;
+  document.querySelectorAll(".filters button").forEach(b => b.setAttribute("aria-pressed", b.dataset.f === f));
+  document.getElementById("list").innerHTML = listHtml();
+}
+function visitBlock() {
+  return `<section id="visit"><h2>Visit us</h2><div class="card"><dl>
+      <dt>Address</dt><dd>${SHOP.street}<br>${SHOP.town}</dd>
+      ${SHOP.hours.map(([d, h]) => `<dt>${d.replace("Monday to Saturday", "Mon to Sat")}</dt><dd>${h}</dd>`).join("")}
+      <dt>Phone</dt><dd><a href="tel:${SHOP.phone.replace(/\s/g, "")}">${SHOP.phone}</a></dd>
+    </dl></div></section>`;
+}
+function renderHome() {
+  return `${header("home")}<main class="wrap">
+    <div class="intro"><h1>What's on</h1>
+      <p>Author readings, a monthly book club and a story hour every Saturday morning. Most events are free.</p></div>
+    <div class="home-grid">
+      <div>
+        <div class="filters" role="group" aria-label="Show">
+          ${[["all", "Everything"], ["author", "Author events"], ["club", "Book club"], ["story", "Story hours"]].map(([f, l]) => `<button data-f="${f}" aria-pressed="${filter === f}" onclick="setFilter('${f}')">${l}</button>`).join("")}
+        </div>
+        <div id="list">${listHtml()}</div>
+      </div>
+      <aside class="aside">
+        <section><h2>How to get in</h2><ul class="how">
+          <li><span class="s-dropin">${ICON.dropin}</span><span><b>Free, just turn up.</b> Story hours. No booking, no ticket.</span></li>
+          <li><span>${ICON.open}</span><span><b>Book a seat.</b> Book club and launches are free, but chairs are limited.</span></li>
+          <li><span>${ICON.open}</span><span><b>Ticketed.</b> Most author readings cost £6 to £8. At readings, the ticket price comes off the book.</span></li>
+        </ul></section>
+        ${visitBlock()}
+      </aside>
+    </div>
+  </main>
+  <footer class="foot"><div class="wrap">The Paper Moth, independent booksellers since 2011. Run by ${SHOP.owners}.</div></footer>`;
+}
+
+function seatPanel(e) {
+  const s = status(e);
+  if (s.key === "dropin") return `<div class="seat card s-dropin" id="seat">
+      <h2>Free. No need to book.</h2>
+      <p class="sub">Just turn up a few minutes before ${t12(e.start)}. There is room for everyone; latecomers can sit at the back.</p>
+      <button class="btn quiet" onclick="act('${e.id}')">Add to my calendar</button></div>`;
+  if (s.key === "soldout") return `<div class="seat card s-soldout" id="seat">
+      <h2>Sold out</h2>
+      <p class="sub">All ${e.cap} seats have gone. Join the waiting list and we will email you, in order, if a seat comes back. People often cancel on the day.</p>
+      <form class="wait" onsubmit="event.preventDefault();act('${e.id}')"><label for="wl">Your email</label><input id="wl" type="email" autocomplete="email" required placeholder="name@example.com"><button class="btn">Join the waiting list</button></form></div>`;
+  const pct = Math.round((1 - e.left / e.cap) * 100);
+  return `<div class="seat card s-${s.key}" id="seat">
+      <h2>${s.key === "few" ? `Only ${e.left} of ${e.cap} seats left` : `${e.left} of ${e.cap} seats left`}</h2>
+      <div class="meter" role="img" aria-label="${pct}% of seats booked"><i style="width:${pct}%"></i></div>
+      <button class="btn" onclick="act('${e.id}')">${actionLabel(e)}</button>
+      <ul class="fine"><li>No printed ticket. We keep a list of names at the door.</li>${e.entry === "ticket" ? "<li>Can't come? Tell us by noon on the day and we will refund you.</li>" : "<li>Can't come? Please cancel so someone else can have your seat.</li>"}</ul></div>`;
+}
+function renderEvent(e) {
+  const r = room(e), s = status(e);
+  const more = upcoming().filter(x => x.id !== e.id).slice(0, 3);
+  return `${header()}<main class="wrap">
+    <a class="back" href="#home">← All events</a>
+    <div class="ev-grid">
+      <div>
+        <div class="ev-head" data-type="${e.type}">
+          <p class="ev-kind"><i></i>${TYPES[e.type].label}</p>
+          <h1>${e.title}</h1>
+          ${e.subject ? `<p class="lead">${e.subject}</p>` : ""}
+          <p class="host">${e.host}${e.note ? ` · ${e.note}` : ""}</p>
+        </div>
+        <dl class="facts">
+          <div><dt>When</dt><dd><b>${longDate(e)}</b><span>${timeRange(e)}${e.doors ? `, doors ${t12(e.doors)}` : ""} · ${relDay(e)}</span></dd></div>
+          <div><dt>Where</dt><dd><b>${r.name}</b><span>${SHOP.name}, ${SHOP.street}, ${SHOP.town}</span></dd></div>
+          <div><dt>Entry</dt><dd><b class="s-${s.key}">${ENTRY_WORDS(e)}</b><span>${priceLine(e)}</span></dd></div>
+          <div><dt>For</dt><dd><b>${e.age}</b></dd></div>
+        </dl>
+        <div class="minor">${s.key === "dropin" ? "" : `<button onclick="downloadIcs(byId('${e.id}'))">Add to calendar</button>`}<button onclick="share('${e.id}')">Share</button></div>
+      </div>
+      ${seatPanel(e)}
+    </div>
+    <section class="prose"><h2>About the event</h2>${e.blurb.map(p => `<p>${p}</p>`).join("")}</section>
+    <section class="good"><h2>Good to know</h2><dl>
+      <div><dt>Getting in</dt><dd>${r.access}</dd></div>
+      ${e.entry === "ticket" ? `<div><dt>Refunds</dt><dd>Tell us by noon on the day and we will refund you, or pass your seat to the waiting list.</dd></div>` : ""}
+      <div><dt>Questions</dt><dd>Ring the shop on <a href="tel:${SHOP.phone.replace(/\s/g, "")}">${SHOP.phone}</a>. We answer between 9:30am and 6pm.</dd></div>
+    </dl></section>
+    <section class="more"><h2>Also coming up</h2><ul>${more.map(row).join("")}</ul></section>
+  </main>
+  <footer class="foot"><div class="wrap">The Paper Moth, ${SHOP.street}, ${SHOP.town}. Run by ${SHOP.owners}.</div></footer>`;
+}
+let io;
+function afterRender(e) {
+  const dock = document.getElementById("dock");
+  if (io) io.disconnect();
+  dock.classList.remove("on");
+  if (!e) { if (location.hash === "#visit") document.getElementById("visit").scrollIntoView(); return; }
+  const s = status(e);
+  dock.innerHTML = `<p><b>${s.key === "dropin" ? "Free · just turn up" : s.key === "soldout" ? "Sold out" : `${s.price} · ${e.left} seats left`}</b>${shortDate(e)}, ${t12(e.start)}</p>
+    <button class="btn ${s.key === "dropin" ? "quiet" : ""}" onclick="document.getElementById('seat').scrollIntoView({behavior:'smooth',block:'center'})">${s.key === "soldout" ? "Waiting list" : s.key === "dropin" ? "Details" : "Book"}</button>`;
+  /* On phones the seat panel sits below the facts; the dock appears once the panel is out of view. */
+  io = new IntersectionObserver(([en]) => dock.classList.toggle("on", !en.isIntersecting));
+  io.observe(document.getElementById("seat"));
+}
+</script>
+</body>
+</html>

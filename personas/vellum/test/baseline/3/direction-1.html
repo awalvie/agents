@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shelf Talkers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Direction 1: Shelf talkers.
+     Every event is a handwritten-style recommendation card, like the cards
+     booksellers clip to shelves. Each event type has its own card colour and
+     doodle, so no photo is ever needed. */
+  :root {
+    --kraft: #d9c3a0;
+    --kraft-dark: #b89c74;
+    --ink: #2b2118;
+    --ink-soft: #5c4b3b;
+    --paper: #fffaf0;
+    --reading: #f6d7a7;   /* butter */
+    --club: #cfe0c3;      /* sage */
+    --story: #f7c6c0;     /* rose */
+    --red: #b3372a;
+    --green: #2f6b3a;
+    --hand: "Caveat", "Comic Sans MS", cursive;
+    --serif: "Fraunces", Georgia, serif;
+    --sans: "Karla", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #efe7da;
+    color: var(--ink);
+    font-family: var(--sans);
+  }
+  .intro {
+    max-width: 880px; margin: 0 auto; padding: 32px 16px 8px;
+  }
+  .intro h1 { font-family: var(--serif); font-weight: 800; font-size: 28px; margin: 0 0 6px; }
+  .intro p { margin: 0; color: var(--ink-soft); max-width: 60ch; line-height: 1.5; }
+  .stage {
+    display: flex; flex-wrap: wrap; gap: 40px; justify-content: center;
+    padding: 24px 16px 64px;
+  }
+  .screen-label { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 10px 4px; }
+  .phone {
+    width: 375px; max-width: 100%; height: 800px; overflow-y: auto; position: relative;
+    border-radius: 28px; border: 10px solid #2b2118; background: var(--kraft);
+    background-image:
+      radial-gradient(rgba(255,255,255,.12) 1px, transparent 1px),
+      radial-gradient(rgba(0,0,0,.05) 1px, transparent 1px);
+    background-size: 7px 7px, 11px 11px;
+    box-shadow: 0 20px 40px rgba(43,33,24,.25);
+  }
+  @media (max-width: 420px) { .phone { width: 100%; border-width: 6px; } }
+
+  /* Site header */
+  .masthead {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px; background: var(--ink); color: var(--paper);
+    position: sticky; top: 0; z-index: 5;
+  }
+  .logo { font-family: var(--serif); font-weight: 800; font-size: 19px; letter-spacing: -.01em; }
+  .logo span { font-family: var(--hand); font-weight: 700; color: #f2b84b; font-size: 22px; margin-left: 2px; }
+  .masthead a { color: var(--paper); font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
+
+  .hello { padding: 22px 18px 6px; }
+  .hello .scrawl { font-family: var(--hand); font-size: 24px; color: var(--ink-soft); transform: rotate(-2deg); display: inline-block; }
+  .hello h2 { font-family: var(--serif); font-size: 34px; line-height: 1.02; margin: 2px 0 10px; font-weight: 800; }
+  .hello p { margin: 0; font-size: 15px; line-height: 1.45; }
+
+  /* Key: how to read the stamps */
+  .key {
+    margin: 16px 18px 4px; padding: 10px 12px; background: var(--paper);
+    border: 1.5px dashed var(--ink-soft); border-radius: 6px; font-size: 13px; line-height: 1.5;
+  }
+  .key b { font-family: var(--hand); font-size: 19px; display: block; margin-bottom: 2px; }
+  .key ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+
+  .filters { display: flex; gap: 8px; padding: 14px 18px 4px; overflow-x: auto; }
+  .chip {
+    flex: none; font: 600 14px var(--sans); padding: 8px 12px; border-radius: 999px;
+    border: 1.5px solid var(--ink); background: transparent; color: var(--ink); cursor: pointer;
+  }
+  .chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+  .week { font-family: var(--hand); font-size: 26px; margin: 22px 18px 6px; color: var(--ink); }
+  .week small { font-family: var(--sans); font-size: 13px; color: var(--ink-soft); margin-left: 6px; }
+
+  /* The shelf-talker card */
+  .card {
+    position: relative; display: grid; grid-template-columns: 58px 1fr; gap: 12px;
+    margin: 14px 18px; padding: 16px 14px 14px; color: var(--ink); text-decoration: none;
+    border-radius: 3px; box-shadow: 0 2px 0 rgba(0,0,0,.08), 0 8px 14px rgba(43,33,24,.18);
+  }
+  .card:nth-of-type(odd) { transform: rotate(-.6deg); }
+  .card:nth-of-type(even) { transform: rotate(.5deg); }
+  .card::before { /* bulldog clip */
+    content: ""; position: absolute; top: -7px; left: 50%; width: 38px; height: 12px; margin-left: -19px;
+    background: #6d6a66; border-radius: 3px 3px 1px 1px; box-shadow: inset 0 -3px 0 #4a4744;
+  }
+  .card.reading { background: var(--reading); }
+  .card.club { background: var(--club); }
+  .card.story { background: var(--story); }
+  .date {
+    text-align: center; border: 2px solid var(--ink); border-radius: 4px; background: var(--paper);
+    padding: 4px 0 6px; align-self: start;
+  }
+  .date .d { font: 800 26px/1 var(--serif); display: block; }
+  .date .m { font: 700 11px var(--sans); letter-spacing: .1em; text-transform: uppercase; }
+  .date .w { font: 600 12px var(--sans); display: block; color: var(--ink-soft); }
+  .type { font: 700 11px var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); }
+  .card h3 { font: 700 20px/1.12 var(--serif); margin: 2px 0 4px; }
+  .card .who { font-family: var(--hand); font-size: 20px; line-height: 1.1; }
+  .meta { font-size: 14px; margin-top: 6px; }
+  .stamp {
+    display: inline-block; margin-top: 10px; padding: 3px 9px 4px; border: 2.5px solid currentColor;
+    border-radius: 4px; font: 700 13px var(--sans); letter-spacing: .06em; text-transform: uppercase;
+    transform: rotate(-2deg);
+  }
+  .stamp.free { color: var(--green); }
+  .stamp.book { color: var(--ink); background: rgba(255,255,255,.5); }
+  .stamp.few { color: var(--red); }
+  .stamp.out { color: var(--red); background: repeating-linear-gradient(-45deg, transparent 0 5px, rgba(179,55,42,.12) 5px 10px); }
+  .doodle { position: absolute; right: 10px; bottom: 8px; width: 46px; height: 46px; opacity: .55; }
+  .card.soldout h3, .card.soldout .who { opacity: .6; }
+
+  .footer-note { margin: 28px 18px 10px; font-size: 14px; line-height: 1.5; }
+  .footer-note .hand { font-family: var(--hand); font-size: 22px; display: block; }
+  .shop-foot { background: var(--ink); color: var(--paper); padding: 18px; font-size: 14px; line-height: 1.55; margin-top: 20px; }
+  .shop-foot b { font-family: var(--serif); font-size: 17px; }
+
+  /* Event page */
+  .crumb { display: block; padding: 14px 18px 0; font-size: 14px; color: var(--ink); }
+  .talker {
+    position: relative; margin: 22px 16px 10px; padding: 26px 18px 20px; background: var(--reading);
+    border-radius: 3px; transform: rotate(-.8deg);
+    box-shadow: 0 2px 0 rgba(0,0,0,.08), 0 14px 22px rgba(43,33,24,.22);
+  }
+  .talker::before { content: ""; position: absolute; top: -9px; left: 50%; width: 54px; height: 16px; margin-left: -27px; background: #6d6a66; border-radius: 3px; box-shadow: inset 0 -4px 0 #4a4744; }
+  .talker .big-doodle { position: absolute; right: 12px; top: 18px; width: 72px; height: 72px; opacity: .5; }
+  .talker h1 { font: 800 32px/1.02 var(--serif); margin: 6px 0 6px; padding-right: 64px; }
+  .talker .who { font-family: var(--hand); font-size: 26px; }
+  .staff {
+    margin-top: 16px; padding-top: 12px; border-top: 1.5px dashed var(--ink-soft);
+    font-family: var(--hand); font-size: 22px; line-height: 1.2;
+  }
+  .staff .sig { display: block; text-align: right; font-size: 20px; color: var(--ink-soft); margin-top: 4px; }
+
+  .facts { margin: 22px 16px 0; background: var(--paper); border-radius: 6px; padding: 4px 14px; border: 1.5px solid var(--ink); }
+  .fact { display: grid; grid-template-columns: 28px 1fr; gap: 10px; padding: 12px 0; border-bottom: 1px solid #e5d9c4; font-size: 15px; line-height: 1.35; }
+  .fact:last-child { border-bottom: 0; }
+  .fact svg { width: 22px; height: 22px; margin-top: 1px; }
+  .fact b { display: block; }
+  .fact small { color: var(--ink-soft); font-size: 13px; }
+  .fact a { color: var(--ink); }
+
+  .seats { margin: 18px 16px 0; background: var(--paper); border-radius: 6px; padding: 14px; border: 1.5px solid var(--ink); }
+  .seats h2 { font: 700 18px var(--serif); margin: 0 0 8px; }
+  .chairs { display: flex; flex-wrap: wrap; gap: 4px; margin: 8px 0 6px; }
+  .chair { width: 14px; height: 16px; border-radius: 3px 3px 1px 1px; background: var(--ink); opacity: .85; }
+  .chair.free { background: transparent; border: 2px solid var(--green); opacity: 1; }
+  .seats p { margin: 6px 0 0; font-size: 14px; line-height: 1.45; }
+
+  .body-copy { margin: 20px 18px; font-size: 16px; line-height: 1.55; }
+  .body-copy h2 { font: 700 20px var(--serif); margin: 22px 0 6px; }
+  .body-copy p { margin: 0 0 10px; }
+
+  .also { margin: 10px 0 0; }
+  .also h2 { font-family: var(--hand); font-size: 26px; font-weight: 700; margin: 10px 18px 0; }
+
+  .bookbar {
+    position: sticky; bottom: 0; z-index: 5; display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px 14px; background: var(--ink); color: var(--paper);
+  }
+  .bookbar .price { font: 800 22px var(--serif); line-height: 1; }
+  .bookbar .price small { display: block; font: 400 12px var(--sans); color: #d8cbb6; margin-top: 3px; }
+  .btn {
+    margin-left: auto; font: 700 16px var(--sans); padding: 13px 18px; border-radius: 6px; border: 0;
+    background: #f2b84b; color: var(--ink); cursor: pointer; box-shadow: 0 3px 0 #a9771c;
+  }
+  .btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #a9771c; }
+  .ghost { display: inline-flex; gap: 6px; align-items: center; font: 600 14px var(--sans); color: var(--ink); background: none; border: 1.5px solid var(--ink); border-radius: 999px; padding: 7px 12px; margin: 14px 0 0 16px; cursor: pointer; }
+  a:focus-visible, button:focus-visible { outline: 3px solid #f2b84b; outline-offset: 2px; }
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>Direction 1: Shelf talkers</h1>
+  <p>Each event is shown as a handwritten recommendation card clipped to a shelf. The card's colour and doodle come from the event type, so the owners only type the words.</p>
+</div>
+
+<!-- Reusable doodles, one per event type -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="d-reading" viewBox="0 0 48 48"><g fill="none" stroke="#2b2118" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="17" y="5" width="14" height="22" rx="7"/><path d="M11 22c0 7 6 12 13 12s13-5 13-12M24 34v8M16 43h16"/><path d="M20 12h8M20 17h8"/></g></symbol>
+    <symbol id="d-club" viewBox="0 0 48 48"><g fill="none" stroke="#2b2118" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 24h24v6a10 10 0 0 1-10 10h-4A10 10 0 0 1 8 30z"/><path d="M32 26h3a4 4 0 0 1 0 8h-4"/><path d="M15 18c-2-3 2-5 0-9M22 18c-2-3 2-5 0-9"/><path d="M6 43h30"/></g></symbol>
+    <symbol id="d-story" viewBox="0 0 48 48"><g fill="none" stroke="#2b2118" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 32c2-10 10-16 19-15 6 1 10 5 10 10 0 4-3 6-6 6H18"/><path d="M28 17l3-7 3 8M20 20l1-6 4 4"/><circle cx="32" cy="24" r="1.3" fill="#2b2118"/><path d="M38 28c3 0 5 1 6 3M9 32l-4 4 6 0"/><path d="M16 33v6M26 33v6"/></g></symbol>
+    <symbol id="d-ghost" viewBox="0 0 48 48"><g fill="none" stroke="#2b2118" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 42V20a12 12 0 0 1 24 0v22l-4-3-4 3-4-3-4 3-4-3z"/><circle cx="19" cy="21" r="1.5" fill="#2b2118"/><circle cx="29" cy="21" r="1.5" fill="#2b2118"/><path d="M21 29c2 2 4 2 6 0"/></g></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><g fill="none" stroke="#2b2118" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></g></symbol>
+    <symbol id="i-coin" viewBox="0 0 24 24"><g fill="none" stroke="#2b2118" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M14.5 8.5c-.5-1-1.5-1.5-2.7-1.5-1.6 0-2.8 1-2.8 2.4 0 3.2 5.7 1.8 5.7 5 0 1.4-1.3 2.6-3 2.6-1.3 0-2.4-.6-2.9-1.6M12 5.5v1.5M12 17v1.5"/></g></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="#2b2118" stroke-width="1.8" stroke-linecap="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></g></symbol>
+    <symbol id="i-access" viewBox="0 0 24 24"><g fill="none" stroke="#2b2118" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="4.5" r="1.8"/><path d="M5 8.5l7 1.5 7-1.5M12 10v5l-3 6M12 15l3 6"/></g></symbol>
+  </defs>
+</svg>
+
+<div class="stage">
+
+  <!-- ================= HOME ================= -->
+  <section>
+    <p class="screen-label">Home</p>
+    <div class="phone">
+      <header class="masthead">
+        <div class="logo">The Crooked Shelf<span>&amp;co</span></div>
+        <a href="#">Visit us</a>
+      </header>
+
+      <div class="hello">
+        <span class="scrawl">Pull up a chair&hellip;</span>
+        <h2>What's on in October</h2>
+        <p>Readings, a book club that argues nicely, and stories for small people. All in the back room at 14 Tanner Street.</p>
+      </div>
+
+      <div class="key" role="note">
+        <b>How to read the stamps</b>
+        <ul>
+          <li><span class="dot" style="background:var(--green)"></span><strong>Free, just turn up</strong> &ndash; no booking</li>
+          <li><span class="dot" style="background:var(--ink)"></span><strong>Book a seat</strong> &ndash; limited chairs, reserve online</li>
+          <li><span class="dot" style="background:var(--red)"></span><strong>Sold out</strong> &ndash; join the waiting list</li>
+        </ul>
+      </div>
+
+      <div class="filters" role="group" aria-label="Filter events">
+        <button class="chip" aria-pressed="true" data-f="all">Everything</button>
+        <button class="chip" aria-pressed="false" data-f="reading">Readings</button>
+        <button class="chip" aria-pressed="false" data-f="club">Book club</button>
+        <button class="chip" aria-pressed="false" data-f="story">Story hour</button>
+      </div>
+
+      <div class="list">
+        <p class="week">This week <small>1&ndash;4 Oct</small></p>
+
+        <a class="card reading" data-t="reading" href="#event">
+          <div class="date"><span class="w">Thu</span><span class="d">1</span><span class="m">Oct</span></div>
+          <div>
+            <div class="type">Author reading &middot; 7pm</div>
+            <h3>The Salt Orchard</h3>
+            <div class="who">with Mara Lindqvist</div>
+            <span class="stamp few">&pound;5 &middot; only 6 seats left</span>
+          </div>
+          <svg class="doodle"><use href="#d-reading"/></svg>
+        </a>
+
+        <a class="card story" data-t="story" href="#event">
+          <div class="date"><span class="w">Sat</span><span class="d">3</span><span class="m">Oct</span></div>
+          <div>
+            <div class="type">Story hour &middot; 10:30am &middot; ages 3&ndash;7</div>
+            <h3>Dragons Who Hate Bedtime</h3>
+            <div class="who">read by Priya from the shop</div>
+            <span class="stamp free">Free &middot; just turn up</span>
+          </div>
+          <svg class="doodle"><use href="#d-story"/></svg>
+        </a>
+
+        <p class="week">Next week <small>5&ndash;11 Oct</small></p>
+
+        <a class="card club" data-t="club" href="#event">
+          <div class="date"><span class="w">Wed</span><span class="d">7</span><span class="m">Oct</span></div>
+          <div>
+            <div class="type">Book club &middot; 7:30pm</div>
+            <h3>Piranesi, by Susanna Clarke</h3>
+            <div class="who">tea, biscuits, strong opinions</div>
+            <span class="stamp book">Free &middot; book a chair</span>
+          </div>
+          <svg class="doodle"><use href="#d-club"/></svg>
+        </a>
+
+        <a class="card story" data-t="story" href="#event">
+          <div class="date"><span class="w">Sat</span><span class="d">10</span><span class="m">Oct</span></div>
+          <div>
+            <div class="type">Story hour &middot; 10:30am &middot; ages 3&ndash;7</div>
+            <h3>The Hedgehog's Umbrella</h3>
+            <div class="who">read by Tom, who does voices</div>
+            <span class="stamp free">Free &middot; just turn up</span>
+          </div>
+          <svg class="doodle"><use href="#d-story"/></svg>
+        </a>
+
+        <p class="week">Later this month</p>
+
+        <a class="card reading soldout" data-t="reading" href="#event">
+          <div class="date"><span class="w">Thu</span><span class="d">15</span><span class="m">Oct</span></div>
+          <div>
+            <div class="type">Poetry reading &middot; 7pm</div>
+            <h3>Small Hours</h3>
+            <div class="who">with Tomas Ekwueme</div>
+            <span class="stamp out">Sold out &middot; join waiting list</span>
+          </div>
+          <svg class="doodle"><use href="#d-reading"/></svg>
+        </a>
+
+        <a class="card story" data-t="story" href="#event">
+          <div class="date"><span class="w">Sat</span><span class="d">17</span><span class="m">Oct</span></div>
+          <div>
+            <div class="type">Story hour &middot; 10:30am &middot; ages 3&ndash;7</div>
+            <h3>A Very Small Lighthouse</h3>
+            <div class="who">read by Priya</div>
+            <span class="stamp free">Free &middot; just turn up</span>
+          </div>
+          <svg class="doodle"><use href="#d-story"/></svg>
+        </a>
+
+        <a class="card club" data-t="club" href="#event">
+          <div class="date"><span class="w">Wed</span><span class="d">21</span><span class="m">Oct</span></div>
+          <div>
+            <div class="type">Book club &middot; 7:30pm</div>
+            <h3>The Remains of the Day</h3>
+            <div class="who">Kazuo Ishiguro, butlers, regret</div>
+            <span class="stamp book">Free &middot; book a chair</span>
+          </div>
+          <svg class="doodle"><use href="#d-club"/></svg>
+        </a>
+
+        <a class="card reading" data-t="reading" href="#event">
+          <div class="date"><span class="w">Fri</span><span class="d">30</span><span class="m">Oct</span></div>
+          <div>
+            <div class="type">Ghost stories by candlelight &middot; 8pm</div>
+            <h3>Things That Knock</h3>
+            <div class="who">three local writers, lights off</div>
+            <span class="stamp book">&pound;6 &middot; book a seat</span>
+          </div>
+          <svg class="doodle"><use href="#d-ghost"/></svg>
+        </a>
+      </div>
+
+      <div class="footer-note">
+        <span class="hand">Never miss a reading</span>
+        We send one short email when the month's events go up. That's it.
+        <br><button class="ghost" style="margin:10px 0 0">Get the monthly email</button>
+      </div>
+
+      <footer class="shop-foot">
+        <b>The Crooked Shelf</b><br>
+        14 Tanner Street &middot; open Tue&ndash;Sun, 10am&ndash;6pm<br>
+        Step-free back room &middot; 01632 960 482
+      </footer>
+    </div>
+  </section>
+
+  <!-- ================= EVENT ================= -->
+  <section id="event">
+    <p class="screen-label">Event</p>
+    <div class="phone">
+      <header class="masthead">
+        <div class="logo">The Crooked Shelf<span>&amp;co</span></div>
+        <a href="#">Visit us</a>
+      </header>
+
+      <a class="crumb" href="#">&larr; All October events</a>
+
+      <article>
+        <div class="talker">
+          <svg class="big-doodle" aria-hidden="true"><use href="#d-reading"/></svg>
+          <div class="type">Author reading</div>
+          <h1>The Salt Orchard</h1>
+          <div class="who">with Mara Lindqvist</div>
+          <span class="stamp few">Only 6 seats left</span>
+          <div class="staff">
+            &ldquo;A novel about a family of apple growers on an island that is slowly sinking. I cried on the bus. Come and hear her read the orchard chapter.&rdquo;
+            <span class="sig">&mdash; Ruth, who runs the shop</span>
+          </div>
+        </div>
+
+        <div class="facts">
+          <div class="fact"><svg aria-hidden="true"><use href="#i-cal"/></svg><div><b>Thursday 1 October, 7pm</b><small>Doors 6:40pm &middot; about 75 minutes, with questions and signing</small><br><a href="#">Add to my calendar</a></div></div>
+          <div class="fact"><svg aria-hidden="true"><use href="#i-coin"/></svg><div><b>&pound;5 a ticket</b><small>Knocked off the price of the book if you buy one on the night</small></div></div>
+          <div class="fact"><svg aria-hidden="true"><use href="#i-pin"/></svg><div><b>The back room, 14 Tanner Street</b><small>Through the shop, past the poetry. <a href="#">Map</a></small></div></div>
+          <div class="fact"><svg aria-hidden="true"><use href="#i-access"/></svg><div><b>Step-free, with an accessible toilet</b><small>Tell us if you need a seat near the front</small></div></div>
+        </div>
+
+        <div class="seats">
+          <h2>40 chairs, 6 still empty</h2>
+          <div class="chairs" aria-hidden="true" id="chairs"></div>
+          <p>Book online and your name goes on a chair. Plans changed? Cancel from your email and we'll pass the seat on.</p>
+        </div>
+
+        <div class="body-copy">
+          <h2>About the book</h2>
+          <p>Mara Lindqvist's second novel follows three generations of the Hale family as the sea creeps up their orchard, one row of trees at a time.</p>
+          <p>She'll read for about twenty minutes, then Ruth will ask her the questions you are too polite to ask. Signed copies on the table by the till.</p>
+          <h2>Good to know</h2>
+          <p>Tea and apple cake are free. Wine is &pound;3 a glass. The shop cat, Borges, may attend. He has not read the book.</p>
+        </div>
+
+        <button class="ghost">Share this event</button>
+
+        <div class="also">
+          <h2>You might also like&hellip;</h2>
+          <a class="card club" href="#">
+            <div class="date"><span class="w">Wed</span><span class="d">7</span><span class="m">Oct</span></div>
+            <div>
+              <div class="type">Book club &middot; 7:30pm</div>
+              <h3>Piranesi, by Susanna Clarke</h3>
+              <span class="stamp book">Free &middot; book a chair</span>
+            </div>
+            <svg class="doodle"><use href="#d-club"/></svg>
+          </a>
+        </div>
+        <div style="height:20px"></div>
+      </article>
+
+      <div class="bookbar">
+        <div class="price">&pound;5<small>6 seats left</small></div>
+        <button class="btn">Book my seat</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  // Chair row: 34 taken, 6 free
+  const chairs = document.getElementById('chairs');
+  for (let i = 0; i < 40; i++) {
+    const c = document.createElement('span');
+    c.className = 'chair' + (i >= 34 ? ' free' : '');
+    chairs.appendChild(c);
+  }
+  // Filter chips on the home screen
+  const chips = document.querySelectorAll('.chip');
+  chips.forEach(ch => ch.addEventListener('click', () => {
+    chips.forEach(c => c.setAttribute('aria-pressed', c === ch));
+    const f = ch.dataset.f;
+    document.querySelectorAll('.list .card').forEach(card => {
+      card.style.display = (f === 'all' || card.dataset.t === f) ? '' : 'none';
+    });
+  }));
+</script>
+</body>
+</html>

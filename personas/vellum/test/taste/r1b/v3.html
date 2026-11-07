@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Crooked Spine · Evenings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#15100c;
+    --gold-hi:#f7e2a6;
+    --gold:#d2a452;
+    --gold-lo:#9c7433;
+    --cream:#efe3cc;
+    --muted:#a8977e;
+    --oxblood:#6e1f1c;
+    --bottle:#1f3b30;
+    --navy:#1d2a44;
+    --ochre:#8a5a1c;
+    --plum:#4a2437;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:#0b0806}
+  body{
+    max-width:390px;margin:0 auto;min-height:100vh;overflow:hidden;
+    background:
+      radial-gradient(90% 45% at 50% -4%, #f0b25a55 0%, #c0762a22 40%, transparent 72%),
+      radial-gradient(60% 30% at 50% 60%, #2a1c1255 0%, transparent 70%),
+      var(--night);
+    color:var(--cream);
+    font-family:"Jost",system-ui,sans-serif;font-size:15px;line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit}
+  .foil{
+    background:linear-gradient(170deg,var(--gold-hi) 0%,var(--gold) 38%,var(--gold-lo) 52%,var(--gold-hi) 68%,var(--gold) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .caps{font-family:"Jost";text-transform:uppercase;letter-spacing:.22em;font-size:11px;font-weight:500}
+
+  .top{display:flex;justify-content:space-between;align-items:center;padding:18px 22px 0;color:var(--muted)}
+  .lamp{display:block;margin:26px auto 0;width:60px;height:auto;opacity:.95}
+  .mast{text-align:center;padding:10px 22px 0}
+  .mast .name{color:var(--gold);margin-bottom:14px}
+  .mast h1{
+    font-family:"Cormorant Garamond";font-weight:500;font-style:italic;
+    font-size:50px;line-height:.95;letter-spacing:-.01em;color:var(--cream);
+  }
+  .mast h1 span{font-style:normal;font-weight:600}
+  .mast p{margin:16px auto 0;max-width:300px;color:var(--muted);font-size:15px}
+  .orn{display:flex;align-items:center;gap:12px;margin:26px 22px 22px;color:var(--gold)}
+  .orn::before,.orn::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold-lo),transparent)}
+
+  /* the cover */
+  .cover{
+    position:relative;margin:0 22px;padding:12px;border-radius:4px 10px 10px 4px;
+    background:
+      repeating-linear-gradient(0deg,#ffffff07 0 1px,transparent 1px 3px),
+      repeating-linear-gradient(90deg,#00000014 0 1px,transparent 1px 3px),
+      linear-gradient(160deg,#84302a 0%,var(--oxblood) 55%,#521613 100%);
+    box-shadow:0 30px 60px -20px #000,0 0 0 1px #00000060, inset 10px 0 12px -8px #00000080;
+  }
+  .cover::before{ /* hinge */
+    content:"";position:absolute;left:14px;top:0;bottom:0;width:1px;background:#00000055;box-shadow:1px 0 0 #ffffff14;
+  }
+  .frame{
+    border:1px solid #d2a45299;outline:1px solid #d2a45255;outline-offset:-6px;
+    padding:28px 22px 22px 30px;text-align:center;
+  }
+  .frame .kind{color:var(--gold)}
+  .frame h2{
+    font-family:"Cormorant Garamond";font-weight:700;font-size:40px;line-height:.95;margin:14px 0 6px;letter-spacing:.005em;
+  }
+  .frame .by{font-family:"Cormorant Garamond";font-style:italic;font-size:21px;color:var(--gold-hi)}
+  .frame .star{color:var(--gold);margin:14px 0;letter-spacing:.6em;font-size:12px}
+  .frame .when{font-family:"Cormorant Garamond";font-size:22px;font-weight:600;color:var(--cream)}
+  .frame .when small{display:block;font-family:"Jost";font-size:12px;color:#e3c9a6;letter-spacing:.06em;margin-top:2px;font-weight:400}
+  .frame .blurb{font-size:14px;color:#e5cdb0;margin:14px 0 0}
+  .deal{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:20px;padding-top:16px;border-top:1px solid #d2a45244;text-align:left
+  }
+  .deal .p{font-family:"Cormorant Garamond";font-weight:700;font-size:28px;line-height:1}
+  .deal .p small{display:block;font-family:"Jost";font-weight:500;font-size:11.5px;color:var(--gold-hi);letter-spacing:.04em;margin-top:4px}
+  .btn{
+    text-decoration:none;font-weight:600;font-size:14px;letter-spacing:.04em;color:#2a1a0c;
+    background:linear-gradient(170deg,var(--gold-hi),var(--gold) 55%,#b98a3e);
+    padding:12px 18px;border-radius:999px;box-shadow:0 6px 16px -6px #000,inset 0 1px 0 #fff6;
+    white-space:nowrap;
+  }
+
+  /* the shelf of spines */
+  .shelf-h{display:flex;justify-content:space-between;align-items:baseline;margin:44px 22px 14px}
+  .shelf-h h3{font-family:"Cormorant Garamond";font-style:italic;font-weight:500;font-size:28px;color:var(--cream)}
+  .shelf-h span{color:var(--muted)}
+  .stack{padding:0 22px;display:flex;flex-direction:column;gap:5px}
+  .spine{
+    position:relative;display:grid;grid-template-columns:56px 1fr auto;align-items:center;gap:12px;
+    padding:12px 14px 12px 10px;border-radius:3px;
+    background:
+      repeating-linear-gradient(90deg,#ffffff06 0 1px,transparent 1px 3px),
+      linear-gradient(180deg,#ffffff1a 0%,transparent 18%,transparent 78%,#00000055 100%),
+      var(--c);
+    box-shadow:0 2px 0 #00000080, inset 0 0 0 1px #00000040;
+  }
+  .spine::before,.spine::after{ /* gold bands near the ends */
+    content:"";position:absolute;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--gold-hi),var(--gold-lo));opacity:.7;
+  }
+  .spine::before{left:70px}
+  .spine::after{right:6px;opacity:.45}
+  .s1{--c:var(--bottle);margin-right:6px}
+  .s2{--c:var(--navy);margin-left:10px}
+  .s3{--c:var(--plum);margin-right:18px}
+  .s4{--c:var(--ochre);margin-left:4px;margin-right:2px}
+  .s5{--c:#3b3a2a;margin-left:14px}
+  .d{text-align:center;line-height:1}
+  .d b{display:block;font-family:"Cormorant Garamond";font-weight:700;font-size:32px;font-variant-numeric:lining-nums}
+  .d span{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-hi);opacity:.85}
+  .t{padding-left:8px;min-width:0}
+  .t .k{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#e9d7b6;opacity:.75}
+  .t h4{font-family:"Cormorant Garamond";font-weight:700;font-size:21px;line-height:1.05;margin:2px 0 3px;color:var(--cream)}
+  .t .m{font-size:12.5px;color:#e9d7b6}
+  .t .m b{font-weight:600;color:var(--gold-hi)}
+  .act{font-size:12px;font-weight:600;letter-spacing:.04em;text-align:right;line-height:1.25}
+  .act a{display:inline-block;text-decoration:none;border:1px solid var(--gold);color:var(--gold-hi);border-radius:999px;padding:7px 11px}
+  .act .walk{color:#e9d7b6;font-weight:500;font-style:italic;font-family:"Cormorant Garamond";font-size:16px;letter-spacing:0}
+  .sold{opacity:.8}
+  .sold h4{text-decoration:line-through;text-decoration-color:#d2a45299;text-decoration-thickness:1px}
+  .sold .act .tag{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#f1a38d;margin-bottom:4px}
+  .sold .act a{border-color:#e9d7b666;color:#e9d7b6;font-weight:500}
+  .plank{margin:6px 12px 0;height:12px;border-radius:2px;background:linear-gradient(180deg,#5a3c22,#3a2615);box-shadow:0 14px 24px -8px #000}
+
+  .howto{margin:40px 22px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .howto > div{border:1px solid #d2a45240;border-radius:10px;padding:14px}
+  .howto .caps{color:var(--gold);font-size:10px}
+  .howto p{font-family:"Cormorant Garamond";font-size:18px;line-height:1.15;margin-top:6px;color:var(--cream)}
+
+  .all{display:block;text-align:center;margin:28px 22px 0;padding:14px;border-radius:999px;border:1px solid var(--gold-lo);text-decoration:none;color:var(--gold-hi);font-weight:500;letter-spacing:.06em;font-size:14px}
+  footer{text-align:center;padding:36px 22px 46px;color:var(--muted);font-size:13px}
+  footer .sign{font-family:"Cormorant Garamond";font-style:italic;font-size:22px;color:var(--cream);margin-bottom:8px}
+</style>
+</head>
+<body>
+  <div class="top caps"><span>Tanner Street</span><span>Menu</span></div>
+
+  <svg class="lamp" viewBox="0 0 60 44" aria-hidden="true">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7e2a6"/><stop offset="1" stop-color="#9c7433"/></linearGradient></defs>
+    <path d="M14 22 L22 4 H38 L46 22 Z" fill="none" stroke="url(#g)" stroke-width="1.4"/>
+    <path d="M30 22 V36 M20 38 H40" stroke="url(#g)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+    <ellipse cx="30" cy="24" rx="8" ry="2" fill="#f7e2a6" opacity=".5"/>
+  </svg>
+
+  <header class="mast">
+    <div class="name caps">The Crooked Spine &middot; Booksellers</div>
+    <h1>Evenings <span>among</span> the shelves</h1>
+    <p>Author readings, a book club that argues nicely, and Saturday stories for small people.</p>
+  </header>
+
+  <div class="orn caps">October</div>
+
+  <article class="cover">
+    <div class="frame">
+      <div class="kind caps">Next &middot; Author reading</div>
+      <h2 class="foil">The Salt Orchard</h2>
+      <div class="by">read by Ines Calloway</div>
+      <div class="star">&#10022; &#10022; &#10022;</div>
+      <div class="when">Thursday 2 October, 7 pm<small>Doors 6:30 &middot; about 90 minutes</small></div>
+      <p class="blurb">Cider-makers, a family secret and one very long winter. Reading, questions, then signing.</p>
+      <div class="deal">
+        <div class="p"><span class="foil">&pound;6</span><small>wine included<br>9 seats left</small></div>
+        <a class="btn" href="#">Book a seat</a>
+      </div>
+    </div>
+  </article>
+
+  <div class="shelf-h"><h3>Also on the shelf</h3><span class="caps">5 more</span></div>
+
+  <div class="stack">
+    <div class="spine s1">
+      <div class="d"><span>Sat</span><b class="foil">4</b></div>
+      <div class="t"><div class="k">Story hour &middot; 3&ndash;7 yrs</div><h4>Tales from the Hedgerow</h4><div class="m">10:30 am &middot; <b>Free</b></div></div>
+      <div class="act"><span class="walk">Just<br>turn up</span></div>
+    </div>
+    <div class="spine s2">
+      <div class="d"><span>Tue</span><b class="foil">7</b></div>
+      <div class="t"><div class="k">Book club</div><h4>Piranesi, Susanna Clarke</h4><div class="m">7:30 pm &middot; <b>Free</b></div></div>
+      <div class="act"><span class="walk">Just<br>turn up</span></div>
+    </div>
+    <div class="spine s3 sold">
+      <div class="d"><span>Thu</span><b class="foil">9</b></div>
+      <div class="t"><div class="k">Poetry night</div><h4>Tomasz Wren, Weather for Birds</h4><div class="m">7 pm &middot; <b>&pound;5</b></div></div>
+      <div class="act"><span class="tag">Sold out</span><a href="#">Waitlist</a></div>
+    </div>
+    <div class="spine s4">
+      <div class="d"><span>Sat</span><b class="foil">11</b></div>
+      <div class="t"><div class="k">Story hour &middot; 3&ndash;7 yrs</div><h4>The Very Windy Day</h4><div class="m">10:30 am &middot; <b>Free</b></div></div>
+      <div class="act"><span class="walk">Just<br>turn up</span></div>
+    </div>
+    <div class="spine s5">
+      <div class="d"><span>Thu</span><b class="foil">16</b></div>
+      <div class="t"><div class="k">Author reading</div><h4>Dev Okafor, A Quiet Kind of Harm</h4><div class="m">7 pm &middot; <b>&pound;8</b>, &pound;5 off the book</div></div>
+      <div class="act"><a href="#">Book</a></div>
+    </div>
+    <div class="plank"></div>
+  </div>
+
+  <section class="howto">
+    <div><div class="caps">Free events</div><p>No ticket, no booking. Come as you are.</p></div>
+    <div><div class="caps">Ticketed</div><p>Book online; small room, so seats go quickly.</p></div>
+  </section>
+
+  <a class="all" href="#">See all of October &rarr;</a>
+
+  <footer>
+    <div class="sign">Come in, the kettle&rsquo;s on.</div>
+    14 Tanner Street &middot; Tue&ndash;Sun, 10&ndash;6<br>Step-free entrance on Mill Lane
+  </footer>
+</body>
+</html>

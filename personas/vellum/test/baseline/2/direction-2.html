@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Front Desk · Ledger</title>
+<style>
+:root{
+ --paper:#faf9f6;--panel:#fff;--rule:#e7e4dc;--rule2:#f1efe9;--ink:#1c1b18;--ink2:#5d5a52;--ink3:#97938a;
+ --bar:#1c1b18;--sel:#fff4c7;--selbar:#1c1b18;--amber:#b36b00;--amber-soft:#fff1d6;--red:#c0392b;--red-soft:#fbe7e4;--green:#237a45;--green-soft:#e4f2e8;--blue:#2c56c7;
+ --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font:13px/1.3 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--paper);display:flex;flex-direction:column;overflow:hidden}
+button{font:inherit;color:inherit;cursor:pointer}
+.m{font-family:var(--mono);font-size:12.5px;font-variant-numeric:tabular-nums}
+kbd{font:600 11px var(--mono);display:inline-block;min-width:18px;text-align:center;padding:1px 4px;border-radius:3px;background:var(--rule2);border:1px solid var(--rule);color:var(--ink)}
+
+/* command bar */
+.cmd{flex:none;background:var(--bar);color:#fff;display:flex;align-items:center;gap:14px;padding:0 14px;height:52px}
+.cmd .clinic{font-weight:700;font-size:13px;white-space:nowrap}
+.cmd .clinic span{color:#8f8b80;font-weight:400}
+.prompt{flex:1;display:flex;align-items:center;gap:8px;background:#2c2b27;border-radius:6px;height:36px;padding:0 10px;border:1px solid #3b3a35}
+.prompt:focus-within{border-color:#d9b44a;box-shadow:0 0 0 2px rgba(217,180,74,.25)}
+.prompt .caret{font:700 15px var(--mono);color:#d9b44a}
+.tokens{display:flex;gap:4px;flex:none}
+.tok{font-size:12px;background:#3b3a35;color:#e9e6dd;border-radius:4px;padding:2px 7px;white-space:nowrap}
+.tok.cur{background:#d9b44a;color:#1c1b18;font-weight:600}
+.tok.mode{background:#fff;color:#1c1b18;font-weight:700}
+.prompt input{flex:1;background:transparent;border:0;color:#fff;font:14px var(--mono);outline:none;min-width:80px}
+.prompt input::placeholder{color:#8f8b80}
+.cmd .clock{font:600 13px var(--mono);color:#d9b44a}
+.cmd .date{color:#bdb9ae;white-space:nowrap}
+
+/* free-time strip */
+.strip{flex:none;background:var(--panel);border-bottom:1px solid var(--rule);padding:8px 14px 6px;display:grid;grid-template-columns:128px 1fr 176px;gap:3px 12px;align-items:center}
+.strip .nm{font-size:12px;white-space:nowrap}
+.strip .nm kbd{margin-right:6px}
+.strip .nm.dim{color:var(--ink3)}
+.lane{position:relative;height:12px;background:repeating-linear-gradient(90deg,transparent 0 calc(100%/12 - 1px),var(--rule2) calc(100%/12 - 1px) calc(100%/12));border-radius:2px}
+.lane i{position:absolute;top:1px;bottom:1px;border-radius:2px}
+.lane i.b{background:#cfcbc0}
+.lane i.p{background:#e8e5dd}
+.lane i.g{background:var(--amber);box-shadow:0 0 0 1px #fff inset}
+.lane i.l{background:var(--red)}
+.lane i.k{background:var(--blue);top:-2px;bottom:-2px;box-shadow:0 0 0 2px #fff;z-index:2}
+.lane .now{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--red)}
+.strip .nx{font-size:12px;color:var(--ink2);white-space:nowrap}
+.strip .nx b{color:var(--amber)}
+.axis{position:relative;height:12px;font:10px var(--mono);color:var(--ink3)}
+.axis span{position:absolute;transform:translateX(-50%)}
+
+/* body */
+.body{flex:1;display:flex;min-height:0}
+.list{flex:1;overflow:auto;background:var(--panel);position:relative}
+.side{width:360px;flex:none;border-left:1px solid var(--rule);overflow:auto;background:var(--paper)}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+th{position:sticky;top:0;background:var(--panel);z-index:2;text-align:left;font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;padding:7px 8px;border-bottom:1px solid var(--rule)}
+td{padding:0 8px;height:27px;border-bottom:1px solid var(--rule2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:0}
+tr.r{cursor:default}
+tr.r:hover td{background:#fcfbf8}
+tr.sel td{background:var(--sel)!important}
+tr.sel td:first-child{box-shadow:inset 3px 0 0 var(--selbar)}
+tr.hr td{height:22px;background:var(--paper);font:600 11px var(--mono);color:var(--ink3);border-bottom:1px solid var(--rule)}
+tr.hr.nowhr td{color:var(--red)}
+tr.past td{color:var(--ink3)}
+tr.past td.pt{color:var(--ink2)}
+tr.earlier td{color:var(--ink2);font-size:12px;background:var(--paper)}
+tr.gap td{background:var(--amber-soft);color:#7a4a00}
+tr.gap td.pt{font-weight:600}
+tr.nowrow td{height:0;padding:0;border-bottom:2px solid var(--red)}
+tr.new td{animation:flash 1.4s}
+@keyframes flash{0%{background:#ffe38a}100%{}}
+td.pt{font-weight:600}
+.st{font-size:12px}
+.st.late{color:var(--red);font-weight:700}
+.st.here{color:var(--green);font-weight:600}
+.st.room{color:var(--blue)}
+.due{color:var(--amber);font-weight:600}
+.res{font-size:11px;color:#6b4bb0}
+.keys{color:var(--ink3);font-size:11px;text-align:right}
+
+/* side */
+.sec{padding:14px 16px;border-bottom:1px solid var(--rule)}
+.sec h4{margin:0 0 8px;font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em}
+.big{font-size:17px;font-weight:700}
+.sub{color:var(--ink2);margin-top:2px}
+.kv{display:grid;grid-template-columns:90px 1fr;gap:3px 8px;margin-top:10px;font-size:12.5px}
+.kv span:nth-child(odd){color:var(--ink3)}
+.acts{display:flex;flex-direction:column;gap:4px}
+.act{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--rule);border-radius:5px;padding:6px 8px;text-align:left}
+.act:hover{border-color:#cdc8bb}
+.act.pri{border-color:var(--ink)}
+.act span{flex:1}
+.act small{color:var(--ink3)}
+.cand{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-top:1px solid var(--rule2)}
+.cand:first-of-type{border-top:0}
+.cand .g{flex:1}
+.cand .t2{color:var(--ink2);font-size:12px}
+.help{display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:12.5px;color:var(--ink2);align-items:center}
+.help kbd{justify-self:start}
+
+/* booking pane */
+.bk{padding:18px 22px;max-width:980px}
+.steps{display:flex;gap:0;margin-bottom:14px;border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:var(--panel)}
+.step{flex:1;padding:8px 12px;border-left:1px solid var(--rule);min-width:0}
+.step:first-child{border-left:0}
+.step .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);font-weight:600}
+.step .v{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.step .v.empty{color:var(--ink3);font-weight:400}
+.step.cur{background:var(--sel);box-shadow:inset 0 -3px 0 var(--ink)}
+.opts{background:var(--panel);border:1px solid var(--rule);border-radius:6px}
+.opts .hd{display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--rule);font-size:12px;color:var(--ink2)}
+.o{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;padding:0 12px;height:32px;border-bottom:1px solid var(--rule2);cursor:pointer}
+.o:last-child{border-bottom:0}
+.o.hi{background:var(--sel)}
+.o.dis{color:var(--ink3);cursor:not-allowed}
+.o .n{font:600 12px var(--mono);color:var(--ink3)}
+.o.hi .n{color:var(--ink)}
+.o .r{color:var(--ink2);font-size:12px;white-space:nowrap}
+.o .fit{font-size:11px;padding:1px 6px;border-radius:3px;background:var(--green-soft);color:var(--green);font-weight:600;margin-left:8px}
+.o .fit.bad{background:var(--amber-soft);color:var(--amber)}
+.o .grp{color:var(--ink3);font-size:12px}
+.o.sep{height:24px;cursor:default;background:var(--paper);grid-template-columns:1fr;font:600 11px var(--mono);color:var(--ink3)}
+.confirm{background:var(--panel);border:2px solid var(--ink);border-radius:8px;padding:16px 18px}
+.confirm .line{font-size:18px;font-weight:700}
+.confirm .ok{color:var(--green);font-size:12.5px;margin-top:8px}
+.confirm .no{color:var(--red);font-size:12.5px;margin-top:8px}
+.confirm .row{display:flex;gap:18px;margin-top:14px;color:var(--ink2);align-items:center}
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 14px;border-radius:6px;display:none;gap:14px;align-items:center;z-index:30;font-size:13px}
+.toast kbd{background:#3b3a35;border-color:#55534c;color:#fff}
+.proto{position:fixed;right:12px;bottom:12px;z-index:60;background:#111;color:#fff;border-radius:8px;padding:5px;display:flex;gap:4px;font-size:12px;opacity:.9}
+.proto span{padding:4px 6px;color:#aaa}
+.proto button{background:#333;border:0;color:#fff;border-radius:5px;padding:4px 9px}
+.proto button.on{background:#fff;color:#111}
+</style>
+</head>
+<body>
+<div class="cmd">
+ <div class="clinic">Fysio Nord <span>desk</span></div>
+ <label class="prompt"><span class="caret">›</span><span class="tokens" id="tokens"></span><input id="q" autocomplete="off" spellcheck="false"></label>
+ <span class="date" id="date"></span><span class="clock" id="clock"></span>
+</div>
+<div class="strip" id="strip"></div>
+<div class="body">
+ <div class="list" id="list"></div>
+ <div class="side" id="side"></div>
+</div>
+<div class="toast" id="toast"></div>
+<div class="proto"><span>Prototype</span><button id="pDay" class="on">Day view</button><button id="pBook">Booking</button></div>
+<script>
+// ---------- Mock data (same in all three directions) ----------
+const pad=n=>String(n).padStart(2,'0');
+const toMin=s=>{const[a,b]=s.split(':').map(Number);return a*60+b};
+const fmt=n=>pad(Math.floor(n/60))+':'+pad(n%60);
+const NOW=toMin('10:40');
+const DAY_START=toMin('07:30'), DAY_END=toMin('19:30');
+const DATE_LABEL='Saturday 26 September';
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const R=rng(20260926);
+
+const THERAPISTS=[
+ {id:'IS',name:'Ingrid Solberg',first:'Ingrid',start:'07:30',end:'16:00',room:'R1',skills:['SW','GYM']},
+ {id:'MR',name:'Marco Rossi',first:'Marco',start:'07:30',end:'14:00',room:'R2',skills:['LZ']},
+ {id:'TB',name:'Tom Bakke',first:'Tom',start:'08:00',end:'17:30',room:'R5',skills:['SW','GYM'],lunch:['12:00','12:30']},
+ {id:'JB',name:'Jonas Berg',first:'Jonas',start:'08:00',end:'16:00',room:'R6',skills:['GYM'],lunch:['12:30','13:00']},
+ {id:'PN',name:'Priya Nair',first:'Priya',start:'09:30',end:'19:00',room:'R4',skills:['SW','LZ'],lunch:['14:00','14:30']},
+ {id:'AL',name:'Ane Lund',first:'Ane',start:'11:30',end:'19:30',room:'R7',skills:['LZ','SW']},
+];
+THERAPISTS.forEach(t=>{t.s=toMin(t.start);t.e=toMin(t.end);t.ls=t.lunch?toMin(t.lunch[0]):null;t.le=t.lunch?toMin(t.lunch[1]):null;});
+const TH=Object.fromEntries(THERAPISTS.map(t=>[t.id,t]));
+const ROOMS={R1:'Room 1',R2:'Room 2',R3:'Room 3',R4:'Room 4',R5:'Room 5',R6:'Room 6',R7:'Room 7',GYM:'Gym',LASER:'Laser unit'};
+const TREATMENTS=[
+ {id:'FU',code:'fu',name:'Follow-up',dur:30,price:650,w:50},
+ {id:'ASM',code:'as',name:'Initial assessment',dur:45,price:950,w:10},
+ {id:'SM',code:'sm',name:'Sports massage',dur:45,price:750,w:9},
+ {id:'DN',code:'dn',name:'Dry needling',dur:30,price:650,w:12},
+ {id:'SW',code:'sw',name:'Shockwave',dur:30,price:850,w:10,skill:'SW',room:'R3',needs:'Room 3 (shockwave unit)'},
+ {id:'GYM',code:'gy',name:'Rehab gym',dur:45,price:700,w:8,skill:'GYM',room:'GYM',needs:'Gym'},
+ {id:'LZ',code:'lz',name:'Laser therapy',dur:30,price:600,w:6,skill:'LZ',device:'LASER',needs:'Laser unit'},
+];
+const TX=Object.fromEntries(TREATMENTS.map(t=>[t.id,t]));
+const SKILL_NAME={SW:'shockwave',GYM:'gym',LZ:'laser'};
+
+const FIRST=['Kari','Erik','Sofie','Lars','Nora','Henrik','Ingrid','Ola','Mia','Jonas','Emma','Jakob','Sara','Magnus','Ida','Filip','Thea','Anders','Julie','Mats','Hanne','Per','Silje','Aksel','Maja','Trond','Linnea','Oskar','Vilde','Eirik','Hedda','Sander','Tuva','Marius','Frida','Kristian','Amalie','Sindre','Ella','Geir','Leah','Omar','Ali','Anna','Petter','Rune'];
+const LAST=['Hansen','Dahl','Brekke','Moen','Vik','Aas','Johansen','Larsen','Olsen','Eide','Haugen','Berg','Strand','Lie','Nilsen','Bakken','Solheim','Nygaard','Lunde','Holm','Kristiansen','Andersen','Pedersen','Aune','Rønning','Sæther','Myhre','Tveit','Foss','Hovland','Ali','Karim','Novak'];
+const usedNames=new Set(['Kari Hansen','Erik Dahl','Sofie Brekke','Lars Moen','Nora Vik','Henrik Aas']);
+const PATIENTS=[];
+function phone(){return '9'+Math.floor(R()*10)+Math.floor(R()*10)+' '+pad(Math.floor(R()*100))+' '+String(Math.floor(R()*1000)).padStart(3,'0')}
+function newPatient(){
+ let n;do{n=FIRST[Math.floor(R()*FIRST.length)]+' '+LAST[Math.floor(R()*LAST.length)]}while(usedNames.has(n));
+ usedNames.add(n);
+ const p={name:n,phone:phone(),usual:THERAPISTS[Math.floor(R()*THERAPISTS.length)].id,visits:1+Math.floor(R()*14),balance:R()<0.08?650:0};
+ PATIENTS.push(p);return p;
+}
+
+const APPTS=[];let nid=1;
+function live(a){return a.status!=='cancelled'}
+function resourceBusy(res,s,e,ignoreId){return APPTS.some(a=>a.id!==ignoreId&&live(a)&&(a.room===res||a.device===res)&&a.start<e&&s<a.end)}
+function therapistBusy(tid,s,e,ignoreId){return APPTS.some(a=>a.id!==ignoreId&&live(a)&&a.t===tid&&a.start<e&&s<a.end)}
+function works(t,s,e){return s>=t.s&&e<=t.e&&!(t.ls!=null&&s<t.le&&t.ls<e)}
+function pickTx(){let x=R()*100,acc=0;for(const t of TREATMENTS){acc+=t.w;if(x<acc)return t}return TREATMENTS[0]}
+
+(function generate(){
+ const cur=Object.fromEntries(THERAPISTS.map(t=>[t.id,t.s]));
+ let active=[...THERAPISTS];
+ while(active.length){
+  active.sort((a,b)=>cur[a.id]-cur[b.id]);
+  const t=active[0];const c=cur[t.id];
+  if(c>=t.e){active.shift();continue}
+  if(t.ls!=null&&c>=t.ls&&c<t.le){cur[t.id]=t.le;continue}
+  if(R()<0.045){cur[t.id]=c+(R()<0.6?15:30);continue}
+  const ok=x=>{const e=c+x.dur;if(!works(t,c,e))return false;if(x.skill&&!t.skills.includes(x.skill))return false;if(x.room&&resourceBusy(x.room,c,e))return false;if(x.device&&resourceBusy(x.device,c,e))return false;return true};
+  let x=pickTx();if(!ok(x))x=TX.FU;
+  if(!ok(x)){cur[t.id]=c+15;continue}
+  APPTS.push({id:nid++,t:t.id,start:c,end:c+x.dur,tx:x.id,patient:newPatient(),room:x.room||t.room,device:x.device||null,status:'booked',paid:false});
+  cur[t.id]=c+x.dur;
+ }
+ APPTS.sort((a,b)=>a.start-b.start||THERAPISTS.indexOf(TH[a.t])-THERAPISTS.indexOf(TH[b.t]));
+ APPTS.forEach(a=>{
+  if(a.end<=NOW){a.status=R()<0.05?'noshow':'done';a.paid=a.status==='done'&&R()<0.85;a.arrivedAt=a.start-Math.floor(R()*10)}
+  else if(a.start<=NOW){a.status='intreat';a.arrivedAt=a.start-Math.floor(R()*8)}
+  else if(a.start-NOW<=20){if(R()<0.6){a.status='arrived';a.arrivedAt=NOW-Math.floor(R()*9)}}
+ });
+ // Late patients: started in the last 15 minutes but not here
+ APPTS.filter(a=>a.start<NOW&&a.start>=NOW-15).slice(0,2).forEach(a=>{a.status='late';delete a.arrivedAt});
+ // Cancellations this morning free up time later today
+ const fut=APPTS.filter(a=>a.start>NOW+45&&a.status==='booked');
+ const sw=fut.find(a=>a.tx==='SW'&&a.start<toMin('15:00'));
+ const toCancel=[sw,fut.filter(a=>a.tx!=='SW'&&a.start<toMin('13:00'))[2],fut.filter(a=>a.tx!=='SW'&&a.start>toMin('15:00'))[4]].filter(Boolean);
+ const times=['08:52','09:31','10:18'];
+ toCancel.forEach((a,i)=>{a.status='cancelled';a.cancelledAt=times[i];a.cancelNote=['Called in sick','Work clash','Child ill'][i]});
+})();
+
+const WAITLIST=[
+ {name:'Kari Hansen',phone:'912 34 567',tx:'FU',note:'Any therapist, any time today',since:'Mon',usual:'TB'},
+ {name:'Erik Dahl',phone:'934 11 208',tx:'SW',before:toMin('15:00'),note:'Shockwave, before 15:00',since:'Tue',usual:'IS'},
+ {name:'Sofie Brekke',phone:'401 22 918',tx:'ASM',therapists:['PN','AL'],after:toMin('15:00'),note:'Priya or Ane, after 15:00',since:'Wed'},
+ {name:'Lars Moen',phone:'958 70 131',tx:'GYM',after:toMin('13:00'),note:'Afternoons only',since:'Wed',usual:'JB'},
+ {name:'Nora Vik',phone:'476 03 552',tx:'FU',therapists:['IS','TB'],before:toMin('13:00'),note:'Ingrid or Tom, mornings',since:'Thu',usual:'IS'},
+ {name:'Henrik Aas',phone:'922 58 004',tx:'DN',notice:30,note:'Lives nearby, 30 min notice',since:'Fri',usual:'MR'},
+];
+WAITLIST.forEach(w=>PATIENTS.push({name:w.name,phone:w.phone,usual:w.usual||'TB',visits:2+Math.floor(R()*6),balance:0,waitlist:w}));
+PATIENTS.sort((a,b)=>a.name.localeCompare(b.name));
+
+function gapsFor(t,from=NOW,min=30){
+ const busy=APPTS.filter(a=>a.t===t.id&&live(a)).map(a=>[a.start,a.end]);
+ if(t.ls!=null)busy.push([t.ls,t.le]);
+ busy.sort((a,b)=>a[0]-b[0]);
+ const out=[];let c=Math.max(t.s,Math.ceil(from/15)*15);
+ for(const[s,e]of busy){if(e<=c)continue;if(s>c&&s-c>=min)out.push({t:t.id,start:c,end:s});c=Math.max(c,e)}
+ if(t.e-c>=min)out.push({t:t.id,start:c,end:t.e});
+ out.forEach(g=>{g.freedBy=APPTS.find(a=>a.status==='cancelled'&&a.t===t.id&&a.start<g.end&&g.start<a.end)});
+ return out;
+}
+function allGaps(from=NOW){return THERAPISTS.flatMap(t=>gapsFor(t,from)).sort((a,b)=>a.start-b.start)}
+function waitFits(w,t){const x=TX[w.tx];if(x.skill&&!t.skills.includes(x.skill))return false;if(w.therapists&&!w.therapists.includes(t.id))return false;return true}
+function candidatesFor(g){
+ const t=TH[g.t];
+ return WAITLIST.map(w=>{
+  if(!waitFits(w,t))return null;const x=TX[w.tx];
+  let s=Math.max(g.start,w.after||0,w.notice?NOW+w.notice:0);s=Math.ceil(s/15)*15;
+  for(;s+x.dur<=g.end;s+=15){
+   if(w.before&&s+x.dur>w.before)break;
+   if(x.room&&resourceBusy(x.room,s,s+x.dur))continue;
+   if(x.device&&resourceBusy(x.device,s,s+x.dur))continue;
+   return{w,start:s,end:s+x.dur,tx:x,usual:w.usual===t.id};
+  }
+  return null;
+ }).filter(Boolean).sort((a,b)=>(b.usual-a.usual)||(a.start-b.start));
+}
+function findSlots({tx,therapists,from=NOW,to=DAY_END,ignoreId}){
+ const x=TX[tx];const res=[];
+ for(const t of THERAPISTS){
+  if(therapists&&therapists.length&&!therapists.includes(t.id))continue;
+  if(x.skill&&!t.skills.includes(x.skill))continue;
+  for(let s=Math.max(t.s,Math.ceil(from/15)*15);s+x.dur<=Math.min(t.e,to);s+=15){
+   const e=s+x.dur;
+   if(!works(t,s,e)||therapistBusy(t.id,s,e,ignoreId))continue;
+   if(x.room&&resourceBusy(x.room,s,e,ignoreId))continue;
+   if(x.device&&resourceBusy(x.device,s,e,ignoreId))continue;
+   res.push({t:t.id,start:s,end:e,room:x.room||t.room,device:x.device||null});
+  }
+ }
+ return res.sort((a,b)=>a.start-b.start||THERAPISTS.indexOf(TH[a.t])-THERAPISTS.indexOf(TH[b.t]));
+}
+// How a slot sits against the therapist's other bookings: minutes left free before and after it
+function slotFit(sl,ignoreId){
+ const t=TH[sl.t];
+ const busy=APPTS.filter(a=>a.t===t.id&&live(a)&&a.id!==ignoreId).map(a=>[a.start,a.end]);
+ if(t.ls!=null)busy.push([t.ls,t.le]);
+ let prev=Math.max(t.s,Math.ceil(NOW/15)*15),next=t.e;
+ busy.forEach(([s,e])=>{if(e<=sl.start&&e>prev)prev=e;if(s>=sl.end&&s<next)next=s});
+ return{before:sl.start-prev,after:next-sl.end};
+}
+function checkConflicts(sl,tx,ignoreId){
+ const x=TX[tx],t=TH[sl.t],out=[];
+ if(x.skill&&!t.skills.includes(x.skill))out.push(t.first+' does not do '+SKILL_NAME[x.skill]);
+ if(!works(t,sl.start,sl.end))out.push(t.first+' is not working '+fmt(sl.start)+'–'+fmt(sl.end));
+ if(therapistBusy(t.id,sl.start,sl.end,ignoreId))out.push(t.first+' is already booked');
+ if(x.room&&resourceBusy(x.room,sl.start,sl.end,ignoreId))out.push(ROOMS[x.room]+' is in use');
+ if(x.device&&resourceBusy(x.device,sl.start,sl.end,ignoreId))out.push('Laser unit is in use');
+ return out;
+}
+function book({patient,tx,t,start},moveId){
+ const x=TX[tx];
+ if(moveId){const a=APPTS.find(a=>a.id===moveId);Object.assign(a,{t,start,end:start+x.dur,tx,room:x.room||TH[t].room,device:x.device||null,isNew:true});return a}
+ const a={id:nid++,t,start,end:start+x.dur,tx,patient,room:x.room||TH[t].room,device:x.device||null,status:'booked',paid:false,isNew:true};
+ APPTS.push(a);APPTS.sort((a,b)=>a.start-b.start||THERAPISTS.indexOf(TH[a.t])-THERAPISTS.indexOf(TH[b.t]));
+ const wi=WAITLIST.findIndex(w=>w.name===patient.name);if(wi>=0)WAITLIST.splice(wi,1);
+ return a;
+}
+function searchPatients(q){q=q.trim().toLowerCase();if(!q)return[];const d=q.replace(/\s/g,'');return PATIENTS.filter(p=>p.name.toLowerCase().split(' ').some(w=>w.startsWith(q))||p.name.toLowerCase().startsWith(q)||(/^\d+$/.test(d)&&p.phone.replace(/\s/g,'').includes(d))).slice(0,8)}
+function lateBy(a){return NOW-a.start}
+function kr(n){return n.toLocaleString('nb-NO').replace(/ /g,' ')+' kr'}
+
+
+// ---------- Direction 2: keyboard ledger ----------
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const q=$('#q');
+let preview=null,mode='list',selKey=null,showEarlier=false,filterT=null,undo=null,bk=null,hi=0,newKey=null;
+const pct=m=>((m-DAY_START)/(DAY_END-DAY_START)*100).toFixed(3)+'%';
+
+function renderStrip(){
+ let h='<div></div><div class="axis">';
+ for(let m=480;m<=1140;m+=120)h+=`<span style="left:${pct(m)}">${fmt(m)}</span>`;
+ h+='</div><div></div>';
+ THERAPISTS.forEach((t,i)=>{
+  const g=gapsFor(t);
+  h+=`<div class="nm ${filterT&&filterT!==t.id?'dim':''}"><kbd>${i+1}</kbd>${t.name}</div><div class="lane">`;
+  APPTS.filter(a=>a.t===t.id&&live(a)).forEach(a=>h+=`<i class="${a.status==='late'?'l':a.end<=NOW?'p':'b'}" style="left:${pct(a.start)};width:calc(${pct(a.end)} - ${pct(a.start)})"></i>`);
+  g.forEach(x=>h+=`<i class="g" style="left:${pct(x.start)};width:calc(${pct(x.end)} - ${pct(x.start)})"></i>`);
+  if(mode==='booking'&&preview&&preview.t===t.id)h+=`<i class="k" style="left:${pct(preview.start)};width:calc(${pct(preview.end)} - ${pct(preview.start)})"></i>`;
+  h+=`<span class="now" style="left:${pct(NOW)}"></span></div>`;
+  h+=`<div class="nx m">${t.start}–${t.end} ${g.length?`<b>· ${fmt(g[0].start)} ${g[0].end-g[0].start}m</b>`:'· full'}</div>`;
+ });
+ $('#strip').innerHTML=h;
+}
+
+// build selectable rows
+function buildRows(){
+ const text=mode==='list'?q.value.trim().toLowerCase():'';
+ const match=a=>!text||a.patient.name.toLowerCase().includes(text)||a.patient.phone.replace(/\s/g,'').includes(text.replace(/\s/g,''));
+ const rows=[];
+ let items=APPTS.filter(a=>live(a)&&(!filterT||a.t===filterT)&&match(a)).map(a=>({k:'a'+a.id,a,start:a.start}));
+ if(!text)items=items.concat(allGaps().filter(g=>!filterT||g.t===filterT).map(g=>({k:'g'+g.t+g.start,g,start:g.start})));
+ items.sort((x,y)=>x.start-y.start||(x.g?1:0)-(y.g?1:0));
+ const past=items.filter(i=>i.a&&i.a.end<=NOW&&!(i.a.status==='done'&&!i.a.paid));
+ const rest=items.filter(i=>!past.includes(i));
+ if(past.length&&!text){
+  const ns=past.filter(i=>i.a.status==='noshow').length;
+  rows.push({k:'earlier',type:'earlier',n:past.length,ns});
+  if(showEarlier)past.forEach(i=>rows.push(Object.assign({type:'item'},i)));
+ }else past.forEach(i=>rows.push(Object.assign({type:'item'},i)));
+ let lastH=null,nowDone=false;
+ rest.forEach(i=>{
+  const hh=Math.floor(i.start/60);
+  if(!nowDone&&i.start>=NOW&&!text){rows.push({type:'now'});nowDone=true}
+  if(hh!==lastH){rows.push({type:'hr',h:hh});lastH=hh}
+  rows.push(Object.assign({type:'item'},i));
+ });
+ return rows;
+}
+function statusCell(a){
+ switch(a.status){
+  case'late':return`<span class="st late">LATE ${lateBy(a)}m</span>`;
+  case'arrived':return`<span class="st here">here ${fmt(a.arrivedAt)}</span>`;
+  case'intreat':return`<span class="st room">in room</span>`;
+  case'done':return`<span class="st">done</span>`;
+  case'noshow':return`<span class="st">no-show</span>`;
+  default:return a.start-NOW<=30?`<span class="st">due in ${a.start-NOW}m</span>`:`<span class="st" style="color:var(--ink3)">booked</span>`;
+ }
+}
+function keysFor(a){
+ if(a.status==='booked'||a.status==='late')return'c m x';
+ if(a.status==='done'&&!a.paid)return'p';
+ if(a.status==='arrived')return'p m';
+ return'';
+}
+let ROWS=[];
+function renderList(){
+ ROWS=buildRows();
+ const sel=ROWS.filter(r=>r.k);
+ if(!selKey||!sel.some(r=>r.k===selKey)){const f=sel.find(r=>r.a&&r.a.start>=NOW-15&&r.a.status!=='done')||sel[0];selKey=f&&f.k}
+ let h=`<table><colgroup><col style="width:62px"><col style="width:44px"><col style="width:250px"><col><col style="width:74px"><col style="width:84px"><col style="width:96px"><col style="width:80px"><col style="width:58px"></colgroup>
+ <thead><tr><th>Time</th><th>Min</th><th>Patient</th><th>Treatment</th><th>With</th><th>Room</th><th>Status</th><th>Money</th><th style="text-align:right">Keys</th></tr></thead><tbody>`;
+ ROWS.forEach(r=>{
+  const s=r.k===selKey?' sel':'';
+  if(r.type==='earlier'){h+=`<tr class="r earlier${s}" data-k="earlier"><td colspan="9">${showEarlier?'▾':'▸'} Earlier today: ${r.n} finished${r.ns?', '+r.ns+' no-show':''}, all paid · <kbd>E</kbd> ${showEarlier?'hide':'show'}</td></tr>`;return}
+  if(r.type==='now'){h+=`<tr class="nowrow"><td colspan="9"></td></tr>`;return}
+  if(r.type==='hr'){h+=`<tr class="hr ${r.h===Math.floor(NOW/60)?'nowhr':''}"><td colspan="9">${pad(r.h)}:00${r.h===Math.floor(NOW/60)?' · now '+fmt(NOW):''}</td></tr>`;return}
+  if(r.g){const g=r.g,c=candidatesFor(g);
+   h+=`<tr class="r gap${s}" data-k="${r.k}"><td class="m">${fmt(g.start)}</td><td class="m">${g.end-g.start}</td><td class="pt">Open${g.freedBy?' · freed by '+esc(g.freedBy.patient.name)+' at '+g.freedBy.cancelledAt:''}</td><td>${c.length?c.length+' on waitlist fit':'no waitlist fit'}</td><td>${TH[g.t].first}</td><td>${ROOMS[TH[g.t].room]}</td><td class="st">gap</td><td></td><td class="keys">f 1–${Math.min(4,c.length)||1}</td></tr>`;return}
+  const a=r.a,x=TX[a.tx];
+  const cls=(a.end<=NOW?' past':'')+(r.k===newKey?' new':'');
+  const money=a.status==='done'&&!a.paid?`<span class="due">${x.price} due</span>`:a.paid?'<span style="color:var(--ink3)">paid</span>':'';
+  h+=`<tr class="r${cls}${s}" data-k="${r.k}"><td class="m">${fmt(a.start)}</td><td class="m">${x.dur}</td><td class="pt">${esc(a.patient.name)}${a.patient.balance?' <span class="due" style="font-weight:400;font-size:11px">owes '+a.patient.balance+'</span>':''}</td><td>${x.name}</td><td>${TH[a.t].first}</td><td>${x.room||x.device?`<span class="res">${x.room?ROOMS[x.room]:ROOMS[a.room]+'+laser'}</span>`:ROOMS[a.room]}</td><td>${statusCell(a)}</td><td class="m">${money}</td><td class="keys">${keysFor(a)}</td></tr>`;
+ });
+ h+='</tbody></table>';
+ $('#list').innerHTML=h;
+ newKey=null;
+ const el=$('#list tr.sel');if(el)el.scrollIntoView({block:'nearest'});
+}
+function selRow(){return ROWS.find(r=>r.k===selKey)}
+function renderSide(){
+ const r=selRow();let h='';
+ if(r&&r.a){
+  const a=r.a,x=TX[a.tx],p=a.patient;
+  h+=`<div class="sec"><div class="big">${esc(p.name)}</div><div class="sub m">${p.phone} · ${p.visits} visits · usually ${TH[p.usual].first}</div>
+  <div class="kv m"><span>Time</span><span>${fmt(a.start)}–${fmt(a.end)}</span><span>Treatment</span><span>${x.name}, ${kr(x.price)}</span><span>Therapist</span><span>${TH[a.t].name}</span><span>Room</span><span>${ROOMS[a.room]}${a.device?' + laser unit':''}</span>${a.arrivedAt!=null?`<span>Arrived</span><span>${fmt(a.arrivedAt)}</span>`:''}${p.balance?`<span>Balance</span><span class="due">${kr(p.balance)} owed</span>`:''}</div></div>`;
+  h+=`<div class="sec"><h4>Actions</h4><div class="acts">`;
+  const A=(k,l,s,pri)=>h+=`<button class="act ${pri?'pri':''}" data-key="${k}"><kbd>${k.toUpperCase()}</kbd><span>${l}</span><small>${s||''}</small></button>`;
+  if(a.status==='booked'||a.status==='late')A('c','Check in',a.status==='late'?lateBy(a)+' min late':'',true);
+  if(a.status==='done'&&!a.paid)A('p','Take payment',kr(x.price+(p.balance||0)),true);
+  if(a.status==='arrived'||a.status==='intreat')A('p','Take payment now',kr(x.price));
+  if(a.status==='late')A('n','Mark no-show','fee applies');
+  if(a.start>NOW||a.status==='late'||a.status==='arrived')A('m','Move','pick new time');
+  if(a.start>NOW||a.status==='late')A('x','Cancel','opens the slot');
+  A('a','Book again for '+p.name.split(' ')[0],'same treatment');
+  h+=`</div></div>`;
+ }else if(r&&r.g){
+  const g=r.g,c=candidatesFor(g);
+  h+=`<div class="sec"><div class="big m">${fmt(g.start)}–${fmt(g.end)} open</div><div class="sub">${TH[g.t].name} · ${g.end-g.start} min${g.freedBy?' · '+esc(g.freedBy.patient.name)+' cancelled at '+g.freedBy.cancelledAt+' ('+g.freedBy.cancelNote.toLowerCase()+')':''}</div></div>`;
+  h+=`<div class="sec"><h4>Waitlist that fits · press number to book</h4>`;
+  if(!c.length)h+=`<div class="sub">Nobody on the waitlist fits. Press <kbd>F</kbd> to book anyone here.</div>`;
+  c.slice(0,4).forEach((x,i)=>h+=`<div class="cand"><kbd>${i+1}</kbd><div class="g"><div><b>${esc(x.w.name)}</b> <span class="m" style="color:var(--ink2)">${x.w.phone}</span></div><div class="t2">${x.tx.name} ${fmt(x.start)}–${fmt(x.end)}${x.usual?' · usual therapist':''} · ${x.w.note}</div></div></div>`);
+  h+=`</div><div class="sec"><div class="acts"><button class="act" data-key="f"><kbd>F</kbd><span>Book someone else here</span></button></div></div>`;
+ }else if(r&&r.type==='earlier'){
+  h+=`<div class="sec"><div class="big">Earlier today</div><div class="sub">Finished and paid appointments are folded away. Unpaid ones stay in the list until paid.</div></div>`;
+ }
+ const late=APPTS.filter(a=>a.status==='late').length,due=APPTS.filter(a=>a.status==='done'&&!a.paid).length;
+ h+=`<div class="sec"><h4>Today</h4><div class="kv m" style="margin-top:0"><span>Booked</span><span>${APPTS.filter(live).length} appointments</span><span>Late now</span><span style="color:var(--red)">${late}</span><span>Unpaid</span><span class="due">${due}</span><span>Open gaps</span><span>${allGaps().length}</span><span>Waitlist</span><span>${WAITLIST.length}</span></div></div>`;
+ h+=`<div class="sec"><h4>Keys</h4><div class="help"><kbd>J</kbd><span>/ <kbd>K</kbd> next / previous row</span><kbd>/</kbd><span>find patient by name or phone</span><kbd>B</kbd><span>new booking, <kbd>A</kbd> book this patient again</span><kbd>C</kbd><span>check in</span><kbd>P</kbd><span>take payment</span><kbd>M</kbd><span>move</span><kbd>X</kbd><span>cancel, then <kbd>U</kbd> undo</span><kbd>G</kbd><span>jump to next gap</span><kbd>1</kbd><span>– <kbd>6</kbd> show one therapist, <kbd>0</kbd> all</span></div></div>`;
+ $('#side').innerHTML=h;
+}
+function renderTokens(){
+ if(mode==='list'){$('#tokens').innerHTML='';q.placeholder='Find by name or phone  ·  b kari fu tom 1115  books in one line';return}
+ const t=[`<span class="tok mode">${bk.moveId?'MOVE':'BOOK'}</span>`];
+ $('#tokens').innerHTML=t.join('');
+ q.placeholder={patient:'patient name or phone',tx:'treatment: fu as sm dn sw gy lz',th:'therapist name, or Tab for any',time:'time, e.g. 14 or 1415',confirm:'Enter to book · Backspace to go back'}[bk.step];
+}
+function renderAll(){renderStrip();renderTokens();if(mode==='list'){renderList();renderSide()}else{renderBooking()}}
+
+// ---------- booking flow ----------
+const STEPS=['patient','tx','th','time','confirm'];
+function startBooking(pre={}){
+ mode='booking';bk=Object.assign({patient:null,tx:null,th:undefined,slot:null,sms:true,moveId:null},pre);
+ bk.step=STEPS.find(s=>!filled(s));q.value='';hi=0;q.focus();setProto('b');renderAll();
+}
+function filled(s){return s==='patient'?!!bk.patient:s==='tx'?!!bk.tx:s==='th'?bk.th!==undefined:s==='time'?!!bk.slot:false}
+function nextStep(){bk.step=STEPS.find(s=>!filled(s));q.value='';hi=0;renderAll()}
+function prevStep(){const i=STEPS.indexOf(bk.step);if(i<=0)return;const p=STEPS[i-1];if(bk.moveId&&(p==='patient'))return;bk.step=p;if(p==='patient')bk.patient=null;if(p==='tx')bk.tx=null;if(p==='th')bk.th=undefined;if(p==='time')bk.slot=null;q.value='';hi=0;renderAll()}
+function exitBooking(){mode='list';bk=null;q.value='';q.blur();setProto('d');renderAll()}
+function options(){
+ const v=q.value.trim().toLowerCase();
+ if(bk.step==='patient'){
+  if(!v){return WAITLIST.map(w=>{const p=PATIENTS.find(p=>p.name===w.name);return{label:p.name,right:`waitlist · ${TX[w.tx].name.toLowerCase()} · ${w.note}`,val:p,grp:'Waitlist'}})}
+  const r=searchPatients(v).map(p=>({label:p.name,right:`${p.phone} · ${p.visits} visits · usually ${TH[p.usual].first}`,val:p}));
+  r.push({label:`New patient “${q.value.trim()}”`,right:'create record',val:{name:q.value.trim().replace(/\b\w/g,c=>c.toUpperCase()),phone:'—',usual:'TB',visits:0,balance:0},isNew:true});
+  return r;
+ }
+ if(bk.step==='tx'){
+  let r=TREATMENTS.map(t=>({label:t.name,right:`${t.code} · ${t.dur} min · ${kr(t.price)}${t.needs?' · '+t.needs:''}`,val:t.id}));
+  if(v)r=r.filter(o=>TX[o.val].code.startsWith(v)||TX[o.val].name.toLowerCase().startsWith(v));
+  const pref=bk.patient&&bk.patient.waitlist&&bk.patient.waitlist.tx;
+  if(pref&&!v){const i=r.findIndex(o=>o.val===pref);if(i>0)r.unshift(r.splice(i,1)[0]);r[0].right+=' · requested'}
+  return r;
+ }
+ if(bk.step==='th'){
+  const x=TX[bk.tx];
+  let r=[{label:'Any therapist',right:'earliest first',val:null}].concat(THERAPISTS.map(t=>{
+   if(x.skill&&!t.skills.includes(x.skill))return{label:t.name,right:'does not do '+SKILL_NAME[x.skill],val:t.id,dis:true};
+   const s=findSlots({tx:bk.tx,therapists:[t.id],ignoreId:bk.moveId});
+   if(!s.length)return{label:t.name,right:'no free '+x.dur+' min today',val:t.id,dis:true};
+   return{label:t.name+(bk.patient&&bk.patient.usual===t.id?'  (usual)':''),right:`${s.length} free · first ${fmt(s[0].start)}`,val:t.id};
+  }));
+  if(v)r=r.filter(o=>o.label.toLowerCase().startsWith(v)||(v==='any'&&o.val===null));
+  const u=bk.patient&&bk.patient.usual;
+  if(!v&&u){const i=r.findIndex(o=>o.val===u&&!o.dis);if(i>0)r.splice(1,0,r.splice(i,1)[0])}
+  return r;
+ }
+ if(bk.step==='time'){
+  const slots=findSlots({tx:bk.tx,therapists:bk.th?[bk.th]:null,ignoreId:bk.moveId});
+  let r=slots.map(s=>{const f=slotFit(s,bk.moveId);let fit='';if(f.before===0&&f.after===0)fit='<span class="fit">fills gap exactly</span>';else if((f.before>0&&f.before<30)||(f.after>0&&f.after<30))fit=`<span class="fit bad">leaves ${f.before>0&&f.before<30?f.before:f.after} min hole</span>`;
+   if(bk.patient&&bk.patient.usual===s.t)fit+='<span class="fit">usual therapist</span>';
+   return{label:`<span class="m">${fmt(s.start)}–${fmt(s.end)}</span>&nbsp;&nbsp;${TH[s.t].name}`,right:`${ROOMS[s.room]}${s.device?' + laser':''}${fit}`,val:s,plain:true}});
+  if(v){const d=v.replace(/[^0-9]/g,'');r=r.filter(o=>fmt(o.val.start).replace(':','').startsWith(d.length<=2?d.padStart(2,'0'):d.padStart(4,'0')))}
+  return r;
+ }
+ return[];
+}
+function pick(o){
+ if(!o||o.dis)return;
+ if(bk.step==='patient'){bk.patient=o.val;if(o.val.waitlist&&!bk.tx)bk.tx=o.val.waitlist.tx}
+ else if(bk.step==='tx')bk.tx=o.val;
+ else if(bk.step==='th')bk.th=o.val;
+ else if(bk.step==='time')bk.slot=o.val;
+ nextStep();
+}
+function renderBooking(){
+ const x=bk.tx?TX[bk.tx]:null;
+ const V=(s,val)=>`<div class="step ${bk.step===s?'cur':''}"><div class="k">${{patient:'1 Patient',tx:'2 Treatment',th:'3 Therapist',time:'4 Time',confirm:'5 Confirm'}[s]}</div><div class="v ${val?'':'empty'}">${val||'—'}</div></div>`;
+ let h=`<div class="bk"><div class="steps">${V('patient',bk.patient&&esc(bk.patient.name))}${V('tx',x&&x.name+' · '+x.dur+'m')}${V('th',bk.th===undefined?'':bk.th?TH[bk.th].first:'Any')}${V('time',bk.slot&&`<span class="m">${fmt(bk.slot.start)}</span> ${TH[bk.slot.t].first}`)}${V('confirm',bk.step==='confirm'?'Enter':'')}</div>`;
+ if(bk.step!=='confirm'){
+  const o=options();if(hi>=o.length)hi=Math.max(0,o.length-1);
+  if(o[hi]&&o[hi].dis){const j=o.findIndex(z=>!z.dis);hi=j<0?0:j}
+  const title={patient:q.value?'Matches':'Type a name or phone. Waitlist shown while empty.',tx:'Treatment · type the two-letter code',th:'Therapist · Tab or 0 for any',time:'Free times today · type 14 or 1415 to jump'}[bk.step];
+  h+=`<div class="opts"><div class="hd"><span>${title}</span><span><kbd>↑</kbd> <kbd>↓</kbd> <kbd>Enter</kbd>${bk.step==='tx'||bk.step==='th'?' or number':''} · <kbd>Backspace</kbd> back · <kbd>Esc</kbd> cancel</span></div>`;
+  if(!o.length)h+=`<div class="o dis"><span class="n"></span><span>${bk.step==='time'?`No free ${x.dur}-min time today${bk.th?' with '+TH[bk.th].first:''}. Backspace to try another therapist. Next free day: Mon 28 Sep.`:'No match'}</span><span></span></div>`;
+  let lastT=null;
+  o.forEach((z,i)=>{
+   if(bk.step==='time'&&!bk.th&&Math.floor(z.val.start/60)!==lastT){lastT=Math.floor(z.val.start/60);h+=`<div class="o sep"><span>${pad(lastT)}:00</span></div>`}
+   const num=bk.step==='th'?i:bk.step==='tx'?i+1:'';
+   h+=`<div class="o ${i===hi?'hi':''} ${z.dis?'dis':''}" data-i="${i}"><span class="n">${num!==''&&num<=9?num:''}</span><span>${z.plain?z.label:esc(z.label)}</span><span class="r">${z.right}</span></div>`;
+  });
+  h+=`</div>`;
+ }else{
+  const s=bk.slot,c=checkConflicts(s,bk.tx,bk.moveId),room=x.room||TH[s.t].room;
+  h+=`<div class="confirm"><div class="line">${esc(bk.patient.name)} · <span class="m" style="font-size:17px">${fmt(s.start)}–${fmt(s.end)}</span> · ${TH[s.t].name}</div><div class="sub">${x.name} · ${ROOMS[room]}${x.device?' + laser unit':''} · ${kr(x.price)}${bk.moveId?' · moved from '+fmt(APPTS.find(a=>a.id===bk.moveId).start):''}</div>
+  ${c.length?`<div class="no">${c.join(' · ')}</div>`:`<div class="ok">${TH[s.t].first} free · ${ROOMS[room]} free${x.device?' · laser unit free':''} · no double booking for ${esc(bk.patient.name.split(' ')[0])}</div>`}
+  <div class="row"><span><kbd>Enter</kbd> ${bk.moveId?'move':'book'}</span><span><kbd>S</kbd> SMS confirmation: <b>${bk.sms?'on':'off'}</b></span><span><kbd>Backspace</kbd> change time</span><span><kbd>Esc</kbd> cancel</span></div></div>`;
+ }
+ preview=bk.step==='confirm'?bk.slot:bk.step==='time'?((options()[hi]||{}).val||null):null;
+ if(preview){const t=TH[preview.t];const near=APPTS.filter(a=>a.t===t.id&&live(a)&&a.id!==bk.moveId&&a.end>preview.start-90&&a.start<preview.end+90);
+  const rows=near.map(a=>({s:a.start,html:`<div class="o" style="cursor:default"><span class="n">${fmt(a.start)}</span><span>${esc(a.patient.name)} <span style="color:var(--ink3)">· ${TX[a.tx].name}</span></span><span class="r">${ROOMS[a.room]}</span></div>`}));
+  rows.push({s:preview.start,html:`<div class="o hi" style="cursor:default;box-shadow:inset 3px 0 0 var(--blue)"><span class="n" style="color:var(--blue)">${fmt(preview.start)}</span><span><b>${bk.patient?esc(bk.patient.name):'New'}</b> · ${x.name}</span><span class="r">this booking</span></div>`});
+  if(t.ls!=null&&t.le>preview.start-90&&t.ls<preview.end+90)rows.push({s:t.ls,html:`<div class="o dis"><span class="n">${fmt(t.ls)}</span><span>Lunch</span><span></span></div>`});
+  rows.sort((a,b)=>a.s-b.s);
+  h+=`<div class="opts" style="margin-top:14px"><div class="hd"><span>${t.first}'s day around ${fmt(preview.start)}</span><span>blue bar on the strip above</span></div>${rows.map(r=>r.html).join('')}</div>`}
+ h+=`</div>`;
+ $('#list').innerHTML=h;
+ renderStrip();
+ // side: patient context + syntax
+ let sd='';
+ if(bk.patient){const p=bk.patient;sd+=`<div class="sec"><h4>Patient</h4><div class="big">${esc(p.name)}</div><div class="sub m">${p.phone}</div><div class="kv m"><span>Visits</span><span>${p.visits}</span><span>Usually</span><span>${TH[p.usual].name}</span>${p.waitlist?`<span>Waitlist</span><span>${p.waitlist.note}</span>`:''}${p.balance?`<span>Balance</span><span class="due">${kr(p.balance)} owed</span>`:''}</div></div>`}
+ sd+=`<div class="sec"><h4>One-line booking</h4><div class="sub" style="line-height:1.6">From the list, press <kbd>/</kbd> and type:<br><span class="m" style="background:var(--rule2);padding:2px 6px;border-radius:3px">b kari fu tom 1115</span><br>Name, treatment code, therapist and time, in any order. Missing parts are asked for.</div></div>`;
+ sd+=`<div class="sec"><h4>Codes</h4><div class="help">${TREATMENTS.map(t=>`<kbd>${t.code}</kbd><span>${t.name}, ${t.dur} min${t.needs?' · '+t.needs:''}</span>`).join('')}</div></div>`;
+ $('#side').innerHTML=sd;
+}
+function commit(){
+ const s=bk.slot;if(checkConflicts(s,bk.tx,bk.moveId).length)return;
+ const moved=bk.moveId;
+ const a=book({patient:bk.patient,tx:bk.tx,t:s.t,start:s.start},bk.moveId);
+ const sms=bk.sms;mode='list';bk=null;q.value='';q.blur();selKey='a'+a.id;newKey=selKey;setProto('d');showEarlier=false;
+ if(!moved)undo={label:'booking',fn:()=>{a.status='cancelled';a.cancelledAt=fmt(NOW);a.cancelNote='Undone'}};
+ renderAll();toast(`${moved?'Moved':'Booked'} ${esc(a.patient.name)} ${fmt(a.start)} with ${TH[a.t].first}${sms?' · SMS sent':''}`,!moved);
+}
+// one-line syntax: b <words>
+function parseLine(str){
+ const w=str.trim().split(/\s+/).slice(1);const pre={};const rest=[];
+ w.forEach(x=>{const lx=x.toLowerCase();
+  if(/^\d{1,2}:?\d{2}$|^\d{1,2}$/.test(lx)&&!pre.time){const d=lx.replace(':','');pre.time=d.length<=2?+d*60:toMin(d.padStart(4,'0').slice(0,2)+':'+d.padStart(4,'0').slice(2));return}
+  const tx=TREATMENTS.find(t=>t.code===lx);if(tx&&!pre.tx){pre.tx=tx.id;return}
+  const th=THERAPISTS.find(t=>t.first.toLowerCase().startsWith(lx)&&lx.length>=3);if(th&&pre.th===undefined&&rest.length){pre.th=th.id;return}
+  if(lx==='any'){pre.th=null;return}
+  rest.push(x);
+ });
+ if(rest.length){const r=searchPatients(rest.join(' '));const exact=r.find(p=>p.name.toLowerCase().startsWith(rest.join(' ').toLowerCase()));if(exact||r.length===1)pre.patient=exact||r[0];else pre.q=rest.join(' ')}
+ if(pre.patient&&!pre.tx&&pre.patient.waitlist)pre.tx=pre.patient.waitlist.tx;
+ if(pre.time!=null&&pre.tx){const s=findSlots({tx:pre.tx,therapists:pre.th?[pre.th]:null}).find(s=>s.start===pre.time);if(s){pre.slot=s;if(pre.th===undefined)pre.th=s.t}}
+ const q0=pre.q;delete pre.q;const tm=pre.time;delete pre.time;
+ startBooking(pre);
+ if(q0){q.value=q0;renderAll()}
+ else if(tm!=null&&bk.step==='time'){q.value=fmt(tm).replace(':','');renderAll()}
+}
+
+// ---------- list actions ----------
+function doKey(k){
+ const r=selRow();const a=r&&r.a;
+ if(k==='b'){return startBooking({})}
+ if(k==='a'&&a){return startBooking({patient:a.patient,tx:a.tx})}
+ if(k==='f'&&r&&r.g){return startBooking({th:r.g.t,tx:null})}
+ if(/^[1-4]$/.test(k)&&r&&r.g){const c=candidatesFor(r.g)[+k-1];if(!c)return;const p=PATIENTS.find(p=>p.name===c.w.name);return startBooking({patient:p,tx:c.w.tx,th:r.g.t,slot:findSlots({tx:c.w.tx,therapists:[r.g.t]}).find(s=>s.start===c.start)})}
+ if(!a)return;
+ if(k==='c'&&(a.status==='booked'||a.status==='late')){const prev=a.status;a.status=a.start<=NOW?'intreat':'arrived';a.arrivedAt=NOW;undo={fn:()=>{a.status=prev;delete a.arrivedAt}};renderAll();toast(`${esc(a.patient.name)} checked in · ${TH[a.t].first} notified`,true)}
+ else if(k==='p'&&(a.status==='done'||a.status==='arrived'||a.status==='intreat')&&!a.paid){a.paid=true;const amt=TX[a.tx].price+(a.patient.balance||0);a.patient.balance=0;undo={fn:()=>{a.paid=false}};moveSel(1);renderAll();toast(`${kr(amt)} paid by card · receipt sent`,true)}
+ else if(k==='n'&&a.status==='late'){a.status='noshow';undo={fn:()=>{a.status='late'}};renderAll();toast('Marked no-show',true)}
+ else if(k==='m'&&(a.start>NOW||a.status==='late'||a.status==='arrived')){startBooking({patient:a.patient,tx:a.tx,th:a.t,moveId:a.id})}
+ else if(k==='x'&&(a.start>NOW||a.status==='late')){const prev=a.status;a.status='cancelled';a.cancelledAt=fmt(NOW);a.cancelNote='By desk';undo={fn:()=>{a.status=prev}};
+  const g=allGaps().find(g=>g.t===a.t&&g.start<a.end&&a.start<g.end);if(g)selKey='g'+g.t+g.start;renderAll();const n=g?candidatesFor(g).length:0;toast(`Cancelled ${esc(a.patient.name)}${n?` · ${n} on waitlist fit · press 1 to book the best`:''}`,true)}
+}
+function moveSel(d){const s=ROWS.filter(r=>r.k);let i=s.findIndex(r=>r.k===selKey);i=Math.max(0,Math.min(s.length-1,i+d));selKey=s[i]&&s[i].k}
+function toast(msg,canUndo){const t=$('#toast');t.innerHTML=msg+(canUndo?' <span><kbd>U</kbd> undo</span>':'');t.style.display='flex';clearTimeout(toast.h);toast.h=setTimeout(()=>{t.style.display='none'},5000)}
+
+document.addEventListener('keydown',e=>{
+ if(e.metaKey||e.ctrlKey||e.altKey)return;
+ const inQ=document.activeElement===q;
+ if(mode==='booking'){
+  if(e.key==='Escape'){e.preventDefault();return exitBooking()}
+  if(bk.step==='confirm'){
+   if(e.key==='Enter'){e.preventDefault();return commit()}
+   if(e.key==='Backspace'){e.preventDefault();return prevStep()}
+   if(e.key==='s'||e.key==='S'){e.preventDefault();bk.sms=!bk.sms;return renderAll()}
+   return;
+  }
+  const o=options();
+  if(e.key==='ArrowDown'){e.preventDefault();do{hi=Math.min(o.length-1,hi+1)}while(o[hi]&&o[hi].dis&&hi<o.length-1);return renderBooking()}
+  if(e.key==='ArrowUp'){e.preventDefault();do{hi=Math.max(0,hi-1)}while(o[hi]&&o[hi].dis&&hi>0);return renderBooking()}
+  if(e.key==='Enter'){e.preventDefault();return pick(o[hi])}
+  if(e.key==='Tab'&&bk.step==='th'){e.preventDefault();return pick(o[0])}
+  if(e.key==='Backspace'&&!q.value){e.preventDefault();return prevStep()}
+  if(/^[0-9]$/.test(e.key)&&(bk.step==='tx'||bk.step==='th')){e.preventDefault();const i=bk.step==='th'?+e.key:+e.key-1;return pick(o[i])}
+  if(!inQ){q.focus()}
+  return;
+ }
+ // list mode
+ if(inQ){
+  if(e.key==='Escape'){q.value='';q.blur();return renderAll()}
+  if(e.key==='Enter'){e.preventDefault();if(/^b(\s|$)/i.test(q.value.trim())){return parseLine(q.value)}q.blur();const f=ROWS.find(r=>r.a);if(f)selKey=f.k;return renderAll()}
+  if(e.key==='ArrowDown'){e.preventDefault();q.blur();moveSel(1);return renderAll()}
+  return;
+ }
+ const k=e.key.toLowerCase();
+ if(k==='j'||e.key==='ArrowDown'){e.preventDefault();moveSel(1);renderAll()}
+ else if(k==='k'||e.key==='ArrowUp'){e.preventDefault();moveSel(-1);renderAll()}
+ else if(e.key==='/'){e.preventDefault();q.focus()}
+ else if(k==='e'){showEarlier=!showEarlier;renderAll()}
+ else if(k==='g'){const s=ROWS.filter(r=>r.k);const i=s.findIndex(r=>r.k===selKey);const n=s.slice(i+1).find(r=>r.g)||s.find(r=>r.g);if(n){selKey=n.k;renderAll()}}
+ else if(k==='u'&&undo){undo.fn();undo=null;renderAll();toast('Undone')}
+ else if(/^[0-6]$/.test(k)&&!(selRow()&&selRow().g&&/^[1-4]$/.test(k))){filterT=k==='0'?null:THERAPISTS[+k-1].id;renderAll()}
+ else if('abcpmxfn1234'.includes(k)){e.preventDefault();doKey(k)}
+ else if(e.key==='Enter'&&selRow()&&selRow().type==='earlier'){showEarlier=!showEarlier;renderAll()}
+});
+q.addEventListener('input',()=>{if(mode==='list'){if(/^b(\s|$)/i.test(q.value))return;renderList();renderSide()}else{hi=0;renderBooking()}});
+document.addEventListener('click',e=>{
+ const tr=e.target.closest('tr.r');if(tr){selKey=tr.dataset.k;if(selKey==='earlier')showEarlier=!showEarlier;return renderAll()}
+ const o=e.target.closest('.o[data-i]');if(o){hi=+o.dataset.i;return pick(options()[hi])}
+ const b=e.target.closest('[data-key]');if(b)return doKey(b.dataset.key);
+ if(e.target.id==='pDay'){if(mode==='booking')exitBooking();return}
+ if(e.target.id==='pBook'){if(mode!=='booking')demoBooking();return}
+});
+function setProto(s){$('#pDay').classList.toggle('on',s==='d');$('#pBook').classList.toggle('on',s==='b')}
+function demoBooking(){const p=PATIENTS.find(p=>p.name==='Erik Dahl');startBooking({patient:p,tx:p.waitlist.tx,th:null})}
+$('#date').textContent=DATE_LABEL;$('#clock').textContent=fmt(NOW);
+renderAll();
+if(location.hash==='#booking')demoBooking();
+if(location.hash==='#oneline'){q.value='b kari fu tom 1115';parseLine(q.value)}
+</script>
+</body>
+</html>

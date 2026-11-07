@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Cobalt Ring</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cobalt:#2f3dfa; --cobalt-d:#1f2ad0; --sky:#c9d0ff; --sheet:#fff8ef; --ink:#15163a; --soft:#6a6c8f;
+  --peach:#ff7a4d; --peach-d:#e2582b; --mint:#b8f5d2; --chip:#f3ebe0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#12134a}
+body{font-family:"Bricolage Grotesque",system-ui,sans-serif;color:var(--ink);display:flex;justify-content:center}
+.phone{width:390px;min-height:844px;background:var(--cobalt);position:relative;overflow:hidden}
+.phone::before{content:"";position:absolute;width:520px;height:520px;left:-65px;top:-170px;border-radius:50%;
+  background:radial-gradient(circle, rgba(255,255,255,.18), transparent 62%)}
+.status{position:relative;height:44px;display:flex;justify-content:space-between;align-items:center;padding:0 26px;font-weight:700;font-size:15px;color:#fff}
+
+.top{position:relative;display:flex;justify-content:space-between;align-items:center;padding:6px 20px 0;color:#fff}
+.pill{background:rgba(255,255,255,.14);border-radius:999px;padding:8px 14px;font-weight:600;font-size:14px}
+.pill b{font-weight:800}
+.dots{display:flex;gap:5px}
+.dots i{width:22px;height:6px;border-radius:3px;background:rgba(255,255,255,.28)}
+.dots i.on{background:#fff}
+.dots i.cur{background:var(--peach)}
+
+/* Ring timer */
+.ring-wrap{position:relative;display:grid;place-items:center;margin-top:14px}
+.ring{width:272px;height:272px;border-radius:50%;
+  background:conic-gradient(#fff 0 216deg, rgba(255,255,255,.18) 216deg 360deg);
+  display:grid;place-items:center;position:relative}
+.ring::before{content:"";position:absolute;inset:16px;border-radius:50%;background:var(--cobalt);
+  box-shadow:inset 0 6px 20px rgba(0,0,40,.25)}
+.ring .knob{position:absolute;width:26px;height:26px;border-radius:50%;background:var(--peach);border:5px solid #fff;
+  top:50%;left:50%;transform:rotate(216deg) translateY(-128px) translate(-50%,-50%);transform-origin:0 0}
+.ring .in{position:relative;text-align:center;color:#fff}
+.ring .in .t{font-size:104px;font-weight:800;letter-spacing:-.05em;line-height:.9;font-variation-settings:"opsz" 96;font-variant-numeric:tabular-nums}
+.ring .in .sub{font-size:15px;font-weight:600;opacity:.8;margin-top:6px}
+.adj{position:absolute;inset:auto 0 12px;display:flex;justify-content:space-between;padding:0 26px;pointer-events:none}
+.adj span{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}
+
+/* Sheet */
+.sheet{position:absolute;left:0;right:0;bottom:0;top:388px;background:var(--sheet);border-radius:34px 34px 0 0;padding:22px 20px 0;
+  box-shadow:0 -20px 40px -20px rgba(0,0,40,.4)}
+.grab{width:40px;height:5px;border-radius:3px;background:#e2d8ca;margin:-10px auto 14px}
+.ex-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.ex h1{font-size:34px;font-weight:800;letter-spacing:-.035em;line-height:.95}
+.ex .meta{font-size:14px;color:var(--soft);font-weight:500;margin-top:6px}
+.form{flex:none;display:flex;align-items:center;gap:8px;background:var(--chip);border-radius:999px;padding:8px 13px 8px 8px;font-weight:700;font-size:13px}
+.form i{width:26px;height:26px;border-radius:50%;background:var(--ink);display:grid;place-items:center}
+.form i::after{content:"";border-left:8px solid #fff;border-top:5px solid transparent;border-bottom:5px solid transparent;margin-left:2px}
+
+.sets{display:flex;gap:8px;margin-top:18px}
+.s{flex:1;border-radius:18px;padding:10px 0 11px;text-align:center;background:var(--chip)}
+.s .v{font-size:20px;font-weight:800;letter-spacing:-.03em}
+.s .r{font-size:12px;font-weight:600;color:var(--soft)}
+.s.done{background:var(--mint)}
+.s.done .r{color:#2e7a52}
+.s.next{background:#fff;box-shadow:0 0 0 3px var(--ink)}
+.s.later{background:transparent;box-shadow:inset 0 0 0 2px #e6dccd}
+.s.later .v{color:#a9a3b8}
+
+.btn{position:absolute;left:16px;right:16px;bottom:32px;height:100px;border-radius:30px;background:var(--peach);color:#fff;display:flex;align-items:center;padding:0 12px 0 26px;justify-content:space-between;
+  box-shadow:0 6px 0 var(--peach-d), 0 22px 30px -10px rgba(226,88,43,.55)}
+.btn .v{font-size:46px;font-weight:800;letter-spacing:-.04em;line-height:1}
+.btn .v small{font-size:20px;font-weight:700;opacity:.85}
+.btn .v span{opacity:.6;font-weight:600;margin:0 4px;font-size:30px}
+.btn .go{height:76px;padding:0 22px;border-radius:22px;background:#fff;color:var(--peach-d);display:flex;align-items:center;font-weight:800;font-size:20px;letter-spacing:-.01em}
+.hint{position:absolute;left:0;right:0;bottom:146px;text-align:center;font-size:13px;color:var(--soft);font-weight:500}
+.hint b{color:#2e7a52;font-weight:700}
+.upnext{margin-top:18px;display:flex;align-items:center;gap:10px;font-size:14px;color:var(--soft);font-weight:500}
+.upnext b{color:var(--ink);font-weight:700}
+.upnext i{width:8px;height:8px;border-radius:50%;background:var(--cobalt);flex:none}
+.home{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:var(--ink)}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="status"><span>9:41</span><span>5G ▮</span></div>
+
+  <div class="top">
+    <div class="pill"><b>Push A</b> · 23 min</div>
+    <div class="dots"><i class="cur"></i><i></i><i></i><i></i><i></i></div>
+  </div>
+
+  <div class="ring-wrap">
+    <div class="ring">
+      <div class="knob"></div>
+      <div class="in">
+        <div class="t">1:12</div>
+        <div class="sub">rest left · of 2:00</div>
+      </div>
+    </div>
+    <div class="adj"><span>−15</span><span>+15</span></div>
+  </div>
+
+  <section class="sheet">
+    <div class="grab"></div>
+    <div class="ex ex-row">
+      <div>
+        <h1>Bench Press</h1>
+        <div class="meta">Set 3 of 4 · Barbell</div>
+      </div>
+      <div class="form"><i></i>Form</div>
+    </div>
+    <div class="sets">
+      <div class="s done"><div class="v">80</div><div class="r">8 reps ✓</div></div>
+      <div class="s done"><div class="v">82.5</div><div class="r">6 reps ✓</div></div>
+      <div class="s next"><div class="v">82.5</div><div class="r">6 reps</div></div>
+      <div class="s later"><div class="v">82.5</div><div class="r">6 reps</div></div>
+    </div>
+    <div class="upnext"><i></i><span>Up next: <b>Incline dumbbell press</b>, 3 × 10</span></div>
+  </section>
+
+  <div class="hint">Up <b>2.5 kg</b> from last week. Tap a number to change it.</div>
+  <div class="btn">
+    <div class="v">82.5<small>kg</small><span>×</span>6</div>
+    <div class="go">Done</div>
+  </div>
+  <div class="home"></div>
+</div>
+</body>
+</html>
