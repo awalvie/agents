@@ -6,5 +6,13 @@
   },
   "homepage": "https://github.com/awalvie/agents",
   "repository": "https://github.com/awalvie/agents",
-  "keywords": ["agents", "personas", "design-review"]
+  "keywords": [
+    "agents",
+    "personas",
+    "design-review"
+  ],
+  "agents": [
+    "./personas/loupe/loupe.md",
+    "./personas/vellum/vellum.md"
+  ]
 }

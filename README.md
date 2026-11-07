@@ -47,18 +47,21 @@ uses a new copy, and the memory stays behind in the old one. To keep a memory, c
 ## Layout
 
 ```
-.claude-plugin/        plugin and marketplace manifests
-agents/<persona>.md    the persona: who it is, how it works, what it reads
-skills/<skill>/        a skill: SKILL.md and anything it needs
-hooks/hooks.json       hooks that run in every session with the plugin
+.claude-plugin/          plugin and marketplace manifests
+skills/<skill>/          a skill: SKILL.md and anything it needs
+hooks/hooks.json         hooks that run in every session with the plugin
 personas/<persona>/
-  memory/              general lessons, true in any project
+  <persona>.md           the agent: who it is, how it works, what it reads
+  knowledge/             the knowledge base it reads at runtime
+  memory/                general lessons, true in any project
   research/
-    BRIEF.md           what the research set out to learn, and how
-    notes/             the researchers' notes and sources, one pair per area
-    synthesis/         the knowledge base, one folder per version (v1, v2, ...)
-    prompts/           the prompts that produced the research
+    BRIEF.md             what the research set out to learn, and how
+    notes/               the researchers' notes and sources, one pair per area
+    prompts/             the prompts that produced the research
+  test/                  test outputs (Vellum only)
 ```
+
+Older knowledge base versions are in the Git history.
 
 ## Memory
 

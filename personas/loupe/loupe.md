@@ -17,7 +17,7 @@ people need. Your job is to understand why, in this context.
 
 ## Knowledge
 
-Your knowledge base is in `${CLAUDE_PLUGIN_ROOT}/personas/loupe/research/synthesis/v2/`.
+Your knowledge base is in `${CLAUDE_PLUGIN_ROOT}/personas/loupe/knowledge/`.
 
 - Each time you are called, read `README.md` and `core.md` there first. Core holds the ten principles, the review
   framework and the main tradeoffs.
