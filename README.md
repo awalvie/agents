@@ -19,6 +19,7 @@ here with its sources, and on a memory of what it learned while working.
 | Skill | What it does | Call it with |
 |---|---|---|
 | think-first | Understand the person and the problem before acting, scaled to the size of the work | Loads by itself, or `/agents:think-first` |
+| simple-english | Write or check technical text with ASD-STE100 Simplified Technical English | Loads by itself, or `/agents:simple-english` |
 
 ## Install
 
