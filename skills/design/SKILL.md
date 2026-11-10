@@ -43,7 +43,8 @@ Words in this skill:
 
 - Make each prototype as close to the real thing as you can. For software, apply the version
   to the real product with local data.
-- Make one for each state.
+- Make one for each state, with content in three amounts: none, little and uneven, and a lot.
+  Ask what the real content looks like, and match it.
 - Before you change the person's files, save their state. After, undo only your changes, and
   make sure that their files are as they were. Never use a command that discards their work.
 

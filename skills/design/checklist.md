@@ -58,6 +58,7 @@ reviewer accepts.
 ## 5. Verify
 
 - [ ] I have a prototype of every state in every form.
+- [ ] Each line of evidence names the prototype that shows it. A "yes" without one is a "no".
 - [ ] I looked at every changed part closely after the last change.
 - [ ] Odd content in the prototypes is a case I designed for, not a fault of the test data.
 - [ ] Beside work the person accepted, it looks like the same product.

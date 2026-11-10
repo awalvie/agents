@@ -39,6 +39,7 @@ If the work is small and easy to undo, do it. Then tell the person what you did.
 - Make sure that the problem is real. Find out who it affects and how often.
 - Find two or more solutions. The first solution often only repeats the words of the request.
 - For each solution, find what else it changes.
+- Test each solution on cases like the person's real ones, not only on the cases at hand.
 - Recommend one solution. Tell the person its limits and what you did not examine.
 - If the decision is important, get a second opinion from an independent agent. Give the agent
   the goal and the problem. Do not give it your answer or the person's examples, because then it
